@@ -24,7 +24,8 @@
         "pg": "^8.11.3",
         "pg-cursor": "^2.10.3",
         "prom-client": "latest",
-        "tslog": "latest"
+        "tslog": "latest",
+        "zapatos": "^6.2.0"
     },
     "devDependencies": {
         "@tsconfig/recommended": "latest",
