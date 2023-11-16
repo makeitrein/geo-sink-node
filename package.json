@@ -1,0 +1,32 @@
+{
+    "name": "geo-substreams-sink",
+    "version": "0.0.1",
+    "description": "Geo Substreams Sink",
+    "type": "module",
+    "exports": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist",
+        "src"
+    ],
+    "license": "MIT OR Apache-2.0",
+    "scripts": {
+        "build": "tsc",
+        "prepublishOnly": "npm run build"
+    },
+    "dependencies": {
+        "@substreams/core": "^0.6.2",
+        "@substreams/manifest": "^0.5.1",
+        "@substreams/node": "^0.3.0",
+        "commander": "latest",
+        "dotenv": "latest",
+        "node-fetch": "latest",
+        "prom-client": "latest",
+        "tslog": "latest"
+    },
+    "devDependencies": {
+        "@tsconfig/recommended": "latest",
+        "@types/node": "latest",
+        "typescript": "latest"
+    }
+}
