@@ -6,8 +6,8 @@ import {
 import { readPackageFromFile } from "@substreams/manifest";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import dotenv from 'dotenv';
-import { invariant } from "./src/invariant.js";
-import { logger } from "./src/logger.js";
+import { invariant } from "./src/utils/invariant.js";
+import { logger } from "./src/utils/logger.js";
 
 dotenv.config();
 
