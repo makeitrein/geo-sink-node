@@ -26,7 +26,6 @@ CREATE TABLE IF NOT EXISTS public.geo_entities (
     description character varying,
     is_type boolean DEFAULT false,
     is_attribute boolean DEFAULT false,
-    defined_in_id text NOT NULL REFERENCES public.spaces(id),
     attribute_value_type_id text,
     version_id text
 );

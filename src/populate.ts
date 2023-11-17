@@ -72,7 +72,6 @@ export const toGeoEntities = (fullEntries: FullEntry[]) => {
       return fullEntry.uriData.actions.map((action) => {
         return {
           id: action.entityId,
-          defined_in_id: fullEntry.space,
         };
       });
     }

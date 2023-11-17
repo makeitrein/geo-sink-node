@@ -16,8 +16,7 @@
     "nukePublic": "ts-node ./src/utils/executeSql.ts ./src/sql/nukePublic.sql",
     "zapatos": "dotenv -e .env -- npx zapatos",
     "fromGenesis": "node dist/index.js --from-genesis",
-    "bootstrap": "node dist/index.js --bootstrap",
-    "bootstrapZapatos": "npm run build && npm run bootstrap && npm run zapatos"
+    "bootstrap": "node dist/index.js --bootstrap"
   },
   "dependencies": {
     "@substreams/core": "^0.6.2",

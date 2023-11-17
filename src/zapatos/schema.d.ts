@@ -609,12 +609,6 @@ declare module 'zapatos/schema' {
       */
       is_attribute: boolean | null;
       /**
-      * **geo_entities.defined_in_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      defined_in_id: string;
-      /**
       * **geo_entities.attribute_value_type_id**
       * - `text` in database
       * - Nullable, no default
@@ -658,12 +652,6 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `false`
       */
       is_attribute: boolean | null;
-      /**
-      * **geo_entities.defined_in_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      defined_in_id: string;
       /**
       * **geo_entities.attribute_value_type_id**
       * - `text` in database
@@ -709,12 +697,6 @@ declare module 'zapatos/schema' {
       */
       is_attribute?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **geo_entities.defined_in_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      defined_in_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **geo_entities.attribute_value_type_id**
       * - `text` in database
       * - Nullable, no default
@@ -759,12 +741,6 @@ declare module 'zapatos/schema' {
       */
       is_attribute?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **geo_entities.defined_in_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      defined_in_id: string | db.Parameter<string> | db.SQLFragment;
-      /**
       * **geo_entities.attribute_value_type_id**
       * - `text` in database
       * - Nullable, no default
@@ -808,12 +784,6 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `false`
       */
       is_attribute?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **geo_entities.defined_in_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      defined_in_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **geo_entities.attribute_value_type_id**
       * - `text` in database
