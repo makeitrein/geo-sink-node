@@ -1,7 +1,6 @@
 import { Command } from "commander";
-import * as zg from "zapatos/generate";
 import { startGeoStream } from "./src/stream.js";
-import { resetDatabase } from "./src/utils/resetDatabase.js";
+import { resetDatabaseToGenesis } from "./src/utils/resetDatabaseToGenesis.js";
 
 try {
   const program = new Command();
@@ -18,22 +17,8 @@ try {
 
   console.log("Options: ", options);
 
-  if (options.bootstrap) {
-    console.log("Bootstrapping database...");
-    await resetDatabase();
-    console.log("Done bootstrapping.");
-
-    console.log("Updating table types...");
-    await zg.generate({
-      db: { connectionString: process.env.DATABASE_URL },
-      outDir: "./src",
-    });
-    console.log("Done updating table types. Exiting...");
-    process.exit();
-  }
-
   if (options.fromGenesis) {
-    await resetDatabase();
+    await resetDatabaseToGenesis();
   }
 
   if (options.fromCache) console.log("from cache");

@@ -34,8 +34,8 @@ export const populateEntries = async (
     .upsert("accounts", accounts, ["id"], { updateColumns: db.doNothing })
     .run(pool);
 
-  const actions: s.actions.Insertable[] = toActions(fullEntries);
-  await db.insert("actions", actions).run(pool);
+  // const actions: s.actions.Insertable[] = toActions(fullEntries);
+  // await db.insert("actions", actions).run(pool);
 
   const geoEntities: s.geo_entities.Insertable[] = toGeoEntities(fullEntries);
   await db

@@ -1,3 +1,6 @@
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA IF NOT EXISTS public;
+
 CREATE TABLE public.accounts (
     id text PRIMARY KEY NOT NULL
 );
