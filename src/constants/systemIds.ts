@@ -5,7 +5,7 @@ export const SPACE = "space";
 export const INDEXED_SPACE = "30659852-2df5-42f6-9ad7-2921c33ad84b";
 export const ATTRIBUTE = "attribute";
 
-/* We could wire this up to the substream, but since we're hardcoding quite a bit already in bootstrapRootEntities.ts, this is probably fine */
+/* We could wire this up to the substream, but since we're hardcoding quite a bit already in bootstrapRoot.ts, this is probably fine */
 export const ROOT_SPACE_ID = "0x170b749413328ac9a94762031a7a05b00c1d2e34";
 export const ROOT_SPACE_CREATED_AT = 1670280473;
 export const ROOT_SPACE_CREATED_AT_BLOCK = 36472429;

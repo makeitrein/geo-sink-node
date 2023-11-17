@@ -256,7 +256,7 @@ const proposal: s.proposals.Insertable = {
   status: "APPROVED",
 };
 
-export const bootstrapRootEntities = async () => {
+export const bootstrapRoot = async () => {
   const zapSpaces = await db.insert("spaces", space).run(pool);
   const zapAccounts = await db.insert("accounts", account).run(pool);
   const zapGeoEntities = await db.insert("geo_entities", geoEntities).run(pool);
