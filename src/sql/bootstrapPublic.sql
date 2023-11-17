@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS public.triples (
     id text PRIMARY KEY NOT NULL,
     entity_id text NOT NULL REFERENCES public.geo_entities(id),
     attribute_id text NOT NULL REFERENCES public.geo_entities(id),
-    value_type text NOT NULL,
+    value_type text NOT NULL CHECK(value_type IN ('number', 'string', 'entity', 'image', 'date', 'url')),
     value_id text NOT NULL,
     number_value text,
     string_value text,
@@ -136,6 +136,12 @@ CREATE TABLE IF NOT EXISTS public.actions (
     proposed_version_id text REFERENCES public.proposed_versions(id),
     version_id text REFERENCES public.versions(id)
 );
+
+--
+-- Make sure triples with protected = true have a unique constraint that prevents overwrites
+-- TODO: Confirm that value_id is the correct column to use here for this unique constraint
+--
+-- ALTER TABLE public.triples ADD CONSTRAINT triples_unique_entity_attribute UNIQUE (entity_id, attribute_id, value_id) WHERE (is_protected = true);
 
 
 
