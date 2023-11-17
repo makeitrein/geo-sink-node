@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS public.versions (
 );
 
 CREATE TABLE IF NOT EXISTS public.actions (
-    id serial PRIMARY KEY NOT NULL,
+    id serial PRIMARY KEY,
     action_type text NOT NULL,
     entity text NOT NULL,
     attribute text,

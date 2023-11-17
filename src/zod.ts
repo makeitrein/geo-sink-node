@@ -13,7 +13,7 @@ export const ZodAction = z.object({
   type: z.enum(["createTriple", "deleteTriple"]),
   entityId: z.string(),
   attributeId: z.string(),
-  // entityName: z.string().optional().nullish(),
+  entityName: z.string().nullish(),
   value: z
     .object({
       type: z
@@ -36,7 +36,9 @@ export const ZodActionsResponse = z.object({
 });
 export type ActionsResponse = z.infer<typeof ZodActionsResponse>;
 
-export const ZodEntryWithActionsResponse = ZodEntry.merge(ZodActionsResponse);
+export const ZodEntryWithActionsResponse = ZodEntry.extend({
+  actionsResponse: ZodActionsResponse,
+});
 export type EntryWithActionsResponse = z.infer<
   typeof ZodEntryWithActionsResponse
 >;

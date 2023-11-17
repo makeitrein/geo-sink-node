@@ -59,16 +59,20 @@ export const startGeoStream = async () => {
     const roleGrantedResponse = ZodRoleGrantedStreamResponse.safeParse(message);
     const roleRevokedResponse = ZodRoleRevokedStreamResponse.safeParse(message);
 
+    if (Number(clock.number.toString()) % 100 === 0) {
+      console.log(`Block number: ${clock.number}`);
+    }
+
     if (entryResponse.success) {
-      console.log("TODO: Handle entryResponse");
+      // console.log("TODO: Handle entryResponse");
       populateEntries(entryResponse.data.entries);
     } else if (roleGrantedResponse.success) {
-      console.log("TODO: Handle roleGrantedResponse");
+      // console.log("TODO: Handle roleGrantedResponse");
     } else if (roleRevokedResponse.success) {
-      console.log("TODO: Handle roleRevokedResponse");
+      // console.log("TODO: Handle roleRevokedResponse");
     } else if (message.entries && entryResponse.error) {
-      logger.error("Unknown response at block " + clock.number);
-      logger.error(entryResponse.error);
+      // logger.error("Unknown response at block " + clock.number);
+      // logger.error(entryResponse.error);
     } else if (message.rolesGranted && roleGrantedResponse.error) {
       /* 
     Note: we're receiving some extra role granted / role revoked noise since the substream

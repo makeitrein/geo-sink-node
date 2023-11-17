@@ -14,7 +14,7 @@ export const populateEntries = async (entries: z.infer<typeof ZodEntry>[]) => {
     const unsafeResponse = await actionsFromURI(entry.uri);
     const response = ZodActionsResponse.safeParse(unsafeResponse);
     if (response.success) {
-      geoEntries.push({ ...entry, ...response.data });
+      geoEntries.push({ ...entry, actionsResponse: response.data });
     } else {
       logger.info(unsafeResponse);
       console.error(response.error);
@@ -50,17 +50,19 @@ export const toAccounts = (geoEntries: EntryWithActionsResponse[]) => {
 };
 
 export const toActions = (geoEntries: EntryWithActionsResponse[]) => {
-  const actions: s.accounts.Insertable[] = geoEntries.flatMap((geoEntry) => {
-    return geoEntry.actions.map((action) => {
+  const actions: s.actions.Insertable[] = geoEntries.flatMap((geoEntry) => {
+    return geoEntry.actionsResponse.actions.map((action) => {
       return {
-        id: "FIXME!",
         type: action.type,
         entity_id: action.entityId,
         attribute_id: action.attributeId,
-        // entity_name: action.entityName,
+        entity_name: action.entityName,
         value_type: action.value.type,
         value_id: action.value.id,
         value_value: action.value.value,
+
+        action_type: action.type,
+        entity: action.entityId,
       };
     });
   });

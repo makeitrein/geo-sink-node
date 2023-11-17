@@ -13,7 +13,8 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "nukePublic": "ts-node ./src/utils/executeSql.ts ./src/sql/nukePublic.sql"
+    "nukePublic": "ts-node ./src/utils/executeSql.ts ./src/sql/nukePublic.sql",
+    "zapatos": "dotenv -e .env -- npx zapatos"
   },
   "dependencies": {
     "@substreams/core": "^0.6.2",
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@tsconfig/recommended": "latest",
     "@types/node": "latest",
+    "dotenv-cli": "^7.3.0",
     "typescript": "latest"
   }
 }
