@@ -1,15 +1,15 @@
-import {
-  authIssue,
-  createRegistry,
-  createRequest
-} from "@substreams/core";
+import { authIssue, createRegistry, createRequest } from "@substreams/core";
 import { readPackageFromFile } from "@substreams/manifest";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import { populateEntries } from "./src/populate.js";
 import { invariant } from "./src/utils/invariant.js";
 import { logger } from "./src/utils/logger.js";
-import { EntryStreamResponse, RoleGrantedStreamResponse, RoleRevokedStreamResponse } from "./src/zod.js";
+import {
+  ZodEntryStreamResponse,
+  ZodRoleGrantedStreamResponse,
+  ZodRoleRevokedStreamResponse,
+} from "./src/zod.js";
 
 dotenv.config();
 
@@ -20,11 +20,9 @@ invariant(substreamsApiKey, "SUBSTREAMS_API_KEY is required");
 const authIssueUrl = process.env.AUTH_ISSUE_URL;
 invariant(authIssueUrl, "AUTH_ISSUE_URL is required");
 
-// Configure logging with TSLog
-logger.enable();
+logger.enable("pretty");
 logger.info("Logging enabled");
 
-// Download Substream package
 const manifest = "./geo-substream.spkg";
 const substreamPackage = await readPackageFromFile(manifest);
 logger.info("Substream package downloaded");
@@ -41,11 +39,7 @@ const finalBlocksOnly = false; // Set to true to only process blocks that have p
 // Connect Transport
 // const startCursor = await cursor.readCursor(cursorPath, httpCursorAuth);
 const registry = createRegistry(substreamPackage);
-const transport = createDefaultTransport(
-  substreamsEndpoint,
-  token,
-  registry,
-);
+const transport = createDefaultTransport(substreamsEndpoint, token, registry);
 const request = createRequest({
   substreamPackage,
   outputModule,
@@ -59,10 +53,10 @@ const request = createRequest({
 const emitter = new BlockEmitter(transport, request, registry);
 
 // Stream Blocks
-emitter.on("anyMessage", (message, cursor, clock) => {  
-  const entryResponse = EntryStreamResponse.safeParse(message)
-  const roleGrantedResponse = RoleGrantedStreamResponse.safeParse(message);
-  const roleRevokedResponse = RoleRevokedStreamResponse.safeParse(message);
+emitter.on("anyMessage", (message, cursor, clock) => {
+  const entryResponse = ZodEntryStreamResponse.safeParse(message);
+  const roleGrantedResponse = ZodRoleGrantedStreamResponse.safeParse(message);
+  const roleRevokedResponse = ZodRoleRevokedStreamResponse.safeParse(message);
 
   if (entryResponse.success) {
     populateEntries(entryResponse.data.entries);

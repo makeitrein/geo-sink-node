@@ -1,19 +1,29 @@
 import type * as s from "zapatos/schema";
 import { z } from "zod";
-import { decodeUri } from "./utils/uri.js";
-import { Entry } from "./zod.js";
+import { actionsFromURI } from "./utils/actions.js";
+import {
+  ZodActionsResponse,
+  ZodEntry,
+  type EntryWithActionsResponse,
+} from "./zod.js";
 
-export const populateEntries = async (entries: z.infer<typeof Entry>[]) => {
-  const entriesWithActions = await Promise.all(
-    entries.map(async (entry) => {
-      const actions = await decodeUri(entry.uri);
-      return { ...entry, actions };
-    })
-  );
+export const populateEntries = async (entries: z.infer<typeof ZodEntry>[]) => {
+  const entriesWithActionResponse: EntryWithActionsResponse[] = [];
+  for (const entry of entries) {
+    const response = ZodActionsResponse.safeParse(
+      await actionsFromURI(entry.uri)
+    );
+    if (response.success) {
+      entriesWithActionResponse.push({ ...entry, ...response.data });
+    } else {
+      console.error(response.error);
+    }
+  }
+
+  console.log(entriesWithActionResponse);
 
   const accounts: s.accounts.Insertable[] = [];
   const actions: s.actions.Insertable[] = [];
-  const cursors: s.cursors.Insertable[] = [];
   const entities: s.entities.Insertable[] = [];
   const log_entries: s.log_entries.Insertable[] = [];
   const proposals: s.proposals.Insertable[] = [];
@@ -26,5 +36,5 @@ export const populateEntries = async (entries: z.infer<typeof Entry>[]) => {
   const triples: s.triples.Insertable[] = [];
   const versions: s.versions.Insertable[] = [];
 
-  entriesWithActions.forEach((entry) => {});
+  //   entriesActions.forEach((entry) => {});
 };
