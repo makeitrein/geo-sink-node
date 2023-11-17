@@ -60,17 +60,23 @@ export const startGeoStream = async () => {
     const roleRevokedResponse = ZodRoleRevokedStreamResponse.safeParse(message);
 
     if (entryResponse.success) {
+      console.log("TODO: Handle entryResponse");
       populateEntries(entryResponse.data.entries);
     } else if (roleGrantedResponse.success) {
+      console.log("TODO: Handle roleGrantedResponse");
     } else if (roleRevokedResponse.success) {
-    } else {
+      console.log("TODO: Handle roleRevokedResponse");
+    } else if (message.entries && entryResponse.error) {
+      logger.error("Unknown response at block " + clock.number);
+      logger.error(entryResponse.error);
+    } else if (message.rolesGranted && roleGrantedResponse.error) {
       /* 
     Note: we're receiving some extra role granted / role revoked noise since the substream
     is configured to listen to any contract, not just Geo-specific spaces. 
     
     We're filtering these extraneous access control changes in the downstream handlers, but it would be better to filter it out at the substream level.
     */
-      logger.info("Unknown response at block " + clock.number);
+    } else if (message.rolesRevoked && roleRevokedResponse.error) {
     }
   });
 

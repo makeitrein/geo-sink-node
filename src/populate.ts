@@ -21,6 +21,8 @@ export const populateEntries = async (entries: z.infer<typeof ZodEntry>[]) => {
     }
   }
 
+  console.log(geoEntries);
+
   const accounts: s.accounts.Insertable[] = [];
   const actions: s.actions.Insertable[] = [];
   const entities: s.entities.Insertable[] = [];

@@ -43,7 +43,7 @@ export type EntryWithActionsResponse = z.infer<
 
 export const ZodRoleGranted = z.object({
   id: z.string(),
-  role: z.enum(["admin", "member", "moderator"]),
+  role: z.enum(["ADMIN", "MEMBER", "MODERATOR"]),
   account: z.string(),
   sender: z.string(),
   space: z.string(),
@@ -52,7 +52,7 @@ export type RoleGranted = z.infer<typeof ZodRoleGranted>;
 
 export const ZodRoleRevoked = z.object({
   id: z.string(),
-  role: z.enum(["admin", "member", "moderator"]),
+  role: z.enum(["ADMIN", "MEMBER", "MODERATOR"]),
   account: z.string(),
   sender: z.string(),
   space: z.string(),
