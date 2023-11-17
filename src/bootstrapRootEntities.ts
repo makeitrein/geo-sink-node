@@ -37,6 +37,7 @@ import {
   WEB_URL,
 } from "./constants/systemIds.js";
 import { pool } from "./utils/pool.js";
+import { generateTripleId } from "./utils/triples.js";
 
 const entities: string[] = [
   TYPES,
@@ -145,7 +146,12 @@ const geoEntities: s.geo_entities.Insertable[] = entities.map((entity) => ({
 
 const namesTriples: s.triples.Insertable[] = Object.entries(names).map(
   ([id, name]) => ({
-    id,
+    id: generateTripleId({
+      space_id: ROOT_SPACE_ID,
+      entity_id: id,
+      attribute_id: NAME,
+      value_id: name,
+    }),
     entity_id: id,
     attribute_id: NAME,
     value_type: "string",
@@ -160,7 +166,12 @@ const attributeTriples: s.triples.Insertable[] = Object.entries(attributes)
   .map(([id, entity_value_id]) => [
     /* Giving these entities a type of attribute */
     {
-      id,
+      id: generateTripleId({
+        space_id: ROOT_SPACE_ID,
+        entity_id: id,
+        attribute_id: TYPES,
+        value_id: ATTRIBUTE,
+      }),
       entity_id: id,
       attribute_id: TYPES,
       value_type: "entity",
@@ -171,7 +182,12 @@ const attributeTriples: s.triples.Insertable[] = Object.entries(attributes)
     },
     /* Giving these attributes a value type of the type they are */
     {
-      id,
+      id: generateTripleId({
+        space_id: ROOT_SPACE_ID,
+        entity_id: id,
+        attribute_id: VALUE_TYPE,
+        value_id: ATTRIBUTE,
+      }),
       entity_id: id,
       attribute_id: VALUE_TYPE,
       value_type: "entity",
@@ -187,7 +203,12 @@ const typeTriples: s.triples.Insertable[] = Object.entries(types)
   .map(([id, attributes]) => [
     /* Giving these entities a type of type */
     {
-      id,
+      id: generateTripleId({
+        space_id: ROOT_SPACE_ID,
+        entity_id: id,
+        attribute_id: TYPES,
+        value_id: SCHEMA_TYPE,
+      }),
       entity_id: id,
       attribute_id: TYPES,
       value_type: "entity",
@@ -198,7 +219,12 @@ const typeTriples: s.triples.Insertable[] = Object.entries(types)
     },
     /* Giving these entities an attribute of attribute */
     ...attributes.map((attribute) => ({
-      id,
+      id: generateTripleId({
+        space_id: ROOT_SPACE_ID,
+        entity_id: id,
+        attribute_id: ATTRIBUTES,
+        value_id: attribute,
+      }),
       entity_id: id,
       attribute_id: ATTRIBUTES,
       value_type: "entity",
@@ -230,14 +256,16 @@ const proposal: s.proposals.Insertable = {
   status: "APPROVED",
 };
 
-const zapSpaces = await db.insert("spaces", space).run(pool);
-const zapAccounts = await db.insert("accounts", account).run(pool);
-const zapGeoEntities = await db.insert("geo_entities", geoEntities).run(pool);
-const zapNamesTriples = await db.insert("triples", namesTriples).run(pool);
-const zapTypeTriples = await db.insert("triples", typeTriples).run(pool);
-const zapAttributeTriples = await db
-  .insert("triples", attributeTriples)
-  .run(pool);
-const zapProposals = await db.insert("proposals", proposal).run(pool);
+export const bootstrapRootEntities = async () => {
+  const zapSpaces = await db.insert("spaces", space).run(pool);
+  const zapAccounts = await db.insert("accounts", account).run(pool);
+  const zapGeoEntities = await db.insert("geo_entities", geoEntities).run(pool);
+  const zapNamesTriples = await db.insert("triples", namesTriples).run(pool);
+  const zapTypeTriples = await db.insert("triples", typeTriples).run(pool);
+  const zapAttributeTriples = await db
+    .insert("triples", attributeTriples)
+    .run(pool);
+  const zapProposals = await db.insert("proposals", proposal).run(pool);
 
-/* TODO: Confirm with Byron about proposal version to action id mapping structure */
+  /* TODO: Confirm with Byron about proposal version to action id mapping structure */
+};

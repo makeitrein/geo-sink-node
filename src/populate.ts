@@ -1,6 +1,7 @@
 import type * as s from "zapatos/schema";
 import { z } from "zod";
 import { actionsFromURI } from "./utils/actions.js";
+import { generateTripleId } from "./utils/triples.js";
 import { ZodEntry, ZodUriData, type FullEntry } from "./zod.js";
 
 export const populateEntries = async (
@@ -101,7 +102,12 @@ export const toTriples = (fullEntries: FullEntry[]) => {
       const space_id = fullEntry.space;
       const deleted = action_type === "deleteTriple";
       const is_protected = false;
-      const id = `${space_id}:${entity_id}:${attribute_id}:${value_id}`;
+      const id = generateTripleId({
+        space_id,
+        entity_id,
+        attribute_id,
+        value_id,
+      });
 
       const entity_value_id = value_type === "entity" ? value_id : null;
       const string_value = value_type === "string" ? action.value.value : null;

@@ -1,16 +1,9 @@
 import { Command } from "commander";
 import * as zg from "zapatos/generate";
 import { startGeoStream } from "./src/stream.js";
-import { runSqlFile } from "./src/utils/runSqlFile.js";
+import { resetDatabase } from "./src/utils/resetDatabase.js";
 
 const program = new Command();
-
-const resetDatabase = async () => {
-  await runSqlFile("./src/sql/nukePublic.sql");
-  await runSqlFile("./src/sql/bootstrapPublic.sql");
-  await runSqlFile("./src/sql/bootstrapCache.sql");
-  await runSqlFile("./src/sql/bootstrapFunctions.sql");
-};
 
 program
   .option("--from-genesis", "Start from genesis block")
