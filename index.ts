@@ -33,7 +33,7 @@ try {
   }
 
   if (options.fromGenesis) {
-    resetDatabase();
+    await resetDatabase();
   }
 
   if (options.fromCache) console.log("from cache");

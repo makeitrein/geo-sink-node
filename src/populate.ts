@@ -1,6 +1,8 @@
+import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 import { z } from "zod";
 import { actionsFromURI, isValidAction } from "./utils/actions.js";
+import { pool } from "./utils/pool.js";
 import { generateTripleId } from "./utils/triples.js";
 import { ZodEntry, ZodUriData, type FullEntry } from "./zod.js";
 
@@ -27,18 +29,45 @@ export const populateEntries = async (
 
   console.log(fullEntries);
 
-  const accounts: s.accounts.Insertable[] = [];
-  const actions: s.actions.Insertable[] = [];
-  const entities: s.geo_entities.Insertable[] = [];
+  const accounts: s.accounts.Insertable[] = toAccounts(fullEntries);
+  await db
+    .upsert("accounts", accounts, ["id"], { updateColumns: db.doNothing })
+    .run(pool);
+
+  const actions: s.actions.Insertable[] = toActions(fullEntries);
+  await db.insert("actions", actions).run(pool);
+
+  const geoEntities: s.geo_entities.Insertable[] = toGeoEntities(fullEntries);
+  await db
+    .upsert("geo_entities", geoEntities, ["id"], {
+      updateColumns: db.doNothing,
+    })
+    .run(pool);
+
   const log_entries: s.log_entries.Insertable[] = [];
   const proposals: s.proposals.Insertable[] = [];
   const proposed_versions: s.proposed_versions.Insertable[] = [];
   const space_admins: s.space_admins.Insertable[] = [];
   const space_editor_controllers: s.space_editor_controllers.Insertable[] = [];
   const space_editors: s.space_editors.Insertable[] = [];
-  const spaces: s.spaces.Insertable[] = [];
+
+  const spaces: s.spaces.Insertable[] = toSpaces(fullEntries, blockNumber);
+  await db
+    .upsert("spaces", spaces, ["id"], {
+      updateColumns: db.doNothing,
+    })
+    .run(pool);
+
   const subspaces: s.subspaces.Insertable[] = [];
-  const triples: s.triples.Insertable[] = [];
+
+  /* Todo: How are duplicate triples being handled in Geo? I know it's possible, but if the triple ID is defined, what does that entail */
+  const triples: s.triples.Insertable[] = toTriples(fullEntries);
+  await db
+    .upsert("triples", triples, ["id"], {
+      updateColumns: db.doNothing,
+    })
+    .run(pool);
+
   const versions: s.versions.Insertable[] = [];
 };
 

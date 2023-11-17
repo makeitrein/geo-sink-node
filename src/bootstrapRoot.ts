@@ -257,15 +257,12 @@ const proposal: s.proposals.Insertable = {
 };
 
 export const bootstrapRoot = async () => {
-  const zapSpaces = await db.insert("spaces", space).run(pool);
-  const zapAccounts = await db.insert("accounts", account).run(pool);
-  const zapGeoEntities = await db.insert("geo_entities", geoEntities).run(pool);
-  const zapNamesTriples = await db.insert("triples", namesTriples).run(pool);
-  const zapTypeTriples = await db.insert("triples", typeTriples).run(pool);
-  const zapAttributeTriples = await db
-    .insert("triples", attributeTriples)
-    .run(pool);
-  const zapProposals = await db.insert("proposals", proposal).run(pool);
-
+  await db.insert("spaces", space).run(pool);
+  await db.insert("accounts", account).run(pool);
+  await db.insert("geo_entities", geoEntities).run(pool);
+  await db.insert("triples", namesTriples).run(pool);
+  await db.insert("triples", typeTriples).run(pool);
+  await db.insert("triples", attributeTriples).run(pool);
+  await db.insert("proposals", proposal).run(pool);
   /* TODO: Confirm with Byron about proposal version to action id mapping structure */
 };

@@ -1,8 +1,8 @@
-CREATE TABLE IF NOT EXISTS public.accounts (
+CREATE TABLE public.accounts (
     id text PRIMARY KEY NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS public.cursors (
+CREATE TABLE public.cursors (
     id integer PRIMARY KEY NOT NULL,
     cursor text NOT NULL,
     block_number text
@@ -12,7 +12,7 @@ COMMENT ON TABLE public.cursors IS '@name substreamCursor';
 
 
 
-CREATE TABLE IF NOT EXISTS public.spaces (
+CREATE TABLE public.spaces (
     id text PRIMARY KEY NOT NULL,
     created_at_block integer NOT NULL,
     is_root_space boolean NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS public.spaces (
     cover text
 );
 
-CREATE TABLE IF NOT EXISTS public.geo_entities (
+CREATE TABLE public.geo_entities (
     id text PRIMARY KEY NOT NULL,
     name character varying,
     description character varying,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS public.geo_entities (
 ALTER TABLE public.geo_entities ADD CONSTRAINT attribute_value_type_id_fk FOREIGN KEY (attribute_value_type_id) REFERENCES public.geo_entities(id);
 
 
-CREATE TABLE IF NOT EXISTS public.log_entries (
+CREATE TABLE public.log_entries (
     id text PRIMARY KEY NOT NULL,
     created_at_block text NOT NULL,
     uri text NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS public.log_entries (
 );
 
 
-CREATE TABLE IF NOT EXISTS public.proposals (
+CREATE TABLE public.proposals (
     id text PRIMARY KEY NOT NULL,
     space_id text NOT NULL REFERENCES public.spaces(id),
     name text,
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS public.proposals (
 );
 
 
-CREATE TABLE IF NOT EXISTS public.proposed_versions (
+CREATE TABLE public.proposed_versions (
     id text PRIMARY KEY NOT NULL,
     name text,
     description text,
@@ -70,33 +70,33 @@ CREATE TABLE IF NOT EXISTS public.proposed_versions (
 
 
 
-CREATE TABLE IF NOT EXISTS public.space_admins (
+CREATE TABLE public.space_admins (
     space_id text NOT NULL REFERENCES public.spaces(id),
     account_id text NOT NULL REFERENCES public.accounts(id),
     CONSTRAINT space_admins_unique_account_space_pair UNIQUE (account_id, space_id)
 );
 
-CREATE TABLE IF NOT EXISTS public.space_editors (
+CREATE TABLE public.space_editors (
     space_id text NOT NULL REFERENCES public.spaces(id),
     account_id text NOT NULL REFERENCES public.accounts(id),
     CONSTRAINT space_editors_unique_account_space_pair UNIQUE (account_id, space_id)
 );
 
 
-CREATE TABLE IF NOT EXISTS public.space_editor_controllers (
+CREATE TABLE public.space_editor_controllers (
     space_id text NOT NULL REFERENCES public.spaces(id),
     account_id text NOT NULL REFERENCES public.accounts(id),
     CONSTRAINT space_editor_controllers_unique_account_space_pair UNIQUE (account_id, space_id)
 );
 
 
-CREATE TABLE IF NOT EXISTS public.subspaces (
+CREATE TABLE public.subspaces (
     id text PRIMARY KEY NOT NULL,
     parent_space_id text NOT NULL REFERENCES public.spaces(id),
     child_space_id text NOT NULL REFERENCES public.spaces(id)
 );
 
-CREATE TABLE IF NOT EXISTS public.triples (
+CREATE TABLE public.triples (
     id text PRIMARY KEY NOT NULL,
     entity_id text NOT NULL REFERENCES public.geo_entities(id),
     attribute_id text NOT NULL REFERENCES public.geo_entities(id),
@@ -108,10 +108,11 @@ CREATE TABLE IF NOT EXISTS public.triples (
     entity_value_id text REFERENCES public.geo_entities(id),
     is_protected boolean NOT NULL,
     space_id text NOT NULL REFERENCES public.spaces(id),
-    deleted boolean DEFAULT false NOT NULL
+    deleted boolean DEFAULT false NOT NULL,
+    CONSTRAINT triples_unique_entity_attribute UNIQUE (entity_id, attribute_id, value_id)
 );
 
-CREATE TABLE IF NOT EXISTS public.versions (
+CREATE TABLE public.versions (
     id text PRIMARY KEY NOT NULL,
     name text,
     description text,
@@ -122,11 +123,11 @@ CREATE TABLE IF NOT EXISTS public.versions (
     entity_id text REFERENCES public.geo_entities(id)
 );
 
-CREATE TABLE IF NOT EXISTS public.actions (
+CREATE TABLE public.actions (
     id serial PRIMARY KEY,
     action_type text NOT NULL,
-    entity text NOT NULL,
-    attribute text,
+    entity_id text REFERENCES public.geo_entities(id) NOT NULL, 
+    attribute_id text REFERENCES public.geo_entities(id) NOT NULL, 
     value_type text,
     value_id text,
     number_value text,
@@ -136,12 +137,6 @@ CREATE TABLE IF NOT EXISTS public.actions (
     proposed_version_id text REFERENCES public.proposed_versions(id),
     version_id text REFERENCES public.versions(id)
 );
-
---
--- Make sure triples with protected = true have a unique constraint that prevents overwrites
--- TODO: Confirm that value_id is the correct column to use here for this unique constraint
---
--- ALTER TABLE public.triples ADD CONSTRAINT triples_unique_entity_attribute UNIQUE (entity_id, attribute_id, value_id) WHERE (is_protected = true);
 
 
 
