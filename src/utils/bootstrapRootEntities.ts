@@ -149,6 +149,11 @@ const types: [string, string[]][] = [
   [PERSON_TYPE, [AVATAR_ATTRIBUTE, COVER_ATTRIBUTE]],
 ];
 
+// const geoEntities: s.geo_entities.Insertable[] = entities.map((entity) => ({
+//   id: entity,
+//   space: "root",
+// }));
+
 // export function bootstrapRootSpaceCoreTypes(
 //   space: string,
 //   createdAtBlock: BigInt,
