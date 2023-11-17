@@ -10,10 +10,10 @@ export const ZodEntry = z.object({
 export type Entry = z.infer<typeof ZodEntry>;
 
 export const ZodAction = z.object({
-  id: z.string(),
-  space: z.string(),
+  type: z.enum(["createTriple", "deleteTriple"]),
   entityId: z.string(),
   attributeId: z.string(),
+  entityName: z.string().nullable(),
   value: z
     .object({
       type: z
@@ -25,9 +25,8 @@ export const ZodAction = z.object({
     .refine((data) => data.id || data.value, {
       message: "Either id or value must be provided",
     }),
-  entityName: z.string().nullable(),
-  type: z.literal("createTriple"),
 });
+
 export type Action = z.infer<typeof ZodAction>;
 
 export const ZodActionsResponse = z.object({
