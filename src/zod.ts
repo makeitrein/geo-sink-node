@@ -39,32 +39,28 @@ export const ZodFullEntry = ZodEntry.extend({
 });
 export type FullEntry = z.infer<typeof ZodFullEntry>;
 
-export const ZodRoleGranted = z.object({
+export const ZodRoleChange = z.object({
   id: z.string(),
   role: z.enum(["ADMIN", "MEMBER", "MODERATOR"]),
   account: z.string(),
   sender: z.string(),
   space: z.string(),
 });
-export type RoleGranted = z.infer<typeof ZodRoleGranted>;
-
-export const ZodRoleRevoked = z.object({
-  id: z.string(),
-  role: z.enum(["ADMIN", "MEMBER", "MODERATOR"]),
-  account: z.string(),
-  sender: z.string(),
-  space: z.string(),
-});
-export type RoleRevoked = z.infer<typeof ZodRoleRevoked>;
+export type RoleGranted = z.infer<typeof ZodRoleChange>;
 
 export const ZodEntryStreamResponse = z.object({
   entries: z.array(ZodEntry),
 });
 
-export const ZodRoleGrantedStreamResponse = z.object({
-  rolesGranted: z.array(ZodRoleGranted),
-});
-
-export const ZodRoleRevokedStreamResponse = z.object({
-  rolesRevoked: z.array(ZodRoleRevoked),
+export const ZodRoleChangeStreamResponse = z.object({
+  roleChanges: z.array(
+    z
+      .object({
+        granted: ZodRoleChange.optional(),
+        revoked: ZodRoleChange.optional(),
+      })
+      .refine((data) => (data.granted ? !data.revoked : data.revoked), {
+        message: "Only one of granted or revoked must be provided",
+      })
+  ),
 });

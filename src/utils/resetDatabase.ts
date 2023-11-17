@@ -6,5 +6,6 @@ export const resetDatabase = async () => {
   await runSqlFile("./src/sql/bootstrapPublic.sql");
   await runSqlFile("./src/sql/bootstrapCache.sql");
   await runSqlFile("./src/sql/bootstrapFunctions.sql");
+
   await bootstrapRoot();
 };

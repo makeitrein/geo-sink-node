@@ -5,11 +5,7 @@ import dotenv from "dotenv";
 import { populateEntries } from "./populate.js";
 import { invariant } from "./utils/invariant.js";
 import { logger } from "./utils/logger.js";
-import {
-  ZodEntryStreamResponse,
-  ZodRoleGrantedStreamResponse,
-  ZodRoleRevokedStreamResponse,
-} from "./zod.js";
+import { ZodEntryStreamResponse, ZodRoleChangeStreamResponse } from "./zod.js";
 
 dotenv.config();
 
@@ -24,7 +20,7 @@ export const startGeoStream = async () => {
   logger.enable("pretty");
   logger.info("Logging enabled");
 
-  const manifest = "./geo-substream.spkg";
+  const manifest = "./geo-substream-v1.0.3.spkg";
   const substreamPackage = await readPackageFromFile(manifest);
   logger.info("Substream package downloaded");
 
@@ -32,7 +28,7 @@ export const startGeoStream = async () => {
   const outputModule = "geo_out";
   const startBlockNum = 36472424;
   const productionMode = true;
-  const finalBlocksOnly = false; // Set to true to only process blocks that have pass finality
+  const finalBlocksOnly = false; // TODO: Confirm with Byron - Set to true to only process blocks that have pass finality
 
   // Cursor
   // const cursor = cursorPath.startsWith("http") ? httpCursor : fileCursor;
@@ -56,8 +52,7 @@ export const startGeoStream = async () => {
   // Stream Blocks
   emitter.on("anyMessage", (message, cursor, clock) => {
     const entryResponse = ZodEntryStreamResponse.safeParse(message);
-    const roleGrantedResponse = ZodRoleGrantedStreamResponse.safeParse(message);
-    const roleRevokedResponse = ZodRoleRevokedStreamResponse.safeParse(message);
+    const roleChangeResponse = ZodRoleChangeStreamResponse.safeParse(message);
 
     const blockNumber = Number(clock.number.toString());
 
@@ -65,24 +60,15 @@ export const startGeoStream = async () => {
       console.log(`Block number: ${clock.number}`);
     }
 
+    console.debug("message", message);
+
     if (entryResponse.success) {
-      // console.log("TODO: Handle entryResponse");
+      console.log("TODO: Handle entryResponse");
       populateEntries(entryResponse.data.entries, blockNumber);
-    } else if (roleGrantedResponse.success) {
-      // console.log("TODO: Handle roleGrantedResponse");
-    } else if (roleRevokedResponse.success) {
-      // console.log("TODO: Handle roleRevokedResponse");
-    } else if (message.entries && entryResponse.error) {
-      // logger.error("Unknown response at block " + clock.number);
-      // logger.error(entryResponse.error);
-    } else if (message.rolesGranted && roleGrantedResponse.error) {
-      /* 
-    Note: we're receiving some extra role granted / role revoked noise since the substream
-    is configured to listen to any contract, not just Geo-specific spaces. 
-    
-    We're filtering these extraneous access control changes in the downstream handlers, but it would be better to filter it out at the substream level.
-    */
-    } else if (message.rolesRevoked && roleRevokedResponse.error) {
+    } else if (roleChangeResponse.success) {
+      console.log("TODO: Handle roleGrantedResponse");
+    } else {
+      console.error("error", message);
     }
   });
 
