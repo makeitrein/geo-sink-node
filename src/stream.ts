@@ -59,13 +59,15 @@ export const startGeoStream = async () => {
     const roleGrantedResponse = ZodRoleGrantedStreamResponse.safeParse(message);
     const roleRevokedResponse = ZodRoleRevokedStreamResponse.safeParse(message);
 
-    if (Number(clock.number.toString()) % 100 === 0) {
+    const blockNumber = Number(clock.number.toString());
+
+    if (blockNumber % 100 === 0) {
       console.log(`Block number: ${clock.number}`);
     }
 
     if (entryResponse.success) {
       // console.log("TODO: Handle entryResponse");
-      populateEntries(entryResponse.data.entries);
+      populateEntries(entryResponse.data.entries, blockNumber);
     } else if (roleGrantedResponse.success) {
       // console.log("TODO: Handle roleGrantedResponse");
     } else if (roleRevokedResponse.success) {

@@ -16,11 +16,9 @@ export const ZodAction = z.object({
   entityName: z.string().nullish(),
   value: z
     .object({
-      type: z
-        .enum(["number", "string", "entity", "image", "date", "url"])
-        .nullable(),
-      id: z.string().optional(),
-      value: z.string().optional(),
+      type: z.enum(["number", "string", "entity", "image", "date", "url"]),
+      id: z.string(),
+      value: z.string(),
     })
     .refine((data) => data.id || data.value, {
       message: "Either id or value must be provided",
@@ -36,10 +34,10 @@ export const ZodUriData = z.object({
 });
 export type UriData = z.infer<typeof ZodUriData>;
 
-export const ZodEntryFull = ZodEntry.extend({
+export const ZodFullEntry = ZodEntry.extend({
   uriData: ZodUriData,
 });
-export type EntryFull = z.infer<typeof ZodEntryFull>;
+export type FullEntry = z.infer<typeof ZodFullEntry>;
 
 export const ZodRoleGranted = z.object({
   id: z.string(),

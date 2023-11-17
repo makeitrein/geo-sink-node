@@ -10,16 +10,7 @@ CREATE TABLE IF NOT EXISTS public.cursors (
 
 COMMENT ON TABLE public.cursors IS '@name substreamCursor';
 
-CREATE TABLE IF NOT EXISTS public.geo_entities (
-    id text PRIMARY KEY NOT NULL,
-    name character varying,
-    description character varying,
-    is_type boolean DEFAULT false,
-    is_attribute boolean DEFAULT false,
-    defined_in text NOT NULL,
-    attribute_value_type_id text,
-    version_id text
-);
+
 
 CREATE TABLE IF NOT EXISTS public.spaces (
     id text PRIMARY KEY NOT NULL,
@@ -28,6 +19,19 @@ CREATE TABLE IF NOT EXISTS public.spaces (
     entity text,
     cover text
 );
+
+CREATE TABLE IF NOT EXISTS public.geo_entities (
+    id text PRIMARY KEY NOT NULL,
+    name character varying,
+    description character varying,
+    is_type boolean DEFAULT false,
+    is_attribute boolean DEFAULT false,
+    defined_in_id text NOT NULL REFERENCES public.spaces(id),
+    attribute_value_type_id text,
+    version_id text
+);
+
+ALTER TABLE public.geo_entities ADD CONSTRAINT attribute_value_type_id_fk FOREIGN KEY (attribute_value_type_id) REFERENCES public.geo_entities(id);
 
 
 CREATE TABLE IF NOT EXISTS public.log_entries (
@@ -97,15 +101,15 @@ CREATE TABLE IF NOT EXISTS public.triples (
     id text PRIMARY KEY NOT NULL,
     entity_id text NOT NULL REFERENCES public.geo_entities(id),
     attribute_id text NOT NULL REFERENCES public.geo_entities(id),
-    value_id text NOT NULL REFERENCES public.geo_entities(id),
     value_type text NOT NULL,
-    defined_in text NOT NULL,
-    is_protected boolean NOT NULL,
-    deleted boolean DEFAULT false NOT NULL,
+    value_id text NOT NULL,
     number_value text,
-    array_value text,
     string_value text,
-    entity_value text REFERENCES public.geo_entities(id)
+    array_value text,
+    entity_value_id text REFERENCES public.geo_entities(id),
+    is_protected boolean NOT NULL,
+    space_id text NOT NULL REFERENCES public.spaces(id),
+    deleted boolean DEFAULT false NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.versions (
@@ -134,8 +138,6 @@ CREATE TABLE IF NOT EXISTS public.actions (
     version_id text REFERENCES public.versions(id)
 );
 
-ALTER TABLE public.geo_entities ADD CONSTRAINT defined_in_fk FOREIGN KEY (defined_in) REFERENCES public.spaces(id);
-ALTER TABLE public.geo_entities ADD CONSTRAINT attribute_value_type_id_fk FOREIGN KEY (attribute_value_type_id) REFERENCES public.geo_entities(id);
 
 
 -- 
