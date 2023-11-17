@@ -2,8 +2,6 @@ CREATE TABLE IF NOT EXISTS public.accounts (
     id text PRIMARY KEY NOT NULL
 );
 
-
-
 CREATE TABLE IF NOT EXISTS public.cursors (
     id integer PRIMARY KEY NOT NULL,
     cursor text NOT NULL,
@@ -23,12 +21,21 @@ CREATE TABLE IF NOT EXISTS public.geo_entities (
     version_id text
 );
 
+CREATE TABLE IF NOT EXISTS public.spaces (
+    id text PRIMARY KEY NOT NULL,
+    created_at_block integer NOT NULL,
+    is_root_space boolean NOT NULL,
+    entity text,
+    cover text
+);
+
+
 CREATE TABLE IF NOT EXISTS public.log_entries (
     id text PRIMARY KEY NOT NULL,
     created_at_block text NOT NULL,
     uri text NOT NULL,
-    created_by text NOT NULL,
-    space text NOT NULL,
+    created_by_id text NOT NULL REFERENCES public.accounts(id),
+    space_id text NOT NULL REFERENCES public.spaces(id),
     mime_type text,
     decoded text,
     json text
@@ -37,12 +44,12 @@ CREATE TABLE IF NOT EXISTS public.log_entries (
 
 CREATE TABLE IF NOT EXISTS public.proposals (
     id text PRIMARY KEY NOT NULL,
-    space text NOT NULL,
+    space_id text NOT NULL REFERENCES public.spaces(id),
     name text,
     description text,
     created_at integer NOT NULL,
     created_at_block integer NOT NULL,
-    created_by text,
+    created_by_id text NOT NULL REFERENCES public.accounts(id),
     status text NOT NULL
 );
 
@@ -53,48 +60,37 @@ CREATE TABLE IF NOT EXISTS public.proposed_versions (
     description text,
     created_at integer NOT NULL,
     created_at_block integer NOT NULL,
-    created_by text NOT NULL,
+    created_by_id text NOT NULL REFERENCES public.accounts(id),
     entity text NOT NULL,
     proposal_id text REFERENCES public.proposals(id)
 );
 
-CREATE TABLE IF NOT EXISTS public.spaces (
-    id text PRIMARY KEY NOT NULL REFERENCES public.geo_entities(id),
-    address text UNIQUE NOT NULL,
-    created_at_block text,
-    is_root_space boolean,
-    admins text,
-    editor_controllers text,
-    editors text,
-    entity text,
-    cover text
-);
 
 
 CREATE TABLE IF NOT EXISTS public.space_admins (
-    space text NOT NULL REFERENCES public.spaces(address),
-    account text NOT NULL REFERENCES public.accounts(id),
-    CONSTRAINT space_admins_unique_account_space_pair UNIQUE (account, space)
+    space_id text NOT NULL REFERENCES public.spaces(id),
+    account_id text NOT NULL REFERENCES public.accounts(id),
+    CONSTRAINT space_admins_unique_account_space_pair UNIQUE (account_id, space_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.space_editors (
-    space text NOT NULL REFERENCES public.spaces(address),
-    account text NOT NULL REFERENCES public.accounts(id),
-    CONSTRAINT space_editors_unique_account_space_pair UNIQUE (account, space)
+    space_id text NOT NULL REFERENCES public.spaces(id),
+    account_id text NOT NULL REFERENCES public.accounts(id),
+    CONSTRAINT space_editors_unique_account_space_pair UNIQUE (account_id, space_id)
 );
 
 
 CREATE TABLE IF NOT EXISTS public.space_editor_controllers (
-    space text NOT NULL REFERENCES public.spaces(address),
-    account text NOT NULL REFERENCES public.accounts(id),
-    CONSTRAINT space_editor_controllers_unique_account_space_pair UNIQUE (account, space)
+    space_id text NOT NULL REFERENCES public.spaces(id),
+    account_id text NOT NULL REFERENCES public.accounts(id),
+    CONSTRAINT space_editor_controllers_unique_account_space_pair UNIQUE (account_id, space_id)
 );
 
 
 CREATE TABLE IF NOT EXISTS public.subspaces (
     id text PRIMARY KEY NOT NULL,
-    parent_space text NOT NULL REFERENCES public.spaces(id),
-    child_space text NOT NULL REFERENCES public.spaces(id)
+    parent_space_id text NOT NULL REFERENCES public.spaces(id),
+    child_space_id text NOT NULL REFERENCES public.spaces(id)
 );
 
 CREATE TABLE IF NOT EXISTS public.triples (
@@ -138,7 +134,7 @@ CREATE TABLE IF NOT EXISTS public.actions (
     version_id text REFERENCES public.versions(id)
 );
 
-ALTER TABLE public.geo_entities ADD CONSTRAINT defined_in_fk FOREIGN KEY (defined_in) REFERENCES public.spaces(address);
+ALTER TABLE public.geo_entities ADD CONSTRAINT defined_in_fk FOREIGN KEY (defined_in) REFERENCES public.spaces(id);
 ALTER TABLE public.geo_entities ADD CONSTRAINT attribute_value_type_id_fk FOREIGN KEY (attribute_value_type_id) REFERENCES public.geo_entities(id);
 
 
