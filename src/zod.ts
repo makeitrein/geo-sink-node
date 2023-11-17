@@ -18,7 +18,7 @@ export const ZodAction = z.object({
     .object({
       type: z.enum(["number", "string", "entity", "image", "date", "url"]),
       id: z.string(),
-      value: z.string(),
+      value: z.string(), // TODO: Confirm with Byron that both id and value always exist
     })
     .refine((data) => data.id || data.value, {
       message: "Either id or value must be provided",

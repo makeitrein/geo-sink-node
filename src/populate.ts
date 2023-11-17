@@ -124,3 +124,24 @@ export const toTriples = (fullEntries: FullEntry[]) => {
 
   return triples;
 };
+
+export const toSubspaces = (fullEntries: FullEntry[]) => {
+  /* Todo: Confirm with Goose and Byron where 
+  ```
+  :subspace {:id "442e1850-9de7-4002-a065-7bc8fcff2514"
+                            :name "Subspace"
+                            :value-type :relation}
+                            ```
+
+                            is coming from...
+
+       Table structure:
+       
+       ```CREATE TABLE IF NOT EXISTS public.subspaces (
+    id text PRIMARY KEY NOT NULL,
+    parent_space_id text NOT NULL REFERENCES public.spaces(id),
+    child_space_id text NOT NULL REFERENCES public.spaces(id)
+);
+```
+  */
+};
