@@ -1,6 +1,6 @@
 import type * as s from "zapatos/schema";
 import { z } from "zod";
-import { actionsFromURI } from "./utils/actions.js";
+import { actionsFromURI, isValidAction } from "./utils/actions.js";
 import { generateTripleId } from "./utils/triples.js";
 import { ZodEntry, ZodUriData, type FullEntry } from "./zod.js";
 
@@ -10,14 +10,18 @@ export const populateEntries = async (
 ) => {
   const fullEntries: FullEntry[] = [];
   for (const entry of entries) {
-    const unsafeResponse = await actionsFromURI(entry.uri);
-    const response = ZodUriData.safeParse(unsafeResponse);
-    if (response.success) {
-      fullEntries.push({ ...entry, uriData: response.data });
+    // First check if the general response conforms to what we expect
+    const uriResponse = ZodUriData.safeParse(await actionsFromURI(entry.uri));
+    if (uriResponse.success) {
+      // Then check if the actions conform to what we expect
+      console.log("Original Action Count", uriResponse.data.actions.length);
+      const actions = uriResponse.data.actions.filter(isValidAction);
+      console.log("Valid Action Count", actions.length);
+      fullEntries.push({ ...entry, uriData: { ...uriResponse.data, actions } });
     } else {
       console.error("Failed to parse URI data");
-      console.error(unsafeResponse);
-      console.error(response.error);
+      console.error(uriResponse);
+      console.error(uriResponse.error);
     }
   }
 

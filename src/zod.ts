@@ -9,6 +9,7 @@ export const ZodEntry = z.object({
 });
 export type Entry = z.infer<typeof ZodEntry>;
 
+// TODO: Confirm with Byron what constitutes a valid action
 export const ZodAction = z.object({
   type: z.enum(["createTriple", "deleteTriple"]),
   entityId: z.string(),
@@ -18,7 +19,7 @@ export const ZodAction = z.object({
     .object({
       type: z.enum(["number", "string", "entity", "image", "date", "url"]),
       id: z.string(),
-      value: z.string(), // TODO: Confirm with Byron that both id and value always exist
+      value: z.string().nullable(),
     })
     .refine((data) => data.id || data.value, {
       message: "Either id or value must be provided",
@@ -30,7 +31,7 @@ export type Action = z.infer<typeof ZodAction>;
 export const ZodUriData = z.object({
   type: z.string(),
   version: z.string(),
-  actions: z.array(ZodAction),
+  actions: z.array(z.any()), // Parsing immediately after receiving data
 });
 export type UriData = z.infer<typeof ZodUriData>;
 

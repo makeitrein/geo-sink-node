@@ -28,7 +28,7 @@ export const startGeoStream = async () => {
   const outputModule = "geo_out";
   const startBlockNum = 36472424;
   const productionMode = true;
-  const finalBlocksOnly = false; // TODO: Confirm with Byron - Set to true to only process blocks that have pass finality
+  const finalBlocksOnly = true; // TODO: Confirm with Byron - Set to true to only process blocks that have pass finality
 
   // Cursor
   // const cursor = cursorPath.startsWith("http") ? httpCursor : fileCursor;
@@ -60,10 +60,7 @@ export const startGeoStream = async () => {
       console.log(`Block number: ${clock.number}`);
     }
 
-    console.debug("message", message);
-
     if (entryResponse.success) {
-      console.log("TODO: Handle entryResponse");
       populateEntries(entryResponse.data.entries, blockNumber);
     } else if (roleChangeResponse.success) {
       console.log("TODO: Handle roleGrantedResponse");
