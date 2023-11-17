@@ -1,37 +1,38 @@
 {
-    "name": "geo-substreams-sink",
-    "version": "0.0.1",
-    "description": "Geo Substreams Sink",
-    "type": "module",
-    "exports": "./dist/index.js",
-    "types": "./dist/index.d.ts",
-    "files": [
-        "dist",
-        "src"
-    ],
-    "license": "MIT OR Apache-2.0",
-    "scripts": {
-        "build": "tsc",
-        "prepublishOnly": "npm run build"
-    },
-    "dependencies": {
-        "@substreams/core": "^0.6.2",
-        "@substreams/manifest": "^0.5.1",
-        "@substreams/node": "^0.3.0",
-        "commander": "latest",
-        "dotenv": "latest",
-        "fetch-retry": "^5.0.6",
-        "node-fetch": "^3.3.2",
-        "pg": "^8.11.3",
-        "pg-cursor": "^2.10.3",
-        "prom-client": "latest",
-        "tslog": "latest",
-        "zapatos": "^6.2.0",
-        "zod": "^3.22.4"
-    },
-    "devDependencies": {
-        "@tsconfig/recommended": "latest",
-        "@types/node": "latest",
-        "typescript": "latest"
-    }
+  "name": "geo-substreams-sink",
+  "version": "0.0.1",
+  "description": "Geo Substreams Sink",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "license": "MIT OR Apache-2.0",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "nukePublic": "ts-node ./src/utils/executeSql.ts ./src/sql/nukePublic.sql"
+  },
+  "dependencies": {
+    "@substreams/core": "^0.6.2",
+    "@substreams/manifest": "^0.5.1",
+    "@substreams/node": "^0.3.0",
+    "commander": "latest",
+    "dotenv": "latest",
+    "fetch-retry": "^5.0.6",
+    "node-fetch": "^3.3.2",
+    "pg": "^8.11.3",
+    "pg-cursor": "^2.10.3",
+    "prom-client": "latest",
+    "tslog": "latest",
+    "zapatos": "^6.2.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "latest",
+    "@types/node": "latest",
+    "typescript": "latest"
+  }
 }

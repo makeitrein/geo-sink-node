@@ -13,7 +13,7 @@ export const ZodAction = z.object({
   type: z.enum(["createTriple", "deleteTriple"]),
   entityId: z.string(),
   attributeId: z.string(),
-  entityName: z.string().nullable(),
+  // entityName: z.string().optional().nullish(),
   value: z
     .object({
       type: z

@@ -1,6 +1,7 @@
 import type * as s from "zapatos/schema";
 import { z } from "zod";
 import { actionsFromURI } from "./utils/actions.js";
+import { logger } from "./utils/logger.js";
 import {
   ZodActionsResponse,
   ZodEntry,
@@ -10,12 +11,12 @@ import {
 export const populateEntries = async (entries: z.infer<typeof ZodEntry>[]) => {
   const geoEntries: EntryWithActionsResponse[] = [];
   for (const entry of entries) {
-    const response = ZodActionsResponse.safeParse(
-      await actionsFromURI(entry.uri)
-    );
+    const unsafeResponse = await actionsFromURI(entry.uri);
+    const response = ZodActionsResponse.safeParse(unsafeResponse);
     if (response.success) {
       geoEntries.push({ ...entry, ...response.data });
     } else {
+      logger.info(unsafeResponse);
       console.error(response.error);
     }
   }
@@ -50,10 +51,11 @@ export const toActions = (geoEntries: EntryWithActionsResponse[]) => {
   const actions: s.accounts.Insertable[] = geoEntries.flatMap((geoEntry) => {
     return geoEntry.actions.map((action) => {
       return {
+        id: "FIXME!",
         type: action.type,
         entity_id: action.entityId,
         attribute_id: action.attributeId,
-        entity_name: action.entityName,
+        // entity_name: action.entityName,
         value_type: action.value.type,
         value_id: action.value.id,
         value_value: action.value.value,
