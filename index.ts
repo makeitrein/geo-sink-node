@@ -6,8 +6,10 @@ import {
 import { readPackageFromFile } from "@substreams/manifest";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import dotenv from 'dotenv';
+import { populateEntries } from "./src/populate.js";
 import { invariant } from "./src/utils/invariant.js";
 import { logger } from "./src/utils/logger.js";
+import { EntryStreamResponse, RoleGrantedStreamResponse, RoleRevokedStreamResponse } from "./src/zod.js";
 
 dotenv.config();
 
@@ -20,10 +22,12 @@ invariant(authIssueUrl, "AUTH_ISSUE_URL is required");
 
 // Configure logging with TSLog
 logger.enable();
+logger.info("Logging enabled");
 
 // Download Substream package
 const manifest = "./geo-substream.spkg";
 const substreamPackage = await readPackageFromFile(manifest);
+logger.info("Substream package downloaded");
 
 const { token } = await authIssue(substreamsApiKey, authIssueUrl);
 const outputModule = "geo_out";
@@ -55,7 +59,26 @@ const request = createRequest({
 const emitter = new BlockEmitter(transport, request, registry);
 
 // Stream Blocks
-emitter.on("anyMessage", (message, cursor, clock) => {});
+emitter.on("anyMessage", (message, cursor, clock) => {  
+  const entryResponse = EntryStreamResponse.safeParse(message)
+  const roleGrantedResponse = RoleGrantedStreamResponse.safeParse(message);
+  const roleRevokedResponse = RoleRevokedStreamResponse.safeParse(message);
+
+  if (entryResponse.success) {
+    populateEntries(entryResponse.data.entries);
+  } else if (roleGrantedResponse.success) {
+  } else if (roleRevokedResponse.success) {
+  } else {
+    /* 
+    Note: we're receiving some extra role granted / role revoked noise since the substream
+    is configured to listen to any contract, not just Geo-specific spaces. 
+    
+    We're filtering these extraneous access control changes in the downstream handlers, but it would be better to filter it out at the substream level.
+    */
+    logger.info("Unknown response at block " + clock.number);
+  }
+});
 
 // Start streaming
 await emitter.start();
+logger.info("Streaming started...");
