@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS public.cursors (
 
 COMMENT ON TABLE public.cursors IS '@name substreamCursor';
 
-CREATE TABLE IF NOT EXISTS public.entities (
+CREATE TABLE IF NOT EXISTS public.geo_entities (
     id text PRIMARY KEY NOT NULL,
     name character varying,
     description character varying,
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS public.proposed_versions (
 );
 
 CREATE TABLE IF NOT EXISTS public.spaces (
-    id text PRIMARY KEY NOT NULL REFERENCES public.entities(id),
+    id text PRIMARY KEY NOT NULL REFERENCES public.geo_entities(id),
     address text UNIQUE NOT NULL,
     created_at_block text,
     is_root_space boolean,
@@ -99,9 +99,9 @@ CREATE TABLE IF NOT EXISTS public.subspaces (
 
 CREATE TABLE IF NOT EXISTS public.triples (
     id text PRIMARY KEY NOT NULL,
-    entity_id text NOT NULL REFERENCES public.entities(id),
-    attribute_id text NOT NULL REFERENCES public.entities(id),
-    value_id text NOT NULL REFERENCES public.entities(id),
+    entity_id text NOT NULL REFERENCES public.geo_entities(id),
+    attribute_id text NOT NULL REFERENCES public.geo_entities(id),
+    value_id text NOT NULL REFERENCES public.geo_entities(id),
     value_type text NOT NULL,
     defined_in text NOT NULL,
     is_protected boolean NOT NULL,
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS public.triples (
     number_value text,
     array_value text,
     string_value text,
-    entity_value text REFERENCES public.entities(id)
+    entity_value text REFERENCES public.geo_entities(id)
 );
 
 CREATE TABLE IF NOT EXISTS public.versions (
@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS public.versions (
     created_at_block integer NOT NULL,
     created_by text NOT NULL,
     proposed_version text NOT NULL,
-    entity_id text REFERENCES public.entities(id)
+    entity_id text REFERENCES public.geo_entities(id)
 );
 
 CREATE TABLE IF NOT EXISTS public.actions (
@@ -138,8 +138,8 @@ CREATE TABLE IF NOT EXISTS public.actions (
     version_id text REFERENCES public.versions(id)
 );
 
-ALTER TABLE public.entities ADD CONSTRAINT defined_in_fk FOREIGN KEY (defined_in) REFERENCES public.spaces(address);
-ALTER TABLE public.entities ADD CONSTRAINT attribute_value_type_id_fk FOREIGN KEY (attribute_value_type_id) REFERENCES public.entities(id);
+ALTER TABLE public.geo_entities ADD CONSTRAINT defined_in_fk FOREIGN KEY (defined_in) REFERENCES public.spaces(address);
+ALTER TABLE public.geo_entities ADD CONSTRAINT attribute_value_type_id_fk FOREIGN KEY (attribute_value_type_id) REFERENCES public.geo_entities(id);
 
 
 -- 
@@ -147,7 +147,7 @@ ALTER TABLE public.entities ADD CONSTRAINT attribute_value_type_id_fk FOREIGN KE
 -- 
 ALTER TABLE public.accounts DISABLE TRIGGER ALL;
 ALTER TABLE public.actions DISABLE TRIGGER ALL;
-ALTER TABLE public.entities DISABLE TRIGGER ALL;
+ALTER TABLE public.geo_entities DISABLE TRIGGER ALL;
 ALTER TABLE public.log_entries DISABLE TRIGGER ALL;
 ALTER TABLE public.proposals DISABLE TRIGGER ALL;
 ALTER TABLE public.proposed_versions DISABLE TRIGGER ALL;

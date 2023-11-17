@@ -29,19 +29,17 @@ export const ZodAction = z.object({
 
 export type Action = z.infer<typeof ZodAction>;
 
-export const ZodActionsResponse = z.object({
+export const ZodUriData = z.object({
   type: z.string(),
   version: z.string(),
   actions: z.array(ZodAction),
 });
-export type ActionsResponse = z.infer<typeof ZodActionsResponse>;
+export type UriData = z.infer<typeof ZodUriData>;
 
-export const ZodEntryWithActionsResponse = ZodEntry.extend({
-  actionsResponse: ZodActionsResponse,
+export const ZodEntryFull = ZodEntry.extend({
+  uriData: ZodUriData,
 });
-export type EntryWithActionsResponse = z.infer<
-  typeof ZodEntryWithActionsResponse
->;
+export type EntryFull = z.infer<typeof ZodEntryFull>;
 
 export const ZodRoleGranted = z.object({
   id: z.string(),

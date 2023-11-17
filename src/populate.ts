@@ -2,19 +2,15 @@ import type * as s from "zapatos/schema";
 import { z } from "zod";
 import { actionsFromURI } from "./utils/actions.js";
 import { logger } from "./utils/logger.js";
-import {
-  ZodActionsResponse,
-  ZodEntry,
-  type EntryWithActionsResponse,
-} from "./zod.js";
+import { ZodEntry, ZodUriData, type EntryFull } from "./zod.js";
 
 export const populateEntries = async (entries: z.infer<typeof ZodEntry>[]) => {
-  const geoEntries: EntryWithActionsResponse[] = [];
+  const geoEntries: EntryFull[] = [];
   for (const entry of entries) {
     const unsafeResponse = await actionsFromURI(entry.uri);
-    const response = ZodActionsResponse.safeParse(unsafeResponse);
+    const response = ZodUriData.safeParse(unsafeResponse);
     if (response.success) {
-      geoEntries.push({ ...entry, actionsResponse: response.data });
+      geoEntries.push({ ...entry, uriData: response.data });
     } else {
       logger.info(unsafeResponse);
       console.error(response.error);
@@ -38,7 +34,7 @@ export const populateEntries = async (entries: z.infer<typeof ZodEntry>[]) => {
   const versions: s.versions.Insertable[] = [];
 };
 
-export const toAccounts = (geoEntries: EntryWithActionsResponse[]) => {
+export const toAccounts = (geoEntries: EntryFull[]) => {
   const accounts: s.accounts.Insertable[] = [];
   const author = geoEntries[0].author; // TODO: Confirm with Byron that this is the correct way to get the author
   if (author) {
@@ -49,18 +45,16 @@ export const toAccounts = (geoEntries: EntryWithActionsResponse[]) => {
   return accounts;
 };
 
-export const toActions = (geoEntries: EntryWithActionsResponse[]) => {
+export const toActions = (geoEntries: EntryFull[]) => {
   const actions: s.actions.Insertable[] = geoEntries.flatMap((geoEntry) => {
-    return geoEntry.actionsResponse.actions.map((action) => {
+    return geoEntry.uriData.actions.map((action) => {
       return {
-        type: action.type,
         entity_id: action.entityId,
         attribute_id: action.attributeId,
         entity_name: action.entityName,
         value_type: action.value.type,
         value_id: action.value.id,
         value_value: action.value.value,
-
         action_type: action.type,
         entity: action.entityId,
       };
