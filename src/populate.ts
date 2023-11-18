@@ -87,7 +87,7 @@ export const toActions = (fullEntries: FullEntry[]) => {
     return fullEntry.uriData.actions.map((action) => {
       const string_value =
         action.value.type === "string" ? action.value.value : null;
-      const entity_value_id =
+      const entity_value =
         action.value.type === "entity" ? action.value.id : null;
       return {
         action_type: action.type,
@@ -96,7 +96,7 @@ export const toActions = (fullEntries: FullEntry[]) => {
         value_type: action.value.type,
         value_id: action.value.id,
         string_value,
-        entity_value_id,
+        entity_value,
       };
     });
   });
