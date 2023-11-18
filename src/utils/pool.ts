@@ -1,10 +1,10 @@
 import * as pg from "pg";
+import { invariant } from "./invariant";
 
+invariant(process.env.DATABASE_URL, "DATABASE_URL is required");
 export const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
-  max: 99,
+  max: 97, // TODO: Confirm with Byron, document if this is a good number
 });
 
-// pool.end(() => {});
-
-// pool.on("error", (err) => console.error(err)); // don't let a pg restart kill your app
+pool.on("error", (err) => console.error("Pool Error", err)); // don't let a pg restart kill your app
