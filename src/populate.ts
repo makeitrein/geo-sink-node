@@ -34,8 +34,10 @@ export const populateEntries = async (
     .upsert("accounts", accounts, ["id"], { updateColumns: db.doNothing })
     .run(pool);
 
+  // await db.insert("accounts", accounts).run(pool);
+
   const actions: s.actions.Insertable[] = toActions(fullEntries);
-  await db.insert("actions", actions).run(pool);
+  // await db.insert("actions", actions).run(pool);
 
   const geoEntities: s.geo_entities.Insertable[] = toGeoEntities(fullEntries);
   await db
@@ -51,6 +53,7 @@ export const populateEntries = async (
   const space_editor_controllers: s.space_editor_controllers.Insertable[] = [];
   const space_editors: s.space_editors.Insertable[] = [];
 
+  if (1 == 1) return;
   const spaces: s.spaces.Insertable[] = toSpaces(fullEntries, blockNumber);
   await db
     .upsert("spaces", spaces, ["id"], {

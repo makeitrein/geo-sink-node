@@ -1,11 +1,9 @@
-DROP SCHEMA public CASCADE;
-
-CREATE SCHEMA IF NOT EXISTS public;
-
-CREATE TABLE public.accounts (id text PRIMARY KEY NOT NULL);
+-- DROP SCHEMA public CASCADE;
+-- CREATE SCHEMA IF NOT EXISTS public;
+CREATE TABLE public.accounts (id text PRIMARY KEY);
 
 CREATE TABLE public.cursors (
-    id integer PRIMARY KEY NOT NULL,
+    id integer PRIMARY KEY,
     cursor text NOT NULL,
     block_number text
 );
@@ -13,13 +11,13 @@ CREATE TABLE public.cursors (
 COMMENT ON TABLE public.cursors IS '@name substreamCursor';
 
 CREATE TABLE public.spaces (
-    id text PRIMARY KEY NOT NULL,
+    id text PRIMARY KEY,
     created_at_block integer NOT NULL,
-    is_root_space boolean NOT NULL,
+    is_root_space boolean NOT NULL
 );
 
 CREATE TABLE public.geo_entities (
-    id text PRIMARY KEY NOT NULL,
+    id text PRIMARY KEY,
     name character varying,
     description character varying,
     is_type boolean DEFAULT false,
@@ -34,7 +32,7 @@ ADD
     CONSTRAINT attribute_value_type_id_fk FOREIGN KEY (attribute_value_type_id) REFERENCES public.geo_entities(id);
 
 CREATE TABLE public.log_entries (
-    id text PRIMARY KEY NOT NULL,
+    id text PRIMARY KEY,
     created_at_block text NOT NULL,
     uri text NOT NULL,
     created_by_id text NOT NULL REFERENCES public.accounts(id),
@@ -45,7 +43,7 @@ CREATE TABLE public.log_entries (
 );
 
 CREATE TABLE public.proposals (
-    id text PRIMARY KEY NOT NULL,
+    id text PRIMARY KEY,
     space_id text NOT NULL REFERENCES public.spaces(id),
     name text,
     description text,
@@ -56,7 +54,7 @@ CREATE TABLE public.proposals (
 );
 
 CREATE TABLE public.proposed_versions (
-    id text PRIMARY KEY NOT NULL,
+    id text PRIMARY KEY,
     name text,
     description text,
     created_at integer NOT NULL,
@@ -85,13 +83,13 @@ CREATE TABLE public.space_editor_controllers (
 );
 
 CREATE TABLE public.subspaces (
-    id text PRIMARY KEY NOT NULL,
+    id text PRIMARY KEY,
     parent_space_id text NOT NULL REFERENCES public.spaces(id),
     child_space_id text NOT NULL REFERENCES public.spaces(id)
 );
 
 CREATE TABLE public.triples (
-    id text PRIMARY KEY NOT NULL,
+    id text PRIMARY KEY,
     entity_id text NOT NULL REFERENCES public.geo_entities(id),
     attribute_id text NOT NULL REFERENCES public.geo_entities(id),
     value_type text NOT NULL CHECK(
@@ -116,7 +114,7 @@ CREATE TABLE public.triples (
 );
 
 CREATE TABLE public.versions (
-    id text PRIMARY KEY NOT NULL,
+    id text PRIMARY KEY,
     name text,
     description text,
     created_at integer NOT NULL,
