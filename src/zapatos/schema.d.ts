@@ -131,11 +131,11 @@ declare module 'zapatos/schema' {
       */
       string_value: string | null;
       /**
-      * **actions.entity_value**
+      * **actions.entity_value_id**
       * - `text` in database
       * - Nullable, no default
       */
-      entity_value: string | null;
+      entity_value_id: string | null;
       /**
       * **actions.array_value**
       * - `_text` in database
@@ -205,11 +205,11 @@ declare module 'zapatos/schema' {
       */
       string_value: string | null;
       /**
-      * **actions.entity_value**
+      * **actions.entity_value_id**
       * - `text` in database
       * - Nullable, no default
       */
-      entity_value: string | null;
+      entity_value_id: string | null;
       /**
       * **actions.array_value**
       * - `_text` in database
@@ -279,11 +279,11 @@ declare module 'zapatos/schema' {
       */
       string_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **actions.entity_value**
+      * **actions.entity_value_id**
       * - `text` in database
       * - Nullable, no default
       */
-      entity_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      entity_value_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **actions.array_value**
       * - `_text` in database
@@ -353,11 +353,11 @@ declare module 'zapatos/schema' {
       */
       string_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **actions.entity_value**
+      * **actions.entity_value_id**
       * - `text` in database
       * - Nullable, no default
       */
-      entity_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      entity_value_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **actions.array_value**
       * - `_text` in database
@@ -427,11 +427,11 @@ declare module 'zapatos/schema' {
       */
       string_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **actions.entity_value**
+      * **actions.entity_value_id**
       * - `text` in database
       * - Nullable, no default
       */
-      entity_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      entity_value_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **actions.array_value**
       * - `_text` in database

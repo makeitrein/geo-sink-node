@@ -34,10 +34,8 @@ export const populateEntries = async (
     .upsert("accounts", accounts, ["id"], { updateColumns: db.doNothing })
     .run(pool);
 
-  // await db.insert("accounts", accounts).run(pool);
-
   const actions: s.actions.Insertable[] = toActions(fullEntries);
-  // await db.insert("actions", actions).run(pool);
+  await db.insert("actions", actions).run(pool);
 
   const geoEntities: s.geo_entities.Insertable[] = toGeoEntities(fullEntries);
   await db
@@ -53,7 +51,6 @@ export const populateEntries = async (
   const space_editor_controllers: s.space_editor_controllers.Insertable[] = [];
   const space_editors: s.space_editors.Insertable[] = [];
 
-  if (1 == 1) return;
   const spaces: s.spaces.Insertable[] = toSpaces(fullEntries, blockNumber);
   await db
     .upsert("spaces", spaces, ["id"], {
@@ -88,14 +85,18 @@ export const toAccounts = (fullEntries: FullEntry[]) => {
 export const toActions = (fullEntries: FullEntry[]) => {
   const actions: s.actions.Insertable[] = fullEntries.flatMap((fullEntry) => {
     return fullEntry.uriData.actions.map((action) => {
+      const string_value =
+        action.value.type === "string" ? action.value.value : null;
+      const entity_value_id =
+        action.value.type === "entity" ? action.value.id : null;
       return {
         action_type: action.type,
         entity_id: action.entityId,
         attribute_id: action.attributeId,
         value_type: action.value.type,
         value_id: action.value.id,
-        value_value: action.value.value,
-        entity: action.entityId,
+        string_value,
+        entity_value_id,
       };
     });
   });

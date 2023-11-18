@@ -2,7 +2,6 @@
   "name": "geo-substreams-sink",
   "version": "0.0.1",
   "description": "Geo Substreams Sink",
-  "type": "module",
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
@@ -11,7 +10,7 @@
   ],
   "license": "MIT OR Apache-2.0",
   "scripts": {
-    "build": "tsc",
+    "build": "esbuild index.ts --bundle --outfile=dist/index.js  --bundle --platform=node",
     "prepublishOnly": "npm run build",
     "nukePublic": "ts-node ./src/utils/executeSql.ts ./src/sql/nukePublic.sql",
     "zapatos": "dotenv -e .env -- npx zapatos",
@@ -26,7 +25,7 @@
     "dotenv": "latest",
     "fetch-retry": "^5.0.6",
     "node-fetch": "^3.3.2",
-    "pg": "^8.11.3",
+    "pg": "^8.7.3",
     "pg-cursor": "^2.10.3",
     "prom-client": "latest",
     "tslog": "latest",
@@ -37,6 +36,7 @@
     "@tsconfig/recommended": "latest",
     "@types/node": "latest",
     "dotenv-cli": "^7.3.0",
+    "esbuild": "^0.19.5",
     "typescript": "latest"
   }
 }
