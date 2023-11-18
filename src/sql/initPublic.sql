@@ -1,5 +1,7 @@
--- DROP SCHEMA public CASCADE;
--- CREATE SCHEMA IF NOT EXISTS public;
+DROP SCHEMA public CASCADE;
+
+CREATE SCHEMA IF NOT EXISTS public;
+
 CREATE TABLE public.accounts (id text PRIMARY KEY);
 
 CREATE TABLE public.cursors (
