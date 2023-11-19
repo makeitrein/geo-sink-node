@@ -27,7 +27,7 @@ export const startGeoStream = async () => {
   const { token } = await authIssue(substreamsApiKey, authIssueUrl);
   const outputModule = "geo_out";
   const startBlockNum = 36472424;
-  const productionMode = true;
+  const productionMode = process.env.NODE_ENV === "production";
   const finalBlocksOnly = true; // TODO: Confirm with Byron - Set to true to only process blocks that have pass finality
 
   // Cursor
@@ -49,6 +49,15 @@ export const startGeoStream = async () => {
   // Substreams Block Emitter
   const emitter = new BlockEmitter(transport, request, registry);
 
+  // Log Out Stream Progress
+  emitter.on("block", (block) => {
+    const blockNumber = Number(block.clock?.number.toString());
+
+    if (blockNumber % 1000 === 0) {
+      console.log(`Block ${blockNumber}`);
+    }
+  });
+
   // Stream Blocks
   emitter.on("anyMessage", (message, cursor, clock) => {
     const entryResponse = ZodEntryStreamResponse.safeParse(message);
@@ -56,11 +65,8 @@ export const startGeoStream = async () => {
 
     const blockNumber = Number(clock.number.toString());
 
-    if (blockNumber % 100 === 0) {
-      console.log(`Block number: ${clock.number}`);
-    }
-
     if (entryResponse.success) {
+      console.log("Processing ", entryResponse.data.entries.length, " entries");
       populateEntries(entryResponse.data.entries, blockNumber);
     } else if (roleChangeResponse.success) {
       console.log("TODO: Handle roleGrantedResponse");
