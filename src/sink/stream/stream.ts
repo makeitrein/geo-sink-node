@@ -4,7 +4,7 @@ import {
   createAuthInterceptor,
   createRegistry,
 } from "@substreams/core";
-import { readPackage, readPackageFromFile } from "@substreams/manifest";
+import { readPackageFromFile } from "@substreams/manifest";
 import { createSink, createStream } from "@substreams/sink";
 import { Data, Effect, Layer, Option, Stream } from "effect";
 import { invariant } from "src/utils/invariant.js";
@@ -28,16 +28,6 @@ export function runStream({
   const program = Effect.gen(function* (_) {
     const db = yield* _(MessageStorage.MessageStorage);
     const cursor = yield* _(CursorStorage.CursorStorage);
-    const pkg = yield* _(
-      Effect.tryPromise({
-        try: () => readPackage(packagePath),
-        catch: (cause) =>
-          new InvalidPackageError({
-            cause,
-            message: `Could not read package at path ${packagePath}`,
-          }),
-      })
-    );
 
     const substreamsEndpoint = process.env.SUBSTREAMS_ENDPOINT;
     invariant(substreamsEndpoint, "SUBSTREAMS_ENDPOINT is required");
@@ -64,7 +54,7 @@ export function runStream({
       interceptors: [createAuthInterceptor(token)],
     });
 
-    const registry = createRegistry(pkg);
+    const registry = createRegistry(substreamPackage);
     const stream = createStream({
       connectTransport: transport,
       substreamPackage: substreamPackage,

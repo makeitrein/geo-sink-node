@@ -34,7 +34,7 @@ export const command: Command.Command<RunCommand> = Command.standard("run", {
     endpoint: Options.text("endpoint").pipe(
       Options.withAlias("e"),
       Options.withDescription("Endpoint to connect to"),
-      Options.withDefault(process.env.SUBSTREAMS_ENDPOINT)
+      Options.withDefault(process.env.SUBSTREAMS_ENDPOINT || "")
     ),
     params: Options.keyValueMap("params").pipe(
       Options.optional,
