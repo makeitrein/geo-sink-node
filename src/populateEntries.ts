@@ -270,6 +270,11 @@ export const toProposedVersions = ({
           created_at: timestamp,
           name: proposedVersionName ? proposedVersionName : null,
           created_by_id: fullEntry.author,
+          proposed_version_id: generateVersionId({
+            idx,
+            entityId,
+            cursor,
+          }),
         };
       });
     });
