@@ -19,18 +19,12 @@ export const generateProposalId = ({
   cursor: string;
 }) => `${idx}:${cursor}`;
 
-export const generateProposedVersionId = ({
-  entityId,
-  cursor,
-}: {
-  entityId: string;
-  cursor: string;
-}) => `${entityId}:${cursor}`;
-
 export const generateVersionId = ({
+  idx,
   entityId,
   cursor,
 }: {
+  idx: number;
   entityId: string;
   cursor: string;
-}) => `${entityId}:${cursor}`;
+}) => `${idx}:${entityId}:${cursor}`;

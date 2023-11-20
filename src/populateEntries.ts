@@ -1,11 +1,15 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 import { TripleAction, TripleDatabaseTuple } from "./types";
-import { actionsFromURI, isValidAction } from "./utils/actions";
+import {
+  actionsFromURI,
+  isNameCreateAction,
+  isNameDeleteAction,
+  isValidAction,
+} from "./utils/actions";
 import { insertChunked, upsertChunked } from "./utils/db";
 import {
   generateProposalId,
-  generateProposedVersionId,
   generateTripleId,
   generateVersionId,
 } from "./utils/id";
@@ -134,36 +138,40 @@ interface ToActionArgs {
   cursor: string;
 }
 export const toActions = ({ fullEntries, cursor }: ToActionArgs) => {
-  const actions: s.actions.Insertable[] = fullEntries.flatMap((fullEntry) => {
-    return fullEntry.uriData.actions.map((action) => {
-      const string_value =
-        action.value.type === "string" ? action.value.value : null;
-      const entity_value =
-        action.value.type === "entity" ? action.value.id : null;
+  const actions: s.actions.Insertable[] = fullEntries.flatMap(
+    (fullEntry, idx) => {
+      return fullEntry.uriData.actions.map((action) => {
+        const string_value =
+          action.value.type === "string" ? action.value.value : null;
+        const entity_value =
+          action.value.type === "entity" ? action.value.id : null;
 
-      const proposed_version_id = generateProposedVersionId({
-        entityId: action.entityId,
-        cursor,
+        const proposed_version_id = generateVersionId({
+          idx,
+          entityId: action.entityId,
+          cursor,
+        });
+
+        const version_id = generateVersionId({
+          idx,
+          entityId: action.entityId,
+          cursor,
+        });
+
+        return {
+          action_type: action.type,
+          entity_id: action.entityId,
+          attribute_id: action.attributeId,
+          value_type: action.value.type,
+          value_id: action.value.id,
+          string_value,
+          entity_value,
+          proposed_version_id,
+          version_id,
+        };
       });
-
-      const version_id = generateVersionId({
-        entityId: action.entityId,
-        cursor,
-      });
-
-      return {
-        action_type: action.type,
-        entity_id: action.entityId,
-        attribute_id: action.attributeId,
-        value_type: action.value.type,
-        value_id: action.value.id,
-        string_value,
-        entity_value,
-        proposed_version_id,
-        version_id,
-      };
-    });
-  });
+    }
+  );
 
   return actions;
 };
@@ -176,8 +184,19 @@ export const toGeoEntities = ({ fullEntries }: toGeoEntitiesArgs) => {
 
   fullEntries.forEach((fullEntry) => {
     fullEntry.uriData.actions.map((action) => {
+      const isNameCreate = isNameCreateAction(action);
+      const isNameDelete = isNameDeleteAction(action);
+
+      const currentName = entitiesMap[action.entityId]?.name;
+      const updatedName = isNameCreate
+        ? action.value.value
+        : isNameDelete
+        ? null
+        : currentName;
+
       entitiesMap[action.entityId] = {
         id: action.entityId,
+        name: updatedName,
       };
     });
   });
@@ -224,7 +243,7 @@ export const toProposedVersions = ({
   cursor,
 }: toProposedVersionArgs) => {
   const proposedVersions: s.proposed_versions.Insertable[] =
-    fullEntries.flatMap((fullEntry) => {
+    fullEntries.flatMap((fullEntry, idx) => {
       const uniqueEntityIds = fullEntry.uriData.actions
         .map((action) => action.entityId)
         .filter((value, index, self) => self.indexOf(value) === index);
@@ -232,7 +251,7 @@ export const toProposedVersions = ({
       return uniqueEntityIds.map((entityId) => {
         const proposedVersionName = fullEntry.uriData.name;
         return {
-          id: generateProposedVersionId({ entityId, cursor }),
+          id: generateVersionId({ idx, entityId, cursor }),
           entity_id: entityId,
           created_at_block: blockNumber,
           created_at: timestamp,
@@ -257,24 +276,30 @@ export const toVersions = ({
   timestamp,
   cursor,
 }: toVersionArgs) => {
-  const versions: s.versions.Insertable[] = fullEntries.flatMap((fullEntry) => {
-    const uniqueEntityIds = fullEntry.uriData.actions
-      .map((action) => action.entityId)
-      .filter((value, index, self) => self.indexOf(value) === index);
+  const versions: s.versions.Insertable[] = fullEntries.flatMap(
+    (fullEntry, idx) => {
+      const uniqueEntityIds = fullEntry.uriData.actions
+        .map((action) => action.entityId)
+        .filter((value, index, self) => self.indexOf(value) === index);
 
-    return uniqueEntityIds.map((entityId) => {
-      const proposedVersionName = fullEntry.uriData.name;
-      return {
-        id: generateProposedVersionId({ entityId, cursor }),
-        entity_id: entityId,
-        created_at_block: blockNumber,
-        created_at: timestamp,
-        name: proposedVersionName ? proposedVersionName : null,
-        proposed_version_id: generateProposedVersionId({ entityId, cursor }),
-        created_by_id: fullEntry.author,
-      };
-    });
-  });
+      return uniqueEntityIds.map((entityId) => {
+        const proposedVersionName = fullEntry.uriData.name;
+        return {
+          id: generateVersionId({ idx, entityId, cursor }),
+          entity_id: entityId,
+          created_at_block: blockNumber,
+          created_at: timestamp,
+          name: proposedVersionName ? proposedVersionName : null,
+          proposed_version_id: generateVersionId({
+            idx,
+            entityId,
+            cursor,
+          }),
+          created_by_id: fullEntry.author,
+        };
+      });
+    }
+  );
 
   return versions;
 };

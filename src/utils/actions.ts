@@ -1,3 +1,4 @@
+import { NAME } from "../constants/systemIds.js";
 import { ZodAction, type Action } from "../zod.js";
 import { ipfsFetch } from "./ipfs.js";
 
@@ -17,9 +18,15 @@ export function isValidAction(action: any): action is Action {
   if (parsedAction.success) {
     return true;
   } else {
-    // console.error("Failed to parse action");
-    // console.error(parsedAction);
-    // console.error(parsedAction.error);
     return false;
   }
 }
+
+export const isNameCreateAction = (action: Action) =>
+  action.type === "createTriple" &&
+  action.attributeId === NAME &&
+  action.value.type === "string";
+export const isNameDeleteAction = (action: Action) =>
+  action.type === "deleteTriple" &&
+  action.attributeId === NAME &&
+  action.value.type === "string";
