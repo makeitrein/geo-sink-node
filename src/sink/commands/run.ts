@@ -3,6 +3,7 @@ import { Path } from "@effect/platform-node";
 import { Schema } from "@effect/schema";
 import { Data, Duration, Effect, HashMap, Option } from "effect";
 import { isRemotePath } from "src/utils/isRemotePath.js";
+import { resetDatabaseToGenesis } from "src/utils/resetDatabaseToGenesis.js";
 import * as Stream from "../stream/stream.js";
 import { parseSchema } from "../utils/parse-schema.js";
 
@@ -16,6 +17,7 @@ export class RunCommand extends Data.TaggedClass("RunCommand")<{
   readonly developmentMode: boolean;
   readonly maxRetryDuration: Duration.Duration;
   readonly params: Option.Option<HashMap.HashMap<string, string>>;
+  readonly fromGenesis: boolean;
 }> {}
 
 export const command: Command.Command<RunCommand> = Command.standard("run", {
@@ -26,6 +28,10 @@ export const command: Command.Command<RunCommand> = Command.standard("run", {
     Args.withDefault("./geo-substream.spkg")
   ),
   options: Options.all({
+    fromGenesis: Options.boolean("from-genesis").pipe(
+      Options.withDescription("fromGenesis from genesis block"),
+      Options.withDefault(false)
+    ),
     outputModule: Options.text("output-module").pipe(
       Options.withAlias("o"),
       Options.withDescription("Output module name"),
@@ -43,6 +49,7 @@ export const command: Command.Command<RunCommand> = Command.standard("run", {
         "Set params for parameterizable modules in the form of `-p <module>=<value>`. Can be specified multiple times (e.g. `-p module1=valA -p module2=valX&valY`)"
       )
     ),
+
     finalBlocksOnly: Options.boolean("final-blocks-only").pipe(
       Options.withDescription("Get only irreversible blocks"),
       Options.withDefault(false)
@@ -70,6 +77,7 @@ export const command: Command.Command<RunCommand> = Command.standard("run", {
       finalBlocksOnly: options.finalBlocksOnly,
       developmentMode: options.developmentMode,
       maxRetryDuration: options.maxRetryDuration,
+      fromGenesis: options.fromGenesis,
     });
   })
 );
@@ -82,6 +90,17 @@ export function handle(command: RunCommand) {
       if (!path.isAbsolute(packagePath)) {
         packagePath = path.join(process.cwd(), packagePath);
       }
+    }
+
+    if (command.fromGenesis) {
+      console.info("Resetting database to genesis...");
+      yield* _(
+        Effect.tryPromise({
+          try: () => resetDatabaseToGenesis(),
+          catch: (cause) =>
+            new Error(`Failed to reset database to genesis: ${cause}`),
+        })
+      );
     }
 
     const stream = Stream.runStream({
