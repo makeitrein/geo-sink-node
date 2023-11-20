@@ -8,6 +8,10 @@ import { readPackageFromFile } from "@substreams/manifest";
 import { createSink, createStream } from "@substreams/sink";
 import { Data, Effect, Layer, Option, Stream } from "effect";
 import { invariant } from "src/utils/invariant.js";
+import {
+  ZodEntryStreamResponse,
+  ZodRoleChangeStreamResponse,
+} from "src/zod.js";
 import * as CursorStorage from "./cursor.js";
 import * as MessageStorage from "./messages.js";
 
@@ -70,19 +74,46 @@ export function runStream({
           size: `${message.output?.mapOutput?.value?.byteLength ?? 0} bytes`,
         })(
           Effect.gen(function* (_) {
-            yield* _(cursor.write(Option.some(message.cursor)));
+            // yield* _(cursor.write(Option.some(message.cursor)));
 
-            if (message.output?.mapOutput?.value?.byteLength === 0) {
+            const mapOutput = message.output?.mapOutput;
+
+            if (!mapOutput) return;
+
+            if (mapOutput.value?.byteLength === 0) {
               yield* _(Effect.logDebug("received empty message"));
             } else {
-              yield* _(
-                Effect.logInfo(
-                  `received message of type ${message.output?.mapOutput?.typeUrl}`
-                )
-              );
-              yield* _(
-                db.append(message.toJsonString({ typeRegistry: registry }))
-              );
+              const unpackedOutput = mapOutput.unpack(registry);
+
+              const entryResponse =
+                ZodEntryStreamResponse.safeParse(unpackedOutput);
+              const roleChangeResponse =
+                ZodRoleChangeStreamResponse.safeParse(unpackedOutput);
+
+              // const blockNumber = Number(clock.number.toString());
+
+              if (entryResponse.success) {
+                console.log(
+                  "Processing ",
+                  entryResponse.data.entries.length,
+                  " entries"
+                );
+                // populateEntries(entryResponse.data.entries, blockNumber);
+              } else if (roleChangeResponse.success) {
+                console.log("TODO: Handle roleGrantedResponse");
+              } else {
+                console.error("error", message);
+              }
+
+              return message;
+              // yield* _(
+              //   Effect.logInfo(
+              //     `received message of type ${message.output?.mapOutput?.typeUrl}`
+              //   )
+              // );
+              // yield* _(
+              //   db.append(message.toJsonString({ typeRegistry: registry }))
+              // );
             }
           })
         ),
