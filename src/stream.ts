@@ -3,7 +3,7 @@ import { readPackageFromFile } from "@substreams/manifest";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import dotenv from "dotenv";
 import { readCursor, writeCursor } from "./cursor.js";
-import { populateEntries } from "./populate.js";
+import { populateEntries } from "./populateEntries.js";
 import { invariant } from "./utils/invariant.js";
 import { logger } from "./utils/logger.js";
 import { ZodEntryStreamResponse, ZodRoleChangeStreamResponse } from "./zod.js";

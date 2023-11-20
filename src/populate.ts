@@ -52,7 +52,13 @@ export const populateEntries = async (
   });
 
   // const log_entries: s.log_entries.Insertable[] = [];
-  // const proposals: s.proposals.Insertable[] = [];
+  const proposals: s.proposals.Insertable[] = toProposals(
+    fullEntries,
+    blockNumber,
+    timestamp
+  );
+  console.log("Proposals Count", proposals.length);
+  await insertChunked("proposals", proposals);
   // const proposed_versions: s.proposed_versions.Insertable[] = [];
   // const space_admins: s.space_admins.Insertable[] = [];
   // const space_editor_controllers: s.space_editor_controllers.Insertable[] = [];
@@ -107,6 +113,33 @@ export const toActions = (fullEntries: FullEntry[]) => {
   });
 
   return actions;
+};
+
+export const toProposals = (
+  fullEntries: FullEntry[],
+  blockNumber: number,
+  timestamp: number
+) => {
+  const proposals: s.proposals.Insertable[] = fullEntries.flatMap(
+    (fullEntry) => ({
+      is_root_space: false,
+      created_at_block: blockNumber,
+      created_by_id: fullEntry.author,
+      space_id: fullEntry.space,
+      created_at: timestamp,
+      status: "APPROVED",
+    })
+  );
+
+  const uniqueEntityIds = fullEntries
+    .flatMap((fullEntry) =>
+      fullEntry.uriData.actions.map((action) => action.entityId)
+    )
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  // const proposedVersions: s.proposed_versions.Insertable[] =
+
+  return { proposals };
 };
 
 export const toGeoEntities = (fullEntries: FullEntry[]) => {
