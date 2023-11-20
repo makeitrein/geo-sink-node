@@ -106,7 +106,6 @@ export const populateEntries = async ({
 interface ToAccountArgs {
   fullEntries: Entry[];
 }
-
 export const toAccounts = ({ fullEntries }: ToAccountArgs) => {
   const accounts: s.accounts.Insertable[] = [];
   const author = fullEntries[0].author; // TODO: Confirm with Byron that this logic is correct
@@ -155,6 +154,23 @@ export const toActions = ({ fullEntries, cursor }: ToActionArgs) => {
   });
 
   return actions;
+};
+
+interface toGeoEntitiesArgs {
+  fullEntries: FullEntry[];
+}
+export const toGeoEntities = ({ fullEntries }: toGeoEntitiesArgs) => {
+  const entities: s.geo_entities.Insertable[] = fullEntries.flatMap(
+    (fullEntry) => {
+      return fullEntry.uriData.actions.map((action) => {
+        return {
+          id: action.entityId,
+        };
+      });
+    }
+  );
+
+  return entities;
 };
 
 interface toProposalsArgs {
