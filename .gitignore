@@ -12,3 +12,5 @@ build
 *.lock
 !example.js
 .env
+.cursor
+.messages

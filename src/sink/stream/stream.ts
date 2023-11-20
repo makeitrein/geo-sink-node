@@ -75,7 +75,8 @@ export function runStream({
           size: `${message.output?.mapOutput?.value?.byteLength ?? 0} bytes`,
         })(
           Effect.gen(function* (_) {
-            // yield* _(cursor.write(Option.some(message.cursor)));
+            /* TODO: Is a file-based cursor acceptable? */
+            yield* _(cursor.write(Option.some(message.cursor)));
 
             const mapOutput = message.output?.mapOutput;
 
@@ -100,6 +101,7 @@ export function runStream({
                   " entries"
                 );
 
+                /* Todo: Compare with message effect structure, see if we need to convert? */
                 populateEntries(entryResponse.data.entries, blockNumber);
               } else if (roleChangeResponse.success) {
                 console.log("TODO: Handle roleGrantedResponse");

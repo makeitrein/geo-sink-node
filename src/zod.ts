@@ -50,18 +50,20 @@ export const ZodRoleChange = z.object({
 export type RoleGranted = z.infer<typeof ZodRoleChange>;
 
 export const ZodEntryStreamResponse = z.object({
-  entries: z.array(ZodEntry),
+  entries: z.array(ZodEntry).min(1),
 });
 
 export const ZodRoleChangeStreamResponse = z.object({
-  roleChanges: z.array(
-    z
-      .object({
-        granted: ZodRoleChange.optional(),
-        revoked: ZodRoleChange.optional(),
-      })
-      .refine((data) => (data.granted ? !data.revoked : data.revoked), {
-        message: "Only one of granted or revoked must be provided",
-      })
-  ),
+  roleChanges: z
+    .array(
+      z
+        .object({
+          granted: ZodRoleChange.optional(),
+          revoked: ZodRoleChange.optional(),
+        })
+        .refine((data) => (data.granted ? !data.revoked : data.revoked), {
+          message: "Only one of granted or revoked must be provided",
+        })
+    )
+    .min(1),
 });
