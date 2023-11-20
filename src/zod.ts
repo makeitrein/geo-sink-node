@@ -9,7 +9,6 @@ export const ZodEntry = z.object({
 });
 export type Entry = z.infer<typeof ZodEntry>;
 
-// TODO: Confirm with Byron what constitutes a valid action
 export const ZodAction = z.object({
   type: z.enum(["createTriple", "deleteTriple"]),
   entityId: z.string(),

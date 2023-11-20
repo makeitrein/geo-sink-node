@@ -479,10 +479,10 @@ declare module 'zapatos/schema' {
       cursor: string;
       /**
       * **cursors.block_number**
-      * - `text` in database
-      * - Nullable, no default
+      * - `int4` in database
+      * - `NOT NULL`, no default
       */
-      block_number: string | null;
+      block_number: number;
     }
     export interface JSONSelectable {
       /**
@@ -499,10 +499,10 @@ declare module 'zapatos/schema' {
       cursor: string;
       /**
       * **cursors.block_number**
-      * - `text` in database
-      * - Nullable, no default
+      * - `int4` in database
+      * - `NOT NULL`, no default
       */
-      block_number: string | null;
+      block_number: number;
     }
     export interface Whereable {
       /**
@@ -519,10 +519,10 @@ declare module 'zapatos/schema' {
       cursor?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **cursors.block_number**
-      * - `text` in database
-      * - Nullable, no default
+      * - `int4` in database
+      * - `NOT NULL`, no default
       */
-      block_number?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      block_number?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -539,10 +539,10 @@ declare module 'zapatos/schema' {
       cursor: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **cursors.block_number**
-      * - `text` in database
-      * - Nullable, no default
+      * - `int4` in database
+      * - `NOT NULL`, no default
       */
-      block_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      block_number: number | db.Parameter<number> | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -559,10 +559,10 @@ declare module 'zapatos/schema' {
       cursor?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **cursors.block_number**
-      * - `text` in database
-      * - Nullable, no default
+      * - `int4` in database
+      * - `NOT NULL`, no default
       */
-      block_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      block_number?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
     }
     export type UniqueIndex = 'cursors_pkey';
     export type Column = keyof Selectable;

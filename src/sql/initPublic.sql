@@ -7,7 +7,7 @@ CREATE TABLE public.accounts (id text PRIMARY KEY);
 CREATE TABLE public.cursors (
     id integer PRIMARY KEY,
     cursor text NOT NULL,
-    block_number text
+    block_number integer NOT NULL
 );
 
 COMMENT ON TABLE public.cursors IS '@name substreamCursor';
