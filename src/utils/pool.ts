@@ -1,5 +1,8 @@
+import * as dotenv from "dotenv";
 import * as pg from "pg";
 import { invariant } from "./invariant";
+
+dotenv.config();
 
 invariant(process.env.DATABASE_URL, "DATABASE_URL is required");
 export const pool = new pg.Pool({

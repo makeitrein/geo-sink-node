@@ -2,6 +2,7 @@ import { authIssue, createRegistry, createRequest } from "@substreams/core";
 import { readPackageFromFile } from "@substreams/manifest";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import dotenv from "dotenv";
+import { readCursor, writeCursor } from "./cursor.js";
 import { populateEntries } from "./populate.js";
 import { invariant } from "./utils/invariant.js";
 import { logger } from "./utils/logger.js";
@@ -34,7 +35,7 @@ export const startGeoStream = async () => {
   // const cursor = cursorPath.startsWith("http") ? httpCursor : fileCursor;
 
   // Connect Transport
-  // const startCursor = await cursor.readCursor(cursorPath, httpCursorAuth);
+  const startCursor = await readCursor();
   const registry = createRegistry(substreamPackage);
   const transport = createDefaultTransport(substreamsEndpoint, token, registry);
   const request = createRequest({
@@ -42,14 +43,12 @@ export const startGeoStream = async () => {
     outputModule,
     startBlockNum,
     productionMode,
-    // startCursor,
+    startCursor,
     finalBlocksOnly,
   });
 
-  // Substreams Block Emitter
   const emitter = new BlockEmitter(transport, request, registry);
 
-  // Log Out Stream Progress
   emitter.on("block", (block) => {
     const blockNumber = Number(block.clock?.number.toString());
 
@@ -58,7 +57,11 @@ export const startGeoStream = async () => {
     }
   });
 
-  // Stream Blocks
+  emitter.on("cursor", (cursor, clock) => {
+    const blockNumber = Number(clock.number.toString());
+    writeCursor(cursor, blockNumber);
+  });
+
   emitter.on("anyMessage", (message, cursor, clock) => {
     const entryResponse = ZodEntryStreamResponse.safeParse(message);
     const roleChangeResponse = ZodRoleChangeStreamResponse.safeParse(message);
