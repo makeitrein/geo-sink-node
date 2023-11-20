@@ -1,4 +1,4 @@
-import { NAME } from "../constants/systemIds.js";
+import { DESCRIPTION, NAME } from "../constants/systemIds.js";
 import { ZodAction, type Action } from "../zod.js";
 import { ipfsFetch } from "./ipfs.js";
 
@@ -22,11 +22,19 @@ export function isValidAction(action: any): action is Action {
   }
 }
 
-export const isNameCreateAction = (action: Action) =>
-  action.type === "createTriple" &&
-  action.attributeId === NAME &&
-  action.value.type === "string";
-export const isNameDeleteAction = (action: Action) =>
-  action.type === "deleteTriple" &&
-  action.attributeId === NAME &&
-  action.value.type === "string";
+export const actionTypeCheck = (action: Action) => {
+  const isCreateTriple = action.type === "createTriple";
+  const isDeleteTriple = action.type === "deleteTriple";
+  const isNameAttribute = action.attributeId === NAME;
+  const isDescriptionAttribute = action.attributeId === DESCRIPTION;
+  const isStringValueType = action.value.type === "string";
+
+  return {
+    isNameCreateAction: isCreateTriple && isNameAttribute && isStringValueType,
+    isNameDeleteAction: isDeleteTriple && isNameAttribute && isStringValueType,
+    isDescriptionCreateAction:
+      isCreateTriple && isDescriptionAttribute && isStringValueType,
+    isDescriptionDeleteAction:
+      isDeleteTriple && isDescriptionAttribute && isStringValueType,
+  };
+};

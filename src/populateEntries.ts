@@ -2,9 +2,8 @@ import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 import { TripleAction, TripleDatabaseTuple } from "./types";
 import {
+  actionTypeCheck,
   actionsFromURI,
-  isNameCreateAction,
-  isNameDeleteAction,
   isValidAction,
 } from "./utils/actions";
 import { insertChunked, upsertChunked } from "./utils/db";
@@ -101,13 +100,14 @@ export const populateEntries = async ({
     toTripleDatabaseTuples(fullEntries);
   console.log("TriplesDatabaseTuples Count", triplesDatabaseTuples.length);
 
-  triplesDatabaseTuples.forEach(([tupleType, triple]) => {
-    if (tupleType === TripleAction.Create) {
-      db.insert("triples", triple).run(pool);
-    } else if (tupleType === TripleAction.Delete) {
-      db.deletes("triples", { id: triple.id }).run(pool);
-    }
-  });
+  for (const [tupleType, triple] of triplesDatabaseTuples) {
+    const isCreateTriple = tupleType === TripleAction.Create;
+    isCreateTriple
+      ? await db
+          .upsert("triples", triple, ["id"], { updateColumns: db.doNothing })
+          .run(pool) // Protecting against duplicate triples that should have been deleted before creating again, but weren't
+      : await db.deletes("triples", { id: triple.id }).run(pool);
+  }
 
   const versions: s.versions.Insertable[] = toVersions({
     fullEntries,
@@ -184,19 +184,32 @@ export const toGeoEntities = ({ fullEntries }: toGeoEntitiesArgs) => {
 
   fullEntries.forEach((fullEntry) => {
     fullEntry.uriData.actions.map((action) => {
-      const isNameCreate = isNameCreateAction(action);
-      const isNameDelete = isNameDeleteAction(action);
+      const {
+        isNameCreateAction,
+        isNameDeleteAction,
+        isDescriptionCreateAction,
+        isDescriptionDeleteAction,
+      } = actionTypeCheck(action);
 
       const currentName = entitiesMap[action.entityId]?.name;
-      const updatedName = isNameCreate
+      const currentDescription = entitiesMap[action.entityId]?.description;
+
+      const updatedName = isNameCreateAction
         ? action.value.value
-        : isNameDelete
+        : isNameDeleteAction
         ? null
         : currentName;
+
+      const updatedDescription = isDescriptionCreateAction
+        ? action.value.value
+        : isDescriptionDeleteAction
+        ? null
+        : currentDescription;
 
       entitiesMap[action.entityId] = {
         id: action.entityId,
         name: updatedName,
+        description: updatedDescription,
       };
     });
   });
