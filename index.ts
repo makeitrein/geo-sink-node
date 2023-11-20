@@ -2,9 +2,12 @@
 
 import { CliApp, HelpDoc, Span, ValidationError } from "@effect/cli";
 import { NodeContext, Runtime } from "@effect/platform-node";
+import * as dotenv from "dotenv";
 import { Effect, Match, Option } from "effect";
 import * as RootCommand from "./src/sink/commands/root.js";
 import * as RunCommand from "./src/sink/commands/run.js";
+
+dotenv.config();
 
 const cli = CliApp.make({
   name: "Substreams File Sink",

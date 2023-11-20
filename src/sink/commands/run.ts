@@ -23,12 +23,18 @@ export const command: Command.Command<RunCommand> = Command.standard("run", {
     Args.withDescription(
       "The path to a substream package (.spkg) or substreams.yaml file"
     ),
-    Args.withDefault("substreams.yaml")
+    Args.withDefault("./geo-substream.spkg")
   ),
   options: Options.all({
     outputModule: Options.text("output-module").pipe(
       Options.withAlias("o"),
-      Options.withDescription("Output module name")
+      Options.withDescription("Output module name"),
+      Options.withDefault("geo_out")
+    ),
+    endpoint: Options.text("endpoint").pipe(
+      Options.withAlias("e"),
+      Options.withDescription("Endpoint to connect to"),
+      Options.withDefault(process.env.SUBSTREAMS_ENDPOINT)
     ),
     params: Options.keyValueMap("params").pipe(
       Options.optional,
@@ -36,11 +42,6 @@ export const command: Command.Command<RunCommand> = Command.standard("run", {
       Options.withDescription(
         "Set params for parameterizable modules in the form of `-p <module>=<value>`. Can be specified multiple times (e.g. `-p module1=valA -p module2=valX&valY`)"
       )
-    ),
-    endpoint: Options.text("endpoint").pipe(
-      Options.withAlias("e"),
-      Options.withDescription("Endpoint to connect to"),
-      Options.withDefault("https://mainnet.eth.streamingfast.io")
     ),
     finalBlocksOnly: Options.boolean("final-blocks-only").pipe(
       Options.withDescription("Get only irreversible blocks"),

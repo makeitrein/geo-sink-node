@@ -1,12 +1,19 @@
 import { createGrpcTransport } from "@connectrpc/connect-node";
-import { createAuthInterceptor, createRegistry } from "@substreams/core";
-import { readPackage } from "@substreams/manifest";
+import {
+  authIssue,
+  createAuthInterceptor,
+  createRegistry,
+} from "@substreams/core";
+import { readPackage, readPackageFromFile } from "@substreams/manifest";
 import { createSink, createStream } from "@substreams/sink";
-import { Config, Data, Effect, Layer, Option, Stream } from "effect";
+import { Data, Effect, Layer, Option, Stream } from "effect";
+import { invariant } from "src/utils/invariant.js";
 import * as CursorStorage from "./cursor.js";
 import * as MessageStorage from "./messages.js";
 
-export class InvalidPackageError extends Data.TaggedClass("InvalidPackageError")<{
+export class InvalidPackageError extends Data.TaggedClass(
+  "InvalidPackageError"
+)<{
   readonly cause: unknown;
   readonly message: string;
 }> {}
@@ -29,12 +36,30 @@ export function runStream({
             cause,
             message: `Could not read package at path ${packagePath}`,
           }),
-      }),
+      })
     );
 
-    const token = yield* _(Effect.config(Config.string("SUBSTREAMS_API_TOKEN")));
+    const substreamsEndpoint = process.env.SUBSTREAMS_ENDPOINT;
+    invariant(substreamsEndpoint, "SUBSTREAMS_ENDPOINT is required");
+    const substreamsApiKey = process.env.SUBSTREAMS_API_KEY;
+    invariant(substreamsApiKey, "SUBSTREAMS_API_KEY is required");
+    const authIssueUrl = process.env.AUTH_ISSUE_URL;
+    invariant(authIssueUrl, "AUTH_ISSUE_URL is required");
+
+    const manifest = "./geo-substream.spkg";
+    const substreamPackage = readPackageFromFile(manifest);
+
+    const { token } = yield* _(
+      Effect.tryPromise({
+        try: () => authIssue(substreamsApiKey, authIssueUrl),
+        catch: (cause) =>
+          new Error(`Could not read package at path ${packagePath}`),
+      })
+    );
+
+    // const token = yield* _(Effect.config(Config.string("SUBSTREAMS_API_TOKEN")));
     const transport = createGrpcTransport({
-      baseUrl: "https://mainnet.eth.streamingfast.io",
+      baseUrl: substreamsEndpoint,
       httpVersion: "2",
       interceptors: [createAuthInterceptor(token)],
     });
@@ -42,7 +67,7 @@ export function runStream({
     const registry = createRegistry(pkg);
     const stream = createStream({
       connectTransport: transport,
-      substreamPackage: pkg,
+      substreamPackage: substreamPackage,
       outputModule,
       startCursor: yield* _(Effect.map(cursor.read(), Option.getOrUndefined)),
     });
@@ -60,10 +85,16 @@ export function runStream({
             if (message.output?.mapOutput?.value?.byteLength === 0) {
               yield* _(Effect.logDebug("received empty message"));
             } else {
-              yield* _(Effect.logInfo(`received message of type ${message.output?.mapOutput?.typeUrl}`));
-              yield* _(db.append(message.toJsonString({ typeRegistry: registry })));
+              yield* _(
+                Effect.logInfo(
+                  `received message of type ${message.output?.mapOutput?.typeUrl}`
+                )
+              );
+              yield* _(
+                db.append(message.toJsonString({ typeRegistry: registry }))
+              );
             }
-          }),
+          })
         ),
       handleBlockUndoSignal: (message) =>
         Effect.gen(function* (_) {
