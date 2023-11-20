@@ -107,7 +107,7 @@ interface ToAccountArgs {
 }
 export const toAccounts = ({ fullEntries }: ToAccountArgs) => {
   const accounts: s.accounts.Insertable[] = [];
-  const author = fullEntries[0].author; // TODO: Confirm with Byron that this logic is correct
+  const author = fullEntries[0].author;
   if (author) {
     accounts.push({
       id: author,
