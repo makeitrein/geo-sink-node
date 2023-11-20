@@ -14,8 +14,11 @@ export const MessageStorageLive = Effect.gen(function* (_) {
   return Layer.succeed(
     MessageStorage,
     MessageStorage.of({
-      append: (message) => db.write(new TextEncoder().encode(`${message}\n`)).pipe(Effect.orDie, Effect.asUnit),
-    }),
+      append: (message) =>
+        db
+          .write(new TextEncoder().encode(`${message}\n`))
+          .pipe(Effect.orDie, Effect.asUnit),
+    })
   );
 }).pipe(Layer.unwrapScoped);
 

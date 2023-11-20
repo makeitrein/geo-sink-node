@@ -7,6 +7,7 @@ import {
 import { readPackageFromFile } from "@substreams/manifest";
 import { createSink, createStream } from "@substreams/sink";
 import { Data, Effect, Layer, Option, Stream } from "effect";
+import { populateEntries } from "src/populate.js";
 import { invariant } from "src/utils/invariant.js";
 import {
   ZodEntryStreamResponse,
@@ -90,7 +91,7 @@ export function runStream({
               const roleChangeResponse =
                 ZodRoleChangeStreamResponse.safeParse(unpackedOutput);
 
-              // const blockNumber = Number(clock.number.toString());
+              const blockNumber = Number(message.clock?.number.toString());
 
               if (entryResponse.success) {
                 console.log(
@@ -98,7 +99,8 @@ export function runStream({
                   entryResponse.data.entries.length,
                   " entries"
                 );
-                // populateEntries(entryResponse.data.entries, blockNumber);
+
+                populateEntries(entryResponse.data.entries, blockNumber);
               } else if (roleChangeResponse.success) {
                 console.log("TODO: Handle roleGrantedResponse");
               } else {
