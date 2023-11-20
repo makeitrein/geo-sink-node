@@ -1,5 +1,6 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
+import { TripleAction, TripleDatabaseTuple } from "./types";
 import { actionsFromURI, isValidAction } from "./utils/actions";
 import { insertChunked, upsertChunked } from "./utils/db";
 import {
@@ -8,6 +9,7 @@ import {
   generateTripleId,
   generateVersionId,
 } from "./utils/id";
+import { pool } from "./utils/pool";
 import { Entry, ZodUriData, type FullEntry } from "./zod";
 
 interface StreamData {
@@ -91,10 +93,16 @@ export const populateEntries = async ({
   });
 
   // /* Todo: How are duplicate triples being handled in Geo? I know it's possible, but if the triple ID is defined, what does that entail */
-  const triples: s.triples.Insertable[] = toTriples(fullEntries);
-  console.log("Triples Count", triples.length);
-  upsertChunked("triples", triples, ["id"], {
-    updateColumns: db.doNothing,
+  const triplesDatabaseTuples: TripleDatabaseTuple[] =
+    toTripleDatabaseTuples(fullEntries);
+  console.log("TriplesDatabaseTuples Count", triplesDatabaseTuples.length);
+
+  triplesDatabaseTuples.forEach(([tupleType, triple]) => {
+    if (tupleType === TripleAction.Create) {
+      db.insert("triples", triple).run(pool);
+    } else if (tupleType === TripleAction.Delete) {
+      db.deletes("triples", { id: triple.id }).run(pool);
+    }
   });
 
   const versions: s.versions.Insertable[] = toVersions({
@@ -261,7 +269,6 @@ export const toVersions = ({
         entity_id: entityId,
         created_at_block: blockNumber,
         created_at: timestamp,
-        status: "APPROVED",
         name: proposedVersionName ? proposedVersionName : null,
         proposed_version_id: generateProposedVersionId({ entityId, cursor }),
         created_by_id: fullEntry.author,
@@ -282,16 +289,17 @@ export const toSpaces = (fullEntries: FullEntry[], blockNumber: number) => {
   return spaces;
 };
 
-export const toTriples = (fullEntries: FullEntry[]) => {
-  const triples: s.triples.Insertable[] = fullEntries.flatMap((fullEntry) => {
+export const toTripleDatabaseTuples = (fullEntries: FullEntry[]) => {
+  const triples: TripleDatabaseTuple[] = fullEntries.flatMap((fullEntry) => {
     return fullEntry.uriData.actions.map((action) => {
       const action_type = action.type;
+      const deleted = action_type === "deleteTriple";
+
       const entity_id = action.entityId;
       const attribute_id = action.attributeId;
       const value_type = action.value.type;
       const value_id = action.value.id;
       const space_id = fullEntry.space;
-      const deleted = action_type === "deleteTriple";
       const is_protected = false;
       const id = generateTripleId({
         space_id,
@@ -303,18 +311,24 @@ export const toTriples = (fullEntries: FullEntry[]) => {
       const entity_value_id = value_type === "entity" ? value_id : null;
       const string_value = value_type === "string" ? action.value.value : null;
 
-      return {
-        id,
-        entity_id,
-        attribute_id,
-        value_id,
-        value_type,
-        entity_value_id,
-        string_value,
-        space_id,
-        is_protected,
-        deleted,
-      };
+      const tupleType =
+        action_type === "deleteTriple"
+          ? TripleAction.Delete
+          : TripleAction.Create;
+      return [
+        tupleType,
+        {
+          id,
+          entity_id,
+          attribute_id,
+          value_id,
+          value_type,
+          entity_value_id,
+          string_value,
+          space_id,
+          is_protected,
+        },
+      ];
     });
   });
 

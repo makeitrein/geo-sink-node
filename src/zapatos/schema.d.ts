@@ -2111,12 +2111,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       space_id: string;
-      /**
-      * **triples.deleted**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      deleted: boolean;
     }
     export interface JSONSelectable {
       /**
@@ -2185,12 +2179,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       space_id: string;
-      /**
-      * **triples.deleted**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      deleted: boolean;
     }
     export interface Whereable {
       /**
@@ -2259,12 +2247,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       space_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **triples.deleted**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      deleted?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -2333,12 +2315,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       space_id: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **triples.deleted**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -2407,12 +2383,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       space_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **triples.deleted**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'triples_pkey' | 'triples_unique_entity_attribute';
     export type Column = keyof Selectable;

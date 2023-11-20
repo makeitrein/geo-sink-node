@@ -110,7 +110,6 @@ CREATE TABLE public.triples (
     entity_value_id text REFERENCES public.geo_entities(id),
     is_protected boolean NOT NULL,
     space_id text NOT NULL REFERENCES public.spaces(id),
-    deleted boolean DEFAULT false NOT NULL,
     CONSTRAINT triples_unique_entity_attribute UNIQUE (entity_id, attribute_id, value_id)
 );
 

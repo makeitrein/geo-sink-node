@@ -40,11 +40,6 @@ export const ZodFullEntry = ZodEntry.extend({
 });
 export type FullEntry = z.infer<typeof ZodFullEntry>;
 
-export enum ZodRoleChangeType {
-  GRANT = "GRANT",
-  REVOKE = "REVOKE",
-}
-
 export const ZodRoleChange = z.object({
   id: z.string(),
   role: z.enum(["ADMIN", "MEMBER", "MODERATOR"]),

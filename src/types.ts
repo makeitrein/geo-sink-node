@@ -1,3 +1,12 @@
+import type * as s from "zapatos/schema";
+
+export enum TripleAction {
+  Create = "createTriple",
+  Delete = "deleteTriple",
+}
+
+export type TripleDatabaseTuple = [TripleAction, s.triples.Insertable];
+
 export interface CreateTripleActionSchema {
   type: "createTriple";
   entityId: string;
