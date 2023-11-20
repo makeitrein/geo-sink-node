@@ -2585,24 +2585,458 @@ declare module 'zapatos/schema' {
 
 
 
+  /* === schema: cache === */
+
+  export namespace cache {
+  
+    /* --- enums --- */
+    /* (none) */
+  
+    /* --- tables --- */
+  
+    /**
+     * **cache.entries**
+     * - Table in database
+     */
+    export namespace entries {
+      export type Table = 'cache.entries';
+      export interface Selectable {
+        /**
+        * **cache.entries.id**
+        * - `int4` in database
+        * - `NOT NULL`, default: `nextval('cache.entries_id_seq'::regclass)`
+        */
+        id: number;
+        /**
+        * **cache.entries.block_number**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        block_number: number;
+        /**
+        * **cache.entries.cursor**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        cursor: string;
+        /**
+        * **cache.entries.data**
+        * - `jsonb` in database
+        * - `NOT NULL`, no default
+        */
+        data: db.JSONValue;
+      }
+      export interface JSONSelectable {
+        /**
+        * **cache.entries.id**
+        * - `int4` in database
+        * - `NOT NULL`, default: `nextval('cache.entries_id_seq'::regclass)`
+        */
+        id: number;
+        /**
+        * **cache.entries.block_number**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        block_number: number;
+        /**
+        * **cache.entries.cursor**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        cursor: string;
+        /**
+        * **cache.entries.data**
+        * - `jsonb` in database
+        * - `NOT NULL`, no default
+        */
+        data: db.JSONValue;
+      }
+      export interface Whereable {
+        /**
+        * **cache.entries.id**
+        * - `int4` in database
+        * - `NOT NULL`, default: `nextval('cache.entries_id_seq'::regclass)`
+        */
+        id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+        /**
+        * **cache.entries.block_number**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        block_number?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+        /**
+        * **cache.entries.cursor**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        cursor?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+        /**
+        * **cache.entries.data**
+        * - `jsonb` in database
+        * - `NOT NULL`, no default
+        */
+        data?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
+      }
+      export interface Insertable {
+        /**
+        * **cache.entries.id**
+        * - `int4` in database
+        * - `NOT NULL`, default: `nextval('cache.entries_id_seq'::regclass)`
+        */
+        id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+        /**
+        * **cache.entries.block_number**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        block_number: number | db.Parameter<number> | db.SQLFragment;
+        /**
+        * **cache.entries.cursor**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        cursor: string | db.Parameter<string> | db.SQLFragment;
+        /**
+        * **cache.entries.data**
+        * - `jsonb` in database
+        * - `NOT NULL`, no default
+        */
+        data: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
+      }
+      export interface Updatable {
+        /**
+        * **cache.entries.id**
+        * - `int4` in database
+        * - `NOT NULL`, default: `nextval('cache.entries_id_seq'::regclass)`
+        */
+        id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+        /**
+        * **cache.entries.block_number**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        block_number?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+        /**
+        * **cache.entries.cursor**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        cursor?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+        /**
+        * **cache.entries.data**
+        * - `jsonb` in database
+        * - `NOT NULL`, no default
+        */
+        data?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
+      }
+      export type UniqueIndex = 'entries_pkey' | 'idx_actions_unique';
+      export type Column = keyof Selectable;
+      export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+      export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+      export type SQL = SQLExpression | SQLExpression[];
+    }
+  
+    /**
+     * **cache.roles**
+     * - Table in database
+     */
+    export namespace roles {
+      export type Table = 'cache.roles';
+      export interface Selectable {
+        /**
+        * **cache.roles.id**
+        * - `int4` in database
+        * - `NOT NULL`, default: `nextval('cache.roles_id_seq'::regclass)`
+        */
+        id: number;
+        /**
+        * **cache.roles.role**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        role: string;
+        /**
+        * **cache.roles.account**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        account: string;
+        /**
+        * **cache.roles.sender**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        sender: string;
+        /**
+        * **cache.roles.space**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        space: string;
+        /**
+        * **cache.roles.type**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        type: string;
+        /**
+        * **cache.roles.block_number**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        block_number: number;
+        /**
+        * **cache.roles.cursor**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        cursor: string;
+      }
+      export interface JSONSelectable {
+        /**
+        * **cache.roles.id**
+        * - `int4` in database
+        * - `NOT NULL`, default: `nextval('cache.roles_id_seq'::regclass)`
+        */
+        id: number;
+        /**
+        * **cache.roles.role**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        role: string;
+        /**
+        * **cache.roles.account**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        account: string;
+        /**
+        * **cache.roles.sender**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        sender: string;
+        /**
+        * **cache.roles.space**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        space: string;
+        /**
+        * **cache.roles.type**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        type: string;
+        /**
+        * **cache.roles.block_number**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        block_number: number;
+        /**
+        * **cache.roles.cursor**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        cursor: string;
+      }
+      export interface Whereable {
+        /**
+        * **cache.roles.id**
+        * - `int4` in database
+        * - `NOT NULL`, default: `nextval('cache.roles_id_seq'::regclass)`
+        */
+        id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+        /**
+        * **cache.roles.role**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        role?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+        /**
+        * **cache.roles.account**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        account?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+        /**
+        * **cache.roles.sender**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        sender?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+        /**
+        * **cache.roles.space**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        space?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+        /**
+        * **cache.roles.type**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+        /**
+        * **cache.roles.block_number**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        block_number?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+        /**
+        * **cache.roles.cursor**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        cursor?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      }
+      export interface Insertable {
+        /**
+        * **cache.roles.id**
+        * - `int4` in database
+        * - `NOT NULL`, default: `nextval('cache.roles_id_seq'::regclass)`
+        */
+        id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+        /**
+        * **cache.roles.role**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        role: string | db.Parameter<string> | db.SQLFragment;
+        /**
+        * **cache.roles.account**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        account: string | db.Parameter<string> | db.SQLFragment;
+        /**
+        * **cache.roles.sender**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        sender: string | db.Parameter<string> | db.SQLFragment;
+        /**
+        * **cache.roles.space**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        space: string | db.Parameter<string> | db.SQLFragment;
+        /**
+        * **cache.roles.type**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        type: string | db.Parameter<string> | db.SQLFragment;
+        /**
+        * **cache.roles.block_number**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        block_number: number | db.Parameter<number> | db.SQLFragment;
+        /**
+        * **cache.roles.cursor**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        cursor: string | db.Parameter<string> | db.SQLFragment;
+      }
+      export interface Updatable {
+        /**
+        * **cache.roles.id**
+        * - `int4` in database
+        * - `NOT NULL`, default: `nextval('cache.roles_id_seq'::regclass)`
+        */
+        id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+        /**
+        * **cache.roles.role**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        role?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+        /**
+        * **cache.roles.account**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        account?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+        /**
+        * **cache.roles.sender**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        sender?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+        /**
+        * **cache.roles.space**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        space?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+        /**
+        * **cache.roles.type**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+        /**
+        * **cache.roles.block_number**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        block_number?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+        /**
+        * **cache.roles.cursor**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        cursor?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      }
+      export type UniqueIndex = 'idx_roles_unique' | 'roles_pkey';
+      export type Column = keyof Selectable;
+      export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+      export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+      export type SQL = SQLExpression | SQLExpression[];
+    }
+  
+    /* --- aggregate types --- */
+  
+    export type Table = entries.Table | roles.Table;
+    export type Selectable = entries.Selectable | roles.Selectable;
+    export type JSONSelectable = entries.JSONSelectable | roles.JSONSelectable;
+    export type Whereable = entries.Whereable | roles.Whereable;
+    export type Insertable = entries.Insertable | roles.Insertable;
+    export type Updatable = entries.Updatable | roles.Updatable;
+    export type UniqueIndex = entries.UniqueIndex | roles.UniqueIndex;
+    export type Column = entries.Column | roles.Column;
+  
+    export type AllBaseTables = [entries.Table, roles.Table];
+    export type AllForeignTables = [];
+    export type AllViews = [];
+    export type AllMaterializedViews = [];
+    export type AllTablesAndViews = [entries.Table, roles.Table];
+  }
+
+
   /* === global aggregate types === */
 
-  export type Schema = 'public';
-  export type Table = public.Table;
-  export type Selectable = public.Selectable;
-  export type JSONSelectable = public.JSONSelectable;
-  export type Whereable = public.Whereable;
-  export type Insertable = public.Insertable;
-  export type Updatable = public.Updatable;
-  export type UniqueIndex = public.UniqueIndex;
-  export type Column = public.Column;
+  export type Schema = 'public' | 'cache';
+  export type Table = public.Table | cache.Table;
+  export type Selectable = public.Selectable | cache.Selectable;
+  export type JSONSelectable = public.JSONSelectable | cache.JSONSelectable;
+  export type Whereable = public.Whereable | cache.Whereable;
+  export type Insertable = public.Insertable | cache.Insertable;
+  export type Updatable = public.Updatable | cache.Updatable;
+  export type UniqueIndex = public.UniqueIndex | cache.UniqueIndex;
+  export type Column = public.Column | cache.Column;
 
-  export type AllSchemas = ['public'];
-  export type AllBaseTables = [...public.AllBaseTables];
-  export type AllForeignTables = [...public.AllForeignTables];
-  export type AllViews = [...public.AllViews];
-  export type AllMaterializedViews = [...public.AllMaterializedViews];
-  export type AllTablesAndViews = [...public.AllTablesAndViews];
+  export type AllSchemas = ['public', 'cache'];
+  export type AllBaseTables = [...public.AllBaseTables, ...cache.AllBaseTables];
+  export type AllForeignTables = [...public.AllForeignTables, ...cache.AllForeignTables];
+  export type AllViews = [...public.AllViews, ...cache.AllViews];
+  export type AllMaterializedViews = [...public.AllMaterializedViews, ...cache.AllMaterializedViews];
+  export type AllTablesAndViews = [...public.AllTablesAndViews, ...cache.AllTablesAndViews];
 
 
   /* === lookups === */
@@ -2622,6 +3056,8 @@ declare module 'zapatos/schema' {
     "subspaces": subspaces.Selectable;
     "triples": triples.Selectable;
     "versions": versions.Selectable;
+    "cache.entries": cache.entries.Selectable;
+    "cache.roles": cache.roles.Selectable;
   }[T];
 
   export type JSONSelectableForTable<T extends Table> = {
@@ -2639,6 +3075,8 @@ declare module 'zapatos/schema' {
     "subspaces": subspaces.JSONSelectable;
     "triples": triples.JSONSelectable;
     "versions": versions.JSONSelectable;
+    "cache.entries": cache.entries.JSONSelectable;
+    "cache.roles": cache.roles.JSONSelectable;
   }[T];
 
   export type WhereableForTable<T extends Table> = {
@@ -2656,6 +3094,8 @@ declare module 'zapatos/schema' {
     "subspaces": subspaces.Whereable;
     "triples": triples.Whereable;
     "versions": versions.Whereable;
+    "cache.entries": cache.entries.Whereable;
+    "cache.roles": cache.roles.Whereable;
   }[T];
 
   export type InsertableForTable<T extends Table> = {
@@ -2673,6 +3113,8 @@ declare module 'zapatos/schema' {
     "subspaces": subspaces.Insertable;
     "triples": triples.Insertable;
     "versions": versions.Insertable;
+    "cache.entries": cache.entries.Insertable;
+    "cache.roles": cache.roles.Insertable;
   }[T];
 
   export type UpdatableForTable<T extends Table> = {
@@ -2690,6 +3132,8 @@ declare module 'zapatos/schema' {
     "subspaces": subspaces.Updatable;
     "triples": triples.Updatable;
     "versions": versions.Updatable;
+    "cache.entries": cache.entries.Updatable;
+    "cache.roles": cache.roles.Updatable;
   }[T];
 
   export type UniqueIndexForTable<T extends Table> = {
@@ -2707,6 +3151,8 @@ declare module 'zapatos/schema' {
     "subspaces": subspaces.UniqueIndex;
     "triples": triples.UniqueIndex;
     "versions": versions.UniqueIndex;
+    "cache.entries": cache.entries.UniqueIndex;
+    "cache.roles": cache.roles.UniqueIndex;
   }[T];
 
   export type ColumnForTable<T extends Table> = {
@@ -2724,6 +3170,8 @@ declare module 'zapatos/schema' {
     "subspaces": subspaces.Column;
     "triples": triples.Column;
     "versions": versions.Column;
+    "cache.entries": cache.entries.Column;
+    "cache.roles": cache.roles.Column;
   }[T];
 
   export type SQLForTable<T extends Table> = {
@@ -2741,6 +3189,8 @@ declare module 'zapatos/schema' {
     "subspaces": subspaces.SQL;
     "triples": triples.SQL;
     "versions": versions.SQL;
+    "cache.entries": cache.entries.SQL;
+    "cache.roles": cache.roles.SQL;
   }[T];
 
 }

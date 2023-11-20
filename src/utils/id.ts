@@ -12,19 +12,19 @@ export const generateTripleId = ({
   `${space_id.toLowerCase()}:${entity_id.toLowerCase()}:${attribute_id.toLowerCase()}:${value_id.toLowerCase()}`;
 
 export const generateProposalId = ({
-  idx,
+  entryIdx,
   cursor,
 }: {
-  idx: number;
+  entryIdx: number;
   cursor: string;
-}) => `${idx}:${cursor}`;
+}) => `${entryIdx}:${cursor}`;
 
 export const generateVersionId = ({
-  idx,
+  entryIdx,
   entityId,
   cursor,
 }: {
-  idx: number;
+  entryIdx: number;
   entityId: string;
   cursor: string;
-}) => `${idx}:${entityId}:${cursor}`;
+}) => `${entryIdx}:${entityId}:${cursor}`;

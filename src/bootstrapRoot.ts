@@ -139,9 +139,9 @@ const types: Record<string, string[]> = {
 const geoEntities: s.geo_entities.Insertable[] = entities.map((entity) => ({
   id: entity,
   name: names[entity],
-  is_attribute: attributes[entity] ? true : false,
-  is_type: types[entity] ? true : false,
-  attribute_value_type_id: attributes[entity],
+  // is_attribute: attributes[entity] ? true : false,
+  // is_type: types[entity] ? true : false,
+  // attribute_value_type_id: attributes[entity],
 }));
 
 const namesTriples: s.triples.Insertable[] = Object.entries(names).map(

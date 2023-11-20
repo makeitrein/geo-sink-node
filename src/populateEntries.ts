@@ -1,6 +1,6 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
-import { TripleAction, TripleDatabaseTuple } from "./types";
+import { StreamData, TripleAction, TripleDatabaseTuple } from "./types";
 import {
   actionTypeCheck,
   actionsFromURI,
@@ -14,13 +14,6 @@ import {
 } from "./utils/id";
 import { pool } from "./utils/pool";
 import { Entry, ZodUriData, type FullEntry } from "./zod";
-
-interface StreamData {
-  entries: Entry[];
-  blockNumber: number;
-  timestamp: number;
-  cursor: string;
-}
 
 export const populateEntries = async ({
   entries,
@@ -139,7 +132,7 @@ interface ToActionArgs {
 }
 export const toActions = ({ fullEntries, cursor }: ToActionArgs) => {
   const actions: s.actions.Insertable[] = fullEntries.flatMap(
-    (fullEntry, idx) => {
+    (fullEntry, entryIdx) => {
       return fullEntry.uriData.actions.map((action) => {
         const string_value =
           action.value.type === "string" ? action.value.value : null;
@@ -147,13 +140,13 @@ export const toActions = ({ fullEntries, cursor }: ToActionArgs) => {
           action.value.type === "entity" ? action.value.id : null;
 
         const proposed_version_id = generateVersionId({
-          idx,
+          entryIdx,
           entityId: action.entityId,
           cursor,
         });
 
         const version_id = generateVersionId({
-          idx,
+          entryIdx,
           entityId: action.entityId,
           cursor,
         });
@@ -230,8 +223,8 @@ export const toProposals = ({
   cursor,
 }: toProposalsArgs) => {
   const proposals: s.proposals.Insertable[] = fullEntries.flatMap(
-    (fullEntry, idx) => ({
-      id: generateProposalId({ idx, cursor }),
+    (fullEntry, entryIdx) => ({
+      id: generateProposalId({ entryIdx, cursor }),
       created_at_block: blockNumber,
       created_by_id: fullEntry.author,
       space_id: fullEntry.space,
@@ -256,7 +249,7 @@ export const toProposedVersions = ({
   cursor,
 }: toProposedVersionArgs) => {
   const proposedVersions: s.proposed_versions.Insertable[] =
-    fullEntries.flatMap((fullEntry, idx) => {
+    fullEntries.flatMap((fullEntry, entryIdx) => {
       const uniqueEntityIds = fullEntry.uriData.actions
         .map((action) => action.entityId)
         .filter((value, index, self) => self.indexOf(value) === index);
@@ -264,17 +257,13 @@ export const toProposedVersions = ({
       return uniqueEntityIds.map((entityId) => {
         const proposedVersionName = fullEntry.uriData.name;
         return {
-          id: generateVersionId({ idx, entityId, cursor }),
+          id: generateVersionId({ entryIdx, entityId, cursor }),
           entity_id: entityId,
           created_at_block: blockNumber,
           created_at: timestamp,
           name: proposedVersionName ? proposedVersionName : null,
           created_by_id: fullEntry.author,
-          proposed_version_id: generateVersionId({
-            idx,
-            entityId,
-            cursor,
-          }),
+          proposal_id: generateProposalId({ entryIdx, cursor }),
         };
       });
     });
@@ -295,7 +284,7 @@ export const toVersions = ({
   cursor,
 }: toVersionArgs) => {
   const versions: s.versions.Insertable[] = fullEntries.flatMap(
-    (fullEntry, idx) => {
+    (fullEntry, entryIdx) => {
       const uniqueEntityIds = fullEntry.uriData.actions
         .map((action) => action.entityId)
         .filter((value, index, self) => self.indexOf(value) === index);
@@ -303,13 +292,13 @@ export const toVersions = ({
       return uniqueEntityIds.map((entityId) => {
         const proposedVersionName = fullEntry.uriData.name;
         return {
-          id: generateVersionId({ idx, entityId, cursor }),
+          id: generateVersionId({ entryIdx, entityId, cursor }),
           entity_id: entityId,
           created_at_block: blockNumber,
           created_at: timestamp,
           name: proposedVersionName ? proposedVersionName : null,
           proposed_version_id: generateVersionId({
-            idx,
+            entryIdx,
             entityId,
             cursor,
           }),

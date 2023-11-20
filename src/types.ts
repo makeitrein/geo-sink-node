@@ -1,8 +1,16 @@
 import type * as s from "zapatos/schema";
+import { Entry } from "./zod";
 
 export enum TripleAction {
   Create = "createTriple",
   Delete = "deleteTriple",
+}
+
+export interface StreamData {
+  entries: Entry[];
+  blockNumber: number;
+  timestamp: number;
+  cursor: string;
 }
 
 export type TripleDatabaseTuple = [TripleAction, s.triples.Insertable];
