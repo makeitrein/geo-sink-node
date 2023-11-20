@@ -1,6 +1,5 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
-import { PERMISSIONED_SPACE_REGISTRY_ADDRESS } from "./constants/systemIds";
 import { actionsFromURI, isValidAction } from "./utils/actions";
 import { insertChunked, upsertChunked } from "./utils/db";
 import {
@@ -188,7 +187,6 @@ export const toProposals = ({
   const proposals: s.proposals.Insertable[] = fullEntries.flatMap(
     (fullEntry, idx) => ({
       id: generateProposalId({ idx, cursor }),
-      is_root_space: fullEntry.space === PERMISSIONED_SPACE_REGISTRY_ADDRESS,
       created_at_block: blockNumber,
       created_by_id: fullEntry.author,
       space_id: fullEntry.space,
@@ -225,7 +223,6 @@ export const toProposedVersions = ({
           entity_id: entityId,
           created_at_block: blockNumber,
           created_at: timestamp,
-          status: "APPROVED",
           name: proposedVersionName ? proposedVersionName : null,
           created_by_id: fullEntry.author,
         };
