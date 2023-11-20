@@ -3,7 +3,7 @@ import { readPackageFromFile } from "@substreams/manifest";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import dotenv from "dotenv";
 import { readCursor, writeCursor } from "./cursor.js";
-import { populateEntries } from "./populateEntries.js";
+import { populateEntries } from "./populate.js";
 import { invariant } from "./utils/invariant.js";
 import { logger } from "./utils/logger.js";
 import { ZodEntryStreamResponse, ZodRoleChangeStreamResponse } from "./zod.js";
@@ -71,7 +71,8 @@ export const startGeoStream = async () => {
 
     if (entryResponse.success) {
       console.log("Processing ", entryResponse.data.entries.length, " entries");
-      populateEntries(entryResponse.data.entries, blockNumber, timestamp);
+      const entries = entryResponse.data.entries;
+      populateEntries({ entries, blockNumber, cursor, timestamp });
     } else if (roleChangeResponse.success) {
       console.log("TODO: Handle roleGrantedResponse");
     } else {

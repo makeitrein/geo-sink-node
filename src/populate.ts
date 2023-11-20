@@ -1,16 +1,29 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
-import { z } from "zod";
+import { PERMISSIONED_SPACE_REGISTRY_ADDRESS } from "./constants/systemIds";
 import { actionsFromURI, isValidAction } from "./utils/actions";
 import { insertChunked, upsertChunked } from "./utils/db";
-import { generateTripleId } from "./utils/id";
-import { ZodEntry, ZodUriData, type FullEntry } from "./zod";
+import {
+  generateProposalId,
+  generateProposedVersionId,
+  generateTripleId,
+  generateVersionId,
+} from "./utils/id";
+import { Entry, ZodUriData, type FullEntry } from "./zod";
 
-export const populateEntries = async (
-  entries: z.infer<typeof ZodEntry>[],
-  blockNumber: number,
-  timestamp: number
-) => {
+interface StreamData {
+  entries: Entry[];
+  blockNumber: number;
+  timestamp: number;
+  cursor: string;
+}
+
+export const populateEntries = async ({
+  entries,
+  blockNumber,
+  timestamp,
+  cursor,
+}: StreamData) => {
   const fullEntries: FullEntry[] = [];
   const uriResponses = await Promise.all(
     entries.map((entry) => actionsFromURI(entry.uri))
@@ -35,42 +48,48 @@ export const populateEntries = async (
     }
   }
 
-  const accounts: s.accounts.Insertable[] = toAccounts(fullEntries);
+  const accounts: s.accounts.Insertable[] = toAccounts({ fullEntries });
   console.log("Accounts Count: ", accounts.length);
   await upsertChunked("accounts", accounts, ["id"], {
     updateColumns: db.doNothing,
   });
 
-  const actions: s.actions.Insertable[] = toActions(fullEntries);
+  const actions: s.actions.Insertable[] = toActions({ fullEntries, cursor });
   console.log("Actions Count", actions.length);
   await insertChunked("actions", actions);
 
-  const geoEntities: s.geo_entities.Insertable[] = toGeoEntities(fullEntries);
+  const geoEntities: s.geo_entities.Insertable[] = toGeoEntities({
+    fullEntries,
+  });
   console.log("Geo Entities Count", geoEntities.length);
   await upsertChunked("geo_entities", geoEntities, ["id"], {
     updateColumns: db.doNothing,
   });
 
-  // const log_entries: s.log_entries.Insertable[] = [];
-  const proposals: s.proposals.Insertable[] = toProposals(
+  const proposals: s.proposals.Insertable[] = toProposals({
     fullEntries,
     blockNumber,
-    timestamp
-  );
+    timestamp,
+    cursor,
+  });
   console.log("Proposals Count", proposals.length);
   await insertChunked("proposals", proposals);
-  // const proposed_versions: s.proposed_versions.Insertable[] = [];
-  // const space_admins: s.space_admins.Insertable[] = [];
-  // const space_editor_controllers: s.space_editor_controllers.Insertable[] = [];
-  // const space_editors: s.space_editors.Insertable[] = [];
+
+  const proposed_versions: s.proposed_versions.Insertable[] =
+    toProposedVersions({
+      fullEntries,
+      blockNumber,
+      timestamp,
+      cursor,
+    });
+  console.log("Proposed Versions Count", proposed_versions.length);
+  await insertChunked("proposed_versions", proposed_versions);
 
   const spaces: s.spaces.Insertable[] = toSpaces(fullEntries, blockNumber);
   console.log("Spaces Count", spaces.length);
   await upsertChunked("spaces", spaces, ["id"], {
     updateColumns: db.doNothing,
   });
-
-  // const subspaces: s.subspaces.Insertable[] = [];
 
   // /* Todo: How are duplicate triples being handled in Geo? I know it's possible, but if the triple ID is defined, what does that entail */
   const triples: s.triples.Insertable[] = toTriples(fullEntries);
@@ -79,10 +98,16 @@ export const populateEntries = async (
     updateColumns: db.doNothing,
   });
 
-  // const versions: s.versions.Insertable[] = [];
+  const versions: s.versions.Insertable[] = [];
+  console.log("Versions Count", versions.length);
+  await insertChunked("versions", versions);
 };
 
-export const toAccounts = (fullEntries: FullEntry[]) => {
+interface ToAccountArgs {
+  fullEntries: Entry[];
+}
+
+export const toAccounts = ({ fullEntries }: ToAccountArgs) => {
   const accounts: s.accounts.Insertable[] = [];
   const author = fullEntries[0].author; // TODO: Confirm with Byron that this logic is correct
   if (author) {
@@ -93,13 +118,28 @@ export const toAccounts = (fullEntries: FullEntry[]) => {
   return accounts;
 };
 
-export const toActions = (fullEntries: FullEntry[]) => {
+interface ToActionArgs {
+  fullEntries: FullEntry[];
+  cursor: string;
+}
+export const toActions = ({ fullEntries, cursor }: ToActionArgs) => {
   const actions: s.actions.Insertable[] = fullEntries.flatMap((fullEntry) => {
     return fullEntry.uriData.actions.map((action) => {
       const string_value =
         action.value.type === "string" ? action.value.value : null;
       const entity_value =
         action.value.type === "entity" ? action.value.id : null;
+
+      const proposed_version_id = generateProposedVersionId({
+        entityId: action.entityId,
+        cursor,
+      });
+
+      const version_id = generateVersionId({
+        entityId: action.entityId,
+        cursor,
+      });
+
       return {
         action_type: action.type,
         entity_id: action.entityId,
@@ -108,6 +148,8 @@ export const toActions = (fullEntries: FullEntry[]) => {
         value_id: action.value.id,
         string_value,
         entity_value,
+        proposed_version_id,
+        version_id,
       };
     });
   });
@@ -115,14 +157,22 @@ export const toActions = (fullEntries: FullEntry[]) => {
   return actions;
 };
 
-export const toProposals = (
-  fullEntries: FullEntry[],
-  blockNumber: number,
-  timestamp: number
-) => {
+interface toProposalsArgs {
+  fullEntries: FullEntry[];
+  blockNumber: number;
+  timestamp: number;
+  cursor: string;
+}
+export const toProposals = ({
+  fullEntries,
+  blockNumber,
+  timestamp,
+  cursor,
+}: toProposalsArgs) => {
   const proposals: s.proposals.Insertable[] = fullEntries.flatMap(
-    (fullEntry) => ({
-      is_root_space: false,
+    (fullEntry, idx) => ({
+      id: generateProposalId({ idx, cursor }),
+      is_root_space: fullEntry.space === PERMISSIONED_SPACE_REGISTRY_ADDRESS,
       created_at_block: blockNumber,
       created_by_id: fullEntry.author,
       space_id: fullEntry.space,
@@ -131,29 +181,77 @@ export const toProposals = (
     })
   );
 
-  const uniqueEntityIds = fullEntries
-    .flatMap((fullEntry) =>
-      fullEntry.uriData.actions.map((action) => action.entityId)
-    )
-    .filter((value, index, self) => self.indexOf(value) === index);
-
-  // const proposedVersions: s.proposed_versions.Insertable[] =
-
-  return { proposals };
+  return proposals;
 };
 
-export const toGeoEntities = (fullEntries: FullEntry[]) => {
-  const entities: s.geo_entities.Insertable[] = fullEntries.flatMap(
-    (fullEntry) => {
-      return fullEntry.uriData.actions.map((action) => {
+interface toProposedVersionArgs {
+  fullEntries: FullEntry[];
+  blockNumber: number;
+  timestamp: number;
+  cursor: string;
+}
+export const toProposedVersions = ({
+  fullEntries,
+  blockNumber,
+  timestamp,
+  cursor,
+}: toProposedVersionArgs) => {
+  const proposedVersions: s.proposed_versions.Insertable[] =
+    fullEntries.flatMap((fullEntry) => {
+      const uniqueEntityIds = fullEntry.uriData.actions
+        .map((action) => action.entityId)
+        .filter((value, index, self) => self.indexOf(value) === index);
+
+      return uniqueEntityIds.map((entityId) => {
+        const proposedVersionName = fullEntry.uriData.name;
         return {
-          id: action.entityId,
+          id: generateProposedVersionId({ entityId, cursor }),
+          entity_id: entityId,
+          created_at_block: blockNumber,
+          created_at: timestamp,
+          status: "APPROVED",
+          name: proposedVersionName ? proposedVersionName : null,
+          created_by_id: fullEntry.author,
         };
       });
-    }
-  );
+    });
 
-  return entities;
+  return proposedVersions;
+};
+
+interface toVersionArgs {
+  fullEntries: FullEntry[];
+  blockNumber: number;
+  timestamp: number;
+  cursor: string;
+}
+export const toVersions = ({
+  fullEntries,
+  blockNumber,
+  timestamp,
+  cursor,
+}: toVersionArgs) => {
+  const versions: s.versions.Insertable[] = fullEntries.flatMap((fullEntry) => {
+    const uniqueEntityIds = fullEntry.uriData.actions
+      .map((action) => action.entityId)
+      .filter((value, index, self) => self.indexOf(value) === index);
+
+    return uniqueEntityIds.map((entityId) => {
+      const proposedVersionName = fullEntry.uriData.name;
+      return {
+        id: generateProposedVersionId({ entityId, cursor }),
+        entity_id: entityId,
+        created_at_block: blockNumber,
+        created_at: timestamp,
+        status: "APPROVED",
+        name: proposedVersionName ? proposedVersionName : null,
+        proposed_version_id: generateProposedVersionId({ entityId, cursor }),
+        created_by_id: fullEntry.author,
+      };
+    });
+  });
+
+  return versions;
 };
 
 export const toSpaces = (fullEntries: FullEntry[], blockNumber: number) => {
@@ -203,25 +301,4 @@ export const toTriples = (fullEntries: FullEntry[]) => {
   });
 
   return triples;
-};
-
-export const toSubspaces = (fullEntries: FullEntry[]) => {
-  /* Todo: Confirm with Goose and Byron where 
-  ```
-  :subspace {:id "442e1850-9de7-4002-a065-7bc8fcff2514"
-                            :name "Subspace"
-                            :value-type :relation}
-                            ```
-
-                            is coming from...
-
-       Table structure:
-       
-       ```CREATE TABLE IF NOT EXISTS public.subspaces (
-    id text PRIMARY KEY NOT NULL,
-    parent_space_id text NOT NULL REFERENCES public.spaces(id),
-    child_space_id text NOT NULL REFERENCES public.spaces(id)
-);
-```
-  */
 };

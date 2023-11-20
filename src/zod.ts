@@ -28,6 +28,7 @@ export const ZodAction = z.object({
 export type Action = z.infer<typeof ZodAction>;
 
 export const ZodUriData = z.object({
+  name: z.string().optional(),
   type: z.string(),
   version: z.string(),
   actions: z.array(z.any()), // Parsing immediately after receiving data

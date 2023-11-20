@@ -145,15 +145,15 @@ declare module 'zapatos/schema' {
       /**
       * **actions.proposed_version_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      proposed_version_id: string | null;
+      proposed_version_id: string;
       /**
       * **actions.version_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      version_id: string | null;
+      version_id: string;
     }
     export interface JSONSelectable {
       /**
@@ -219,15 +219,15 @@ declare module 'zapatos/schema' {
       /**
       * **actions.proposed_version_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      proposed_version_id: string | null;
+      proposed_version_id: string;
       /**
       * **actions.version_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      version_id: string | null;
+      version_id: string;
     }
     export interface Whereable {
       /**
@@ -293,13 +293,13 @@ declare module 'zapatos/schema' {
       /**
       * **actions.proposed_version_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
       proposed_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **actions.version_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
       version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
@@ -367,15 +367,15 @@ declare module 'zapatos/schema' {
       /**
       * **actions.proposed_version_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      proposed_version_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      proposed_version_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **actions.version_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      version_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      version_id: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -441,15 +441,15 @@ declare module 'zapatos/schema' {
       /**
       * **actions.proposed_version_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      proposed_version_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      proposed_version_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **actions.version_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      version_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      version_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
     export type UniqueIndex = 'actions_pkey';
     export type Column = keyof Selectable;
@@ -614,12 +614,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       attribute_value_type_id: string | null;
-      /**
-      * **geo_entities.version_id**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      version_id: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -658,12 +652,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       attribute_value_type_id: string | null;
-      /**
-      * **geo_entities.version_id**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      version_id: string | null;
     }
     export interface Whereable {
       /**
@@ -702,12 +690,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       attribute_value_type_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **geo_entities.version_id**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -746,12 +728,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       attribute_value_type_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **geo_entities.version_id**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      version_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -790,12 +766,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       attribute_value_type_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **geo_entities.version_id**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      version_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'geo_entities_pkey';
     export type Column = keyof Selectable;
@@ -1076,10 +1046,10 @@ declare module 'zapatos/schema' {
     export interface Selectable {
       /**
       * **proposals.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('proposals_id_seq'::regclass)`
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      id: number;
+      id: string;
       /**
       * **proposals.space_id**
       * - `text` in database
@@ -1126,10 +1096,10 @@ declare module 'zapatos/schema' {
     export interface JSONSelectable {
       /**
       * **proposals.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('proposals_id_seq'::regclass)`
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      id: number;
+      id: string;
       /**
       * **proposals.space_id**
       * - `text` in database
@@ -1176,10 +1146,10 @@ declare module 'zapatos/schema' {
     export interface Whereable {
       /**
       * **proposals.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('proposals_id_seq'::regclass)`
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **proposals.space_id**
       * - `text` in database
@@ -1226,10 +1196,10 @@ declare module 'zapatos/schema' {
     export interface Insertable {
       /**
       * **proposals.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('proposals_id_seq'::regclass)`
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **proposals.space_id**
       * - `text` in database
@@ -1276,10 +1246,10 @@ declare module 'zapatos/schema' {
     export interface Updatable {
       /**
       * **proposals.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('proposals_id_seq'::regclass)`
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **proposals.space_id**
       * - `text` in database
@@ -1381,10 +1351,10 @@ declare module 'zapatos/schema' {
       entity_id: string;
       /**
       * **proposed_versions.proposal_id**
-      * - `int4` in database
+      * - `text` in database
       * - Nullable, no default
       */
-      proposal_id: number | null;
+      proposal_id: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -1431,10 +1401,10 @@ declare module 'zapatos/schema' {
       entity_id: string;
       /**
       * **proposed_versions.proposal_id**
-      * - `int4` in database
+      * - `text` in database
       * - Nullable, no default
       */
-      proposal_id: number | null;
+      proposal_id: string | null;
     }
     export interface Whereable {
       /**
@@ -1481,10 +1451,10 @@ declare module 'zapatos/schema' {
       entity_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **proposed_versions.proposal_id**
-      * - `int4` in database
+      * - `text` in database
       * - Nullable, no default
       */
-      proposal_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      proposal_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -1531,10 +1501,10 @@ declare module 'zapatos/schema' {
       entity_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **proposed_versions.proposal_id**
-      * - `int4` in database
+      * - `text` in database
       * - Nullable, no default
       */
-      proposal_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      proposal_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -1581,10 +1551,10 @@ declare module 'zapatos/schema' {
       entity_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **proposed_versions.proposal_id**
-      * - `int4` in database
+      * - `text` in database
       * - Nullable, no default
       */
-      proposal_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      proposal_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'proposed_versions_pkey';
     export type Column = keyof Selectable;
@@ -2489,17 +2459,17 @@ declare module 'zapatos/schema' {
       */
       created_at_block: number;
       /**
-      * **versions.created_by**
+      * **versions.created_by_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      created_by: string;
+      created_by_id: string;
       /**
-      * **versions.proposed_version**
+      * **versions.proposed_version_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      proposed_version: string;
+      proposed_version_id: string;
       /**
       * **versions.entity_id**
       * - `text` in database
@@ -2539,17 +2509,17 @@ declare module 'zapatos/schema' {
       */
       created_at_block: number;
       /**
-      * **versions.created_by**
+      * **versions.created_by_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      created_by: string;
+      created_by_id: string;
       /**
-      * **versions.proposed_version**
+      * **versions.proposed_version_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      proposed_version: string;
+      proposed_version_id: string;
       /**
       * **versions.entity_id**
       * - `text` in database
@@ -2589,17 +2559,17 @@ declare module 'zapatos/schema' {
       */
       created_at_block?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **versions.created_by**
+      * **versions.created_by_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      created_by?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      created_by_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **versions.proposed_version**
+      * **versions.proposed_version_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      proposed_version?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      proposed_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **versions.entity_id**
       * - `text` in database
@@ -2639,17 +2609,17 @@ declare module 'zapatos/schema' {
       */
       created_at_block: number | db.Parameter<number> | db.SQLFragment;
       /**
-      * **versions.created_by**
+      * **versions.created_by_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      created_by: string | db.Parameter<string> | db.SQLFragment;
+      created_by_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **versions.proposed_version**
+      * **versions.proposed_version_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      proposed_version: string | db.Parameter<string> | db.SQLFragment;
+      proposed_version_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **versions.entity_id**
       * - `text` in database
@@ -2689,17 +2659,17 @@ declare module 'zapatos/schema' {
       */
       created_at_block?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
       /**
-      * **versions.created_by**
+      * **versions.created_by_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      created_by?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      created_by_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **versions.proposed_version**
+      * **versions.proposed_version_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      proposed_version?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      proposed_version_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **versions.entity_id**
       * - `text` in database

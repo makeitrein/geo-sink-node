@@ -11,4 +11,26 @@ export const generateTripleId = ({
 }) =>
   `${space_id.toLowerCase()}:${entity_id.toLowerCase()}:${attribute_id.toLowerCase()}:${value_id.toLowerCase()}`;
 
-export const generateProposedVersionId = ({ cursor }: { cursor: string }) => ``;
+export const generateProposalId = ({
+  idx,
+  cursor,
+}: {
+  idx: number;
+  cursor: string;
+}) => `${idx}:${cursor}`;
+
+export const generateProposedVersionId = ({
+  entityId,
+  cursor,
+}: {
+  entityId: string;
+  cursor: string;
+}) => `${entityId}:${cursor}`;
+
+export const generateVersionId = ({
+  entityId,
+  cursor,
+}: {
+  entityId: string;
+  cursor: string;
+}) => `${entityId}:${cursor}`;
