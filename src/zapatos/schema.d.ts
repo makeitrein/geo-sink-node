@@ -76,6 +76,389 @@ declare module 'zapatos/schema' {
   }
 
   /**
+   * **actions**
+   * - Table in database
+   */
+  export namespace actions {
+    export type Table = 'actions';
+    export interface Selectable {
+      /**
+      * **actions.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('actions_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **actions.action_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      action_type: string;
+      /**
+      * **actions.entity_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      entity_id: string;
+      /**
+      * **actions.attribute_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      attribute_id: string;
+      /**
+      * **actions.value_type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value_type: string | null;
+      /**
+      * **actions.value_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value_id: string | null;
+      /**
+      * **actions.number_value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      number_value: string | null;
+      /**
+      * **actions.string_value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      string_value: string | null;
+      /**
+      * **actions.entity_value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      entity_value: string | null;
+      /**
+      * **actions.array_value**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      array_value: string[] | null;
+      /**
+      * **actions.proposed_version_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      proposed_version_id: number | null;
+      /**
+      * **actions.version_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      version_id: string | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **actions.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('actions_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **actions.action_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      action_type: string;
+      /**
+      * **actions.entity_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      entity_id: string;
+      /**
+      * **actions.attribute_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      attribute_id: string;
+      /**
+      * **actions.value_type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value_type: string | null;
+      /**
+      * **actions.value_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value_id: string | null;
+      /**
+      * **actions.number_value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      number_value: string | null;
+      /**
+      * **actions.string_value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      string_value: string | null;
+      /**
+      * **actions.entity_value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      entity_value: string | null;
+      /**
+      * **actions.array_value**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      array_value: string[] | null;
+      /**
+      * **actions.proposed_version_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      proposed_version_id: number | null;
+      /**
+      * **actions.version_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      version_id: string | null;
+    }
+    export interface Whereable {
+      /**
+      * **actions.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('actions_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **actions.action_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      action_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **actions.entity_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      entity_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **actions.attribute_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      attribute_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **actions.value_type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **actions.value_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **actions.number_value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      number_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **actions.string_value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      string_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **actions.entity_value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      entity_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **actions.array_value**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      array_value?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **actions.proposed_version_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      proposed_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **actions.version_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **actions.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('actions_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **actions.action_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      action_type: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **actions.entity_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      entity_id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **actions.attribute_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      attribute_id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **actions.value_type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value_type?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **actions.value_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **actions.number_value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      number_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **actions.string_value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      string_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **actions.entity_value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      entity_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **actions.array_value**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      array_value?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **actions.proposed_version_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      proposed_version_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **actions.version_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      version_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **actions.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('actions_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **actions.action_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      action_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **actions.entity_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      entity_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **actions.attribute_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      attribute_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **actions.value_type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value_type?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **actions.value_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **actions.number_value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      number_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **actions.string_value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      string_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **actions.entity_value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      entity_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **actions.array_value**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      array_value?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **actions.proposed_version_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      proposed_version_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **actions.version_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      version_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'actions_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
    * **cursors**
    * - Table in database
    */
@@ -941,6 +1324,269 @@ declare module 'zapatos/schema' {
       status?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
     export type UniqueIndex = 'proposals_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **proposed_versions**
+   * - Table in database
+   */
+  export namespace proposed_versions {
+    export type Table = 'proposed_versions';
+    export interface Selectable {
+      /**
+      * **proposed_versions.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('proposed_versions_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **proposed_versions.name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      name: string | null;
+      /**
+      * **proposed_versions.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description: string | null;
+      /**
+      * **proposed_versions.created_at**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      created_at: number;
+      /**
+      * **proposed_versions.created_at_block**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      created_at_block: number;
+      /**
+      * **proposed_versions.created_by_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      created_by_id: string;
+      /**
+      * **proposed_versions.entity_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      entity_id: string;
+      /**
+      * **proposed_versions.proposal_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      proposal_id: number | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **proposed_versions.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('proposed_versions_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **proposed_versions.name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      name: string | null;
+      /**
+      * **proposed_versions.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description: string | null;
+      /**
+      * **proposed_versions.created_at**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      created_at: number;
+      /**
+      * **proposed_versions.created_at_block**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      created_at_block: number;
+      /**
+      * **proposed_versions.created_by_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      created_by_id: string;
+      /**
+      * **proposed_versions.entity_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      entity_id: string;
+      /**
+      * **proposed_versions.proposal_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      proposal_id: number | null;
+    }
+    export interface Whereable {
+      /**
+      * **proposed_versions.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('proposed_versions_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **proposed_versions.name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **proposed_versions.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **proposed_versions.created_at**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      created_at?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **proposed_versions.created_at_block**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      created_at_block?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **proposed_versions.created_by_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      created_by_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **proposed_versions.entity_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      entity_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **proposed_versions.proposal_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      proposal_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **proposed_versions.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('proposed_versions_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **proposed_versions.name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **proposed_versions.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **proposed_versions.created_at**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      created_at: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **proposed_versions.created_at_block**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      created_at_block: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **proposed_versions.created_by_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      created_by_id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **proposed_versions.entity_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      entity_id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **proposed_versions.proposal_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      proposal_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **proposed_versions.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('proposed_versions_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **proposed_versions.name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **proposed_versions.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **proposed_versions.created_at**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      created_at?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **proposed_versions.created_at_block**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      created_at_block?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **proposed_versions.created_by_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      created_by_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **proposed_versions.entity_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      entity_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **proposed_versions.proposal_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      proposal_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'proposed_versions_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
@@ -1850,10 +2496,10 @@ declare module 'zapatos/schema' {
       created_by: string;
       /**
       * **versions.proposed_version**
-      * - `text` in database
+      * - `int4` in database
       * - `NOT NULL`, no default
       */
-      proposed_version: string;
+      proposed_version: number;
       /**
       * **versions.entity_id**
       * - `text` in database
@@ -1900,10 +2546,10 @@ declare module 'zapatos/schema' {
       created_by: string;
       /**
       * **versions.proposed_version**
-      * - `text` in database
+      * - `int4` in database
       * - `NOT NULL`, no default
       */
-      proposed_version: string;
+      proposed_version: number;
       /**
       * **versions.entity_id**
       * - `text` in database
@@ -1950,10 +2596,10 @@ declare module 'zapatos/schema' {
       created_by?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **versions.proposed_version**
-      * - `text` in database
+      * - `int4` in database
       * - `NOT NULL`, no default
       */
-      proposed_version?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      proposed_version?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **versions.entity_id**
       * - `text` in database
@@ -2000,10 +2646,10 @@ declare module 'zapatos/schema' {
       created_by: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **versions.proposed_version**
-      * - `text` in database
+      * - `int4` in database
       * - `NOT NULL`, no default
       */
-      proposed_version: string | db.Parameter<string> | db.SQLFragment;
+      proposed_version: number | db.Parameter<number> | db.SQLFragment;
       /**
       * **versions.entity_id**
       * - `text` in database
@@ -2050,10 +2696,10 @@ declare module 'zapatos/schema' {
       created_by?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **versions.proposed_version**
-      * - `text` in database
+      * - `int4` in database
       * - `NOT NULL`, no default
       */
-      proposed_version?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      proposed_version?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
       /**
       * **versions.entity_id**
       * - `text` in database
@@ -2071,20 +2717,20 @@ declare module 'zapatos/schema' {
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = accounts.Table | cursors.Table | geo_entities.Table | log_entries.Table | proposals.Table | space_admins.Table | space_editor_controllers.Table | space_editors.Table | spaces.Table | subspaces.Table | triples.Table | versions.Table;
-    export type Selectable = accounts.Selectable | cursors.Selectable | geo_entities.Selectable | log_entries.Selectable | proposals.Selectable | space_admins.Selectable | space_editor_controllers.Selectable | space_editors.Selectable | spaces.Selectable | subspaces.Selectable | triples.Selectable | versions.Selectable;
-    export type JSONSelectable = accounts.JSONSelectable | cursors.JSONSelectable | geo_entities.JSONSelectable | log_entries.JSONSelectable | proposals.JSONSelectable | space_admins.JSONSelectable | space_editor_controllers.JSONSelectable | space_editors.JSONSelectable | spaces.JSONSelectable | subspaces.JSONSelectable | triples.JSONSelectable | versions.JSONSelectable;
-    export type Whereable = accounts.Whereable | cursors.Whereable | geo_entities.Whereable | log_entries.Whereable | proposals.Whereable | space_admins.Whereable | space_editor_controllers.Whereable | space_editors.Whereable | spaces.Whereable | subspaces.Whereable | triples.Whereable | versions.Whereable;
-    export type Insertable = accounts.Insertable | cursors.Insertable | geo_entities.Insertable | log_entries.Insertable | proposals.Insertable | space_admins.Insertable | space_editor_controllers.Insertable | space_editors.Insertable | spaces.Insertable | subspaces.Insertable | triples.Insertable | versions.Insertable;
-    export type Updatable = accounts.Updatable | cursors.Updatable | geo_entities.Updatable | log_entries.Updatable | proposals.Updatable | space_admins.Updatable | space_editor_controllers.Updatable | space_editors.Updatable | spaces.Updatable | subspaces.Updatable | triples.Updatable | versions.Updatable;
-    export type UniqueIndex = accounts.UniqueIndex | cursors.UniqueIndex | geo_entities.UniqueIndex | log_entries.UniqueIndex | proposals.UniqueIndex | space_admins.UniqueIndex | space_editor_controllers.UniqueIndex | space_editors.UniqueIndex | spaces.UniqueIndex | subspaces.UniqueIndex | triples.UniqueIndex | versions.UniqueIndex;
-    export type Column = accounts.Column | cursors.Column | geo_entities.Column | log_entries.Column | proposals.Column | space_admins.Column | space_editor_controllers.Column | space_editors.Column | spaces.Column | subspaces.Column | triples.Column | versions.Column;
+    export type Table = accounts.Table | actions.Table | cursors.Table | geo_entities.Table | log_entries.Table | proposals.Table | proposed_versions.Table | space_admins.Table | space_editor_controllers.Table | space_editors.Table | spaces.Table | subspaces.Table | triples.Table | versions.Table;
+    export type Selectable = accounts.Selectable | actions.Selectable | cursors.Selectable | geo_entities.Selectable | log_entries.Selectable | proposals.Selectable | proposed_versions.Selectable | space_admins.Selectable | space_editor_controllers.Selectable | space_editors.Selectable | spaces.Selectable | subspaces.Selectable | triples.Selectable | versions.Selectable;
+    export type JSONSelectable = accounts.JSONSelectable | actions.JSONSelectable | cursors.JSONSelectable | geo_entities.JSONSelectable | log_entries.JSONSelectable | proposals.JSONSelectable | proposed_versions.JSONSelectable | space_admins.JSONSelectable | space_editor_controllers.JSONSelectable | space_editors.JSONSelectable | spaces.JSONSelectable | subspaces.JSONSelectable | triples.JSONSelectable | versions.JSONSelectable;
+    export type Whereable = accounts.Whereable | actions.Whereable | cursors.Whereable | geo_entities.Whereable | log_entries.Whereable | proposals.Whereable | proposed_versions.Whereable | space_admins.Whereable | space_editor_controllers.Whereable | space_editors.Whereable | spaces.Whereable | subspaces.Whereable | triples.Whereable | versions.Whereable;
+    export type Insertable = accounts.Insertable | actions.Insertable | cursors.Insertable | geo_entities.Insertable | log_entries.Insertable | proposals.Insertable | proposed_versions.Insertable | space_admins.Insertable | space_editor_controllers.Insertable | space_editors.Insertable | spaces.Insertable | subspaces.Insertable | triples.Insertable | versions.Insertable;
+    export type Updatable = accounts.Updatable | actions.Updatable | cursors.Updatable | geo_entities.Updatable | log_entries.Updatable | proposals.Updatable | proposed_versions.Updatable | space_admins.Updatable | space_editor_controllers.Updatable | space_editors.Updatable | spaces.Updatable | subspaces.Updatable | triples.Updatable | versions.Updatable;
+    export type UniqueIndex = accounts.UniqueIndex | actions.UniqueIndex | cursors.UniqueIndex | geo_entities.UniqueIndex | log_entries.UniqueIndex | proposals.UniqueIndex | proposed_versions.UniqueIndex | space_admins.UniqueIndex | space_editor_controllers.UniqueIndex | space_editors.UniqueIndex | spaces.UniqueIndex | subspaces.UniqueIndex | triples.UniqueIndex | versions.UniqueIndex;
+    export type Column = accounts.Column | actions.Column | cursors.Column | geo_entities.Column | log_entries.Column | proposals.Column | proposed_versions.Column | space_admins.Column | space_editor_controllers.Column | space_editors.Column | spaces.Column | subspaces.Column | triples.Column | versions.Column;
   
-    export type AllBaseTables = [accounts.Table, cursors.Table, geo_entities.Table, log_entries.Table, proposals.Table, space_admins.Table, space_editor_controllers.Table, space_editors.Table, spaces.Table, subspaces.Table, triples.Table, versions.Table];
+    export type AllBaseTables = [accounts.Table, actions.Table, cursors.Table, geo_entities.Table, log_entries.Table, proposals.Table, proposed_versions.Table, space_admins.Table, space_editor_controllers.Table, space_editors.Table, spaces.Table, subspaces.Table, triples.Table, versions.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [accounts.Table, cursors.Table, geo_entities.Table, log_entries.Table, proposals.Table, space_admins.Table, space_editor_controllers.Table, space_editors.Table, spaces.Table, subspaces.Table, triples.Table, versions.Table];
+    export type AllTablesAndViews = [accounts.Table, actions.Table, cursors.Table, geo_entities.Table, log_entries.Table, proposals.Table, proposed_versions.Table, space_admins.Table, space_editor_controllers.Table, space_editors.Table, spaces.Table, subspaces.Table, triples.Table, versions.Table];
   }
 
 
@@ -2113,10 +2759,12 @@ declare module 'zapatos/schema' {
 
   export type SelectableForTable<T extends Table> = {
     "accounts": accounts.Selectable;
+    "actions": actions.Selectable;
     "cursors": cursors.Selectable;
     "geo_entities": geo_entities.Selectable;
     "log_entries": log_entries.Selectable;
     "proposals": proposals.Selectable;
+    "proposed_versions": proposed_versions.Selectable;
     "space_admins": space_admins.Selectable;
     "space_editor_controllers": space_editor_controllers.Selectable;
     "space_editors": space_editors.Selectable;
@@ -2128,10 +2776,12 @@ declare module 'zapatos/schema' {
 
   export type JSONSelectableForTable<T extends Table> = {
     "accounts": accounts.JSONSelectable;
+    "actions": actions.JSONSelectable;
     "cursors": cursors.JSONSelectable;
     "geo_entities": geo_entities.JSONSelectable;
     "log_entries": log_entries.JSONSelectable;
     "proposals": proposals.JSONSelectable;
+    "proposed_versions": proposed_versions.JSONSelectable;
     "space_admins": space_admins.JSONSelectable;
     "space_editor_controllers": space_editor_controllers.JSONSelectable;
     "space_editors": space_editors.JSONSelectable;
@@ -2143,10 +2793,12 @@ declare module 'zapatos/schema' {
 
   export type WhereableForTable<T extends Table> = {
     "accounts": accounts.Whereable;
+    "actions": actions.Whereable;
     "cursors": cursors.Whereable;
     "geo_entities": geo_entities.Whereable;
     "log_entries": log_entries.Whereable;
     "proposals": proposals.Whereable;
+    "proposed_versions": proposed_versions.Whereable;
     "space_admins": space_admins.Whereable;
     "space_editor_controllers": space_editor_controllers.Whereable;
     "space_editors": space_editors.Whereable;
@@ -2158,10 +2810,12 @@ declare module 'zapatos/schema' {
 
   export type InsertableForTable<T extends Table> = {
     "accounts": accounts.Insertable;
+    "actions": actions.Insertable;
     "cursors": cursors.Insertable;
     "geo_entities": geo_entities.Insertable;
     "log_entries": log_entries.Insertable;
     "proposals": proposals.Insertable;
+    "proposed_versions": proposed_versions.Insertable;
     "space_admins": space_admins.Insertable;
     "space_editor_controllers": space_editor_controllers.Insertable;
     "space_editors": space_editors.Insertable;
@@ -2173,10 +2827,12 @@ declare module 'zapatos/schema' {
 
   export type UpdatableForTable<T extends Table> = {
     "accounts": accounts.Updatable;
+    "actions": actions.Updatable;
     "cursors": cursors.Updatable;
     "geo_entities": geo_entities.Updatable;
     "log_entries": log_entries.Updatable;
     "proposals": proposals.Updatable;
+    "proposed_versions": proposed_versions.Updatable;
     "space_admins": space_admins.Updatable;
     "space_editor_controllers": space_editor_controllers.Updatable;
     "space_editors": space_editors.Updatable;
@@ -2188,10 +2844,12 @@ declare module 'zapatos/schema' {
 
   export type UniqueIndexForTable<T extends Table> = {
     "accounts": accounts.UniqueIndex;
+    "actions": actions.UniqueIndex;
     "cursors": cursors.UniqueIndex;
     "geo_entities": geo_entities.UniqueIndex;
     "log_entries": log_entries.UniqueIndex;
     "proposals": proposals.UniqueIndex;
+    "proposed_versions": proposed_versions.UniqueIndex;
     "space_admins": space_admins.UniqueIndex;
     "space_editor_controllers": space_editor_controllers.UniqueIndex;
     "space_editors": space_editors.UniqueIndex;
@@ -2203,10 +2861,12 @@ declare module 'zapatos/schema' {
 
   export type ColumnForTable<T extends Table> = {
     "accounts": accounts.Column;
+    "actions": actions.Column;
     "cursors": cursors.Column;
     "geo_entities": geo_entities.Column;
     "log_entries": log_entries.Column;
     "proposals": proposals.Column;
+    "proposed_versions": proposed_versions.Column;
     "space_admins": space_admins.Column;
     "space_editor_controllers": space_editor_controllers.Column;
     "space_editors": space_editors.Column;
@@ -2218,10 +2878,12 @@ declare module 'zapatos/schema' {
 
   export type SQLForTable<T extends Table> = {
     "accounts": accounts.SQL;
+    "actions": actions.SQL;
     "cursors": cursors.SQL;
     "geo_entities": geo_entities.SQL;
     "log_entries": log_entries.SQL;
     "proposals": proposals.SQL;
+    "proposed_versions": proposed_versions.SQL;
     "space_admins": space_admins.SQL;
     "space_editor_controllers": space_editor_controllers.SQL;
     "space_editors": space_editors.SQL;

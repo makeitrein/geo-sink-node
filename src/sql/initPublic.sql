@@ -56,14 +56,14 @@ CREATE TABLE public.proposals (
 );
 
 CREATE TABLE public.proposed_versions (
-    id text PRIMARY KEY,
+    id serial PRIMARY KEY,
     name text,
     description text,
     created_at integer NOT NULL,
     created_at_block integer NOT NULL,
     created_by_id text NOT NULL REFERENCES public.accounts(id),
     entity_id text NOT NULL REFERENCES public.geo_entities(id),
-    proposal_id text REFERENCES public.proposals(id)
+    proposal_id integer REFERENCES public.proposals(id)
 );
 
 CREATE TABLE public.space_admins (
@@ -122,7 +122,7 @@ CREATE TABLE public.versions (
     created_at integer NOT NULL,
     created_at_block integer NOT NULL,
     created_by text NOT NULL,
-    proposed_version text NOT NULL,
+    proposed_version integer REFERENCES public.proposed_versions(id) NOT NULL,
     entity_id text REFERENCES public.geo_entities(id)
 );
 
@@ -137,7 +137,7 @@ CREATE TABLE public.actions (
     string_value text,
     entity_value text REFERENCES public.geo_entities(id),
     array_value text [],
-    proposed_version_id text REFERENCES public.proposed_versions(id),
+    proposed_version_id integer REFERENCES public.proposed_versions(id),
     version_id text REFERENCES public.versions(id)
 );
 
