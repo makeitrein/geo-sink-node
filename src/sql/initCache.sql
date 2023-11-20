@@ -1,3 +1,4 @@
+-- DROP SCHEMA IF EXISTS cache CASCADE;
 CREATE SCHEMA IF NOT EXISTS cache;
 
 -- 
@@ -10,7 +11,7 @@ CREATE TABLE IF NOT EXISTS cache.entries (
     data jsonb NOT NULL
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS idx_actions_unique ON cache.entries (block_number, cursor);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_actions_unique ON cache.entries (cursor);
 
 CREATE TABLE IF NOT EXISTS cache.roles (
     id serial PRIMARY KEY,

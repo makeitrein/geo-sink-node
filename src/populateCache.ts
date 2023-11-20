@@ -1,4 +1,6 @@
+import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
+import { pool } from "./utils/pool";
 import { FullEntry } from "./zod";
 
 export const populateEntriesCache = async ({
@@ -13,6 +15,8 @@ export const populateEntriesCache = async ({
   const cachedEntry: s.cache.entries.Insertable = {
     block_number: blockNumber,
     cursor,
-    data: JSON.stringify(fullEntries),
+    data: fullEntries,
   };
+
+  await db.upsert("cache.entries", cachedEntry, ["cursor"]).run(pool);
 };
