@@ -331,7 +331,6 @@ export const toTripleDatabaseTuples = (fullEntries: FullEntry[]) => {
   const triples: TripleDatabaseTuple[] = fullEntries.flatMap((fullEntry) => {
     return fullEntry.uriData.actions.map((action) => {
       const action_type = action.type;
-      const deleted = action_type === "deleteTriple";
 
       const entity_id = action.entityId;
       const attribute_id = action.attributeId;
@@ -366,7 +365,7 @@ export const toTripleDatabaseTuples = (fullEntries: FullEntry[]) => {
           space_id,
           is_protected,
         },
-      ];
+      ] as TripleDatabaseTuple;
     });
   });
 
