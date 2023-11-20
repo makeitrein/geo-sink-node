@@ -107,8 +107,7 @@ CREATE TABLE public.triples (
     array_value text,
     entity_value_id text REFERENCES public.geo_entities(id),
     is_protected boolean NOT NULL,
-    space_id text NOT NULL REFERENCES public.spaces(id),
-    CONSTRAINT triples_unique_entity_attribute UNIQUE (entity_id, attribute_id, value_id)
+    space_id text NOT NULL REFERENCES public.spaces(id)
 );
 
 CREATE TABLE public.versions (
