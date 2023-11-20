@@ -22,20 +22,16 @@ export const startGeoStream = async () => {
   logger.enable("pretty");
   logger.info("Logging enabled");
 
-  const manifest = "./geo-substream-v1.0.3.spkg";
+  const manifest = "./geo-substream.spkg";
   const substreamPackage = await readPackageFromFile(manifest);
   logger.info("Substream package downloaded");
 
   const { token } = await authIssue(substreamsApiKey, authIssueUrl);
   const outputModule = "geo_out";
   const startBlockNum = 36472424;
-  const productionMode = process.env.NODE_ENV === "production";
-  const finalBlocksOnly = true; // TODO: Confirm with Byron - Set to true to only process blocks that have pass finality
+  const productionMode = true;
+  const finalBlocksOnly = true;
 
-  // Cursor
-  // const cursor = cursorPath.startsWith("http") ? httpCursor : fileCursor;
-
-  // Connect Transport
   const startCursor = await readCursor();
   const registry = createRegistry(substreamPackage);
   const transport = createDefaultTransport(substreamsEndpoint, token, registry);
