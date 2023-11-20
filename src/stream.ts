@@ -67,10 +67,11 @@ export const startGeoStream = async () => {
     const roleChangeResponse = ZodRoleChangeStreamResponse.safeParse(message);
 
     const blockNumber = Number(clock.number.toString());
+    const timestamp = Number(clock.timestamp?.seconds);
 
     if (entryResponse.success) {
       console.log("Processing ", entryResponse.data.entries.length, " entries");
-      populateEntries(entryResponse.data.entries, blockNumber);
+      populateEntries(entryResponse.data.entries, blockNumber, timestamp);
     } else if (roleChangeResponse.success) {
       console.log("TODO: Handle roleGrantedResponse");
     } else {

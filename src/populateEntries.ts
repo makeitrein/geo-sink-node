@@ -1,10 +1,10 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 import { z } from "zod";
-import { actionsFromURI, isValidAction } from "./utils/actions";
+import { actionsFromURI } from "./utils/actions";
 import { insertChunked, upsertChunked } from "./utils/db";
 import { generateTripleId } from "./utils/triples";
-import { ZodEntry, ZodUriData, type FullEntry } from "./zod";
+import { ZodEntry, type FullEntry } from "./zod";
 
 export const populateEntries = async (
   entries: z.infer<typeof ZodEntry>[],
@@ -15,25 +15,6 @@ export const populateEntries = async (
   const uriResponses = await Promise.all(
     entries.map((entry) => actionsFromURI(entry.uri))
   );
-  for (let i = 0; i < entries.length; i++) {
-    console.log("\n\nProcessing entry", i + 1, "of", entries.length, "entries");
-    // First check if the general response conforms to what we expect
-    const uriResponse = ZodUriData.safeParse(uriResponses[i]);
-    if (uriResponse.success) {
-      // Then check if the actions conform to what we expect
-      console.log("Original Action Count: ", uriResponse.data.actions.length);
-      const actions = uriResponse.data.actions.filter(isValidAction);
-      console.log("Valid Actions:", actions.length);
-      fullEntries.push({
-        ...entries[i],
-        uriData: { ...uriResponse.data, actions },
-      });
-    } else {
-      console.error("Failed to parse URI data");
-      console.error(uriResponse);
-      console.error(uriResponse.error);
-    }
-  }
 
   const accounts: s.accounts.Insertable[] = toAccounts(fullEntries);
   console.log("Accounts Count: ", accounts.length);
@@ -52,19 +33,20 @@ export const populateEntries = async (
   });
 
   // const log_entries: s.log_entries.Insertable[] = [];
-  // const proposals: s.proposals.Insertable[] = [];
+  const proposals: s.proposals.Insertable[] = toProposals(
+    fullEntries,
+    blockNumber,
+    timestamp
+  );
+  console.log("Proposals Count", proposals.length);
+  await insertChunked("proposals", proposals);
   // const proposed_versions: s.proposed_versions.Insertable[] = [];
-  // const space_admins: s.space_admins.Insertable[] = [];
-  // const space_editor_controllers: s.space_editor_controllers.Insertable[] = [];
-  // const space_editors: s.space_editors.Insertable[] = [];
 
   const spaces: s.spaces.Insertable[] = toSpaces(fullEntries, blockNumber);
   console.log("Spaces Count", spaces.length);
   await upsertChunked("spaces", spaces, ["id"], {
     updateColumns: db.doNothing,
   });
-
-  // const subspaces: s.subspaces.Insertable[] = [];
 
   // /* Todo: How are duplicate triples being handled in Geo? I know it's possible, but if the triple ID is defined, what does that entail */
   const triples: s.triples.Insertable[] = toTriples(fullEntries);
@@ -121,6 +103,38 @@ export const toGeoEntities = (fullEntries: FullEntry[]) => {
   );
 
   return entities;
+};
+
+type FullEntry = {
+  id: string;
+  uri: string;
+  index: string;
+  author: string;
+  space: string;
+  uriData: {
+    actions: any[];
+    type: string;
+    version: string;
+  };
+};
+
+export const toProposals = (
+  fullEntries: FullEntry[],
+  blockNumber: number,
+  timestamp: number
+) => {
+  const proposals: s.proposals.Insertable[] = fullEntries.flatMap(
+    (fullEntry) => ({
+      is_root_space: false,
+      created_at_block: blockNumber,
+      created_by_id: fullEntry.author,
+      space_id: fullEntry.space,
+      created_at: timestamp,
+      status: "APPROVED",
+    })
+  );
+
+  return proposals;
 };
 
 export const toSpaces = (fullEntries: FullEntry[], blockNumber: number) => {

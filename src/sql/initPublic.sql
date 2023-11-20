@@ -45,7 +45,7 @@ CREATE TABLE public.log_entries (
 );
 
 CREATE TABLE public.proposals (
-    id text PRIMARY KEY,
+    id serial PRIMARY KEY,
     space_id text NOT NULL REFERENCES public.spaces(id),
     name text,
     description text,

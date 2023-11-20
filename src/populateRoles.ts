@@ -6,7 +6,7 @@ import { insertChunked, upsertChunked } from "./utils/db";
 import { generateTripleId } from "./utils/triples";
 import { ZodEntry, ZodUriData, type FullEntry } from "./zod";
 
-export const populateEntries = async (
+export const populateRoles = async (
   entries: z.infer<typeof ZodEntry>[],
   blockNumber: number,
   timestamp: number
