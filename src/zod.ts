@@ -52,7 +52,7 @@ export const ZodRoleChange = z.object({
   sender: z.string(),
   space: z.string(),
 });
-export type RoleGranted = z.infer<typeof ZodRoleChange>;
+export type RoleChange = z.infer<typeof ZodRoleChange>;
 
 export const ZodEntryStreamResponse = z.object({
   entries: z.array(ZodEntry),

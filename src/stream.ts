@@ -4,6 +4,7 @@ import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import dotenv from "dotenv";
 import { readCursor, writeCursor } from "./cursor.js";
 import { populateEntries } from "./populateEntries.js";
+import { handleRoleGranted, handleRoleRevoked } from "./populateRoles.js";
 import { invariant } from "./utils/invariant.js";
 import { logger } from "./utils/logger.js";
 import { ZodEntryStreamResponse, ZodRoleChangeStreamResponse } from "./zod.js";
@@ -74,13 +75,18 @@ export const startGeoStream = async () => {
       const entries = entryResponse.data.entries;
       populateEntries({ entries, blockNumber, cursor, timestamp });
     } else if (roleChangeResponse.success) {
-      console.log("TODO: Handle roleGrantedResponse");
+      roleChangeResponse.data.roleChanges.forEach((roleChange) => {
+        const { granted, revoked } = roleChange;
+        if (granted) {
+          handleRoleGranted(granted);
+        } else if (revoked) {
+          handleRoleRevoked(revoked);
+        }
+      });
     } else {
-      console.error("error", message);
+      console.error("Failed to parse substream message", message);
     }
   });
 
-  // Start streaming
   await emitter.start();
-  logger.info("Streaming started...");
 };
