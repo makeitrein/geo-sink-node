@@ -97,7 +97,12 @@ export const populateEntries = async ({
     updateColumns: db.doNothing,
   });
 
-  const versions: s.versions.Insertable[] = [];
+  const versions: s.versions.Insertable[] = toVersions({
+    fullEntries,
+    blockNumber,
+    timestamp,
+    cursor,
+  });
   console.log("Versions Count", versions.length);
   await insertChunked("versions", versions);
 };
@@ -159,17 +164,17 @@ interface toGeoEntitiesArgs {
   fullEntries: FullEntry[];
 }
 export const toGeoEntities = ({ fullEntries }: toGeoEntitiesArgs) => {
-  const entities: s.geo_entities.Insertable[] = fullEntries.flatMap(
-    (fullEntry) => {
-      return fullEntry.uriData.actions.map((action) => {
-        return {
-          id: action.entityId,
-        };
-      });
-    }
-  );
+  const entitiesMap: Record<string, s.geo_entities.Insertable> = {};
 
-  return entities;
+  fullEntries.forEach((fullEntry) => {
+    fullEntry.uriData.actions.map((action) => {
+      entitiesMap[action.entityId] = {
+        id: action.entityId,
+      };
+    });
+  });
+
+  return Object.values(entitiesMap);
 };
 
 interface toProposalsArgs {
