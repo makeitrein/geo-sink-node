@@ -3,7 +3,7 @@ import type * as s from "zapatos/schema";
 import { z } from "zod";
 import { actionsFromURI, isValidAction } from "./utils/actions";
 import { insertChunked, upsertChunked } from "./utils/db";
-import { generateTripleId } from "./utils/triples";
+import { generateTripleId } from "./utils/id";
 import { ZodEntry, ZodUriData, type FullEntry } from "./zod";
 
 export const populateEntries = async (

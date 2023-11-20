@@ -36,8 +36,8 @@ import {
   WALLETS_ATTRIBUTE,
   WEB_URL,
 } from "./constants/systemIds.js";
+import { generateTripleId } from "./utils/id.js";
 import { pool } from "./utils/pool.js";
-import { generateTripleId } from "./utils/triples.js";
 
 const entities: string[] = [
   TYPES,

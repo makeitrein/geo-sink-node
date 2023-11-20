@@ -10,3 +10,5 @@ export const generateTripleId = ({
   value_id: string;
 }) =>
   `${space_id.toLowerCase()}:${entity_id.toLowerCase()}:${attribute_id.toLowerCase()}:${value_id.toLowerCase()}`;
+
+export const generateProposedVersionId = ({ cursor }: { cursor: string }) => ``;

@@ -144,10 +144,10 @@ declare module 'zapatos/schema' {
       array_value: string[] | null;
       /**
       * **actions.proposed_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - Nullable, no default
       */
-      proposed_version_id: number | null;
+      proposed_version_id: string | null;
       /**
       * **actions.version_id**
       * - `text` in database
@@ -218,10 +218,10 @@ declare module 'zapatos/schema' {
       array_value: string[] | null;
       /**
       * **actions.proposed_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - Nullable, no default
       */
-      proposed_version_id: number | null;
+      proposed_version_id: string | null;
       /**
       * **actions.version_id**
       * - `text` in database
@@ -292,10 +292,10 @@ declare module 'zapatos/schema' {
       array_value?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
       /**
       * **actions.proposed_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - Nullable, no default
       */
-      proposed_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      proposed_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **actions.version_id**
       * - `text` in database
@@ -366,10 +366,10 @@ declare module 'zapatos/schema' {
       array_value?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
       /**
       * **actions.proposed_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - Nullable, no default
       */
-      proposed_version_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      proposed_version_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **actions.version_id**
       * - `text` in database
@@ -440,10 +440,10 @@ declare module 'zapatos/schema' {
       array_value?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **actions.proposed_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - Nullable, no default
       */
-      proposed_version_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      proposed_version_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **actions.version_id**
       * - `text` in database
@@ -1339,10 +1339,10 @@ declare module 'zapatos/schema' {
     export interface Selectable {
       /**
       * **proposed_versions.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('proposed_versions_id_seq'::regclass)`
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      id: number;
+      id: string;
       /**
       * **proposed_versions.name**
       * - `text` in database
@@ -1389,10 +1389,10 @@ declare module 'zapatos/schema' {
     export interface JSONSelectable {
       /**
       * **proposed_versions.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('proposed_versions_id_seq'::regclass)`
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      id: number;
+      id: string;
       /**
       * **proposed_versions.name**
       * - `text` in database
@@ -1439,10 +1439,10 @@ declare module 'zapatos/schema' {
     export interface Whereable {
       /**
       * **proposed_versions.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('proposed_versions_id_seq'::regclass)`
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **proposed_versions.name**
       * - `text` in database
@@ -1489,10 +1489,10 @@ declare module 'zapatos/schema' {
     export interface Insertable {
       /**
       * **proposed_versions.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('proposed_versions_id_seq'::regclass)`
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **proposed_versions.name**
       * - `text` in database
@@ -1539,10 +1539,10 @@ declare module 'zapatos/schema' {
     export interface Updatable {
       /**
       * **proposed_versions.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('proposed_versions_id_seq'::regclass)`
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **proposed_versions.name**
       * - `text` in database
@@ -2496,10 +2496,10 @@ declare module 'zapatos/schema' {
       created_by: string;
       /**
       * **versions.proposed_version**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      proposed_version: number;
+      proposed_version: string;
       /**
       * **versions.entity_id**
       * - `text` in database
@@ -2546,10 +2546,10 @@ declare module 'zapatos/schema' {
       created_by: string;
       /**
       * **versions.proposed_version**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      proposed_version: number;
+      proposed_version: string;
       /**
       * **versions.entity_id**
       * - `text` in database
@@ -2596,10 +2596,10 @@ declare module 'zapatos/schema' {
       created_by?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **versions.proposed_version**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      proposed_version?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      proposed_version?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **versions.entity_id**
       * - `text` in database
@@ -2646,10 +2646,10 @@ declare module 'zapatos/schema' {
       created_by: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **versions.proposed_version**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      proposed_version: number | db.Parameter<number> | db.SQLFragment;
+      proposed_version: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **versions.entity_id**
       * - `text` in database
@@ -2696,10 +2696,10 @@ declare module 'zapatos/schema' {
       created_by?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **versions.proposed_version**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      proposed_version?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      proposed_version?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **versions.entity_id**
       * - `text` in database
