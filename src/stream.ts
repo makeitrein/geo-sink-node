@@ -2,7 +2,6 @@ import { authIssue, createRegistry, createRequest } from "@substreams/core";
 import { readPackageFromFile } from "@substreams/manifest";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import dotenv from "dotenv";
-import { populateEntries } from "./populate.js";
 import { invariant } from "./utils/invariant.js";
 import { logger } from "./utils/logger.js";
 import { ZodEntryStreamResponse, ZodRoleChangeStreamResponse } from "./zod.js";
@@ -21,8 +20,8 @@ export const startGeoStream = async () => {
   logger.info("Logging enabled");
 
   const manifest = "./geo-substream-v1.0.3.spkg";
-  const substreamPackage = await readPackageFromFile(manifest);
-  logger.info("Substream package downloaded");
+  const substreamPackage = readPackageFromFile(manifest);
+  logger.info("Substream package read from file");
 
   const { token } = await authIssue(substreamsApiKey, authIssueUrl);
   const outputModule = "geo_out";
@@ -67,7 +66,7 @@ export const startGeoStream = async () => {
 
     if (entryResponse.success) {
       console.log("Processing ", entryResponse.data.entries.length, " entries");
-      populateEntries(entryResponse.data.entries, blockNumber);
+      // populateEntries(entryResponse.data.entries, blockNumber);
     } else if (roleChangeResponse.success) {
       console.log("TODO: Handle roleGrantedResponse");
     } else {
