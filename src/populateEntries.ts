@@ -43,8 +43,8 @@ export const populateWithEntries = async ({
           uriData: { ...uriResponse.data, actions },
         });
       } else {
-        console.error("Failed to parse URI data");
-        console.error(uriResponse);
+        console.error("Failed to parse URI data: ", uriResponse);
+        console.error("URI used: ", entries[i].uri);
         console.error(uriResponse.error);
       }
     }
