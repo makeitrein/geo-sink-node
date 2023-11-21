@@ -2846,6 +2846,12 @@ declare module 'zapatos/schema' {
         */
         cursor: string;
         /**
+        * **cache.entries.timestamp**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        timestamp: number;
+        /**
         * **cache.entries.data**
         * - `jsonb` in database
         * - `NOT NULL`, no default
@@ -2871,6 +2877,12 @@ declare module 'zapatos/schema' {
         * - `NOT NULL`, no default
         */
         cursor: string;
+        /**
+        * **cache.entries.timestamp**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        timestamp: number;
         /**
         * **cache.entries.data**
         * - `jsonb` in database
@@ -2898,6 +2910,12 @@ declare module 'zapatos/schema' {
         */
         cursor?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
         /**
+        * **cache.entries.timestamp**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        timestamp?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+        /**
         * **cache.entries.data**
         * - `jsonb` in database
         * - `NOT NULL`, no default
@@ -2923,6 +2941,12 @@ declare module 'zapatos/schema' {
         * - `NOT NULL`, no default
         */
         cursor: string | db.Parameter<string> | db.SQLFragment;
+        /**
+        * **cache.entries.timestamp**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        timestamp: number | db.Parameter<number> | db.SQLFragment;
         /**
         * **cache.entries.data**
         * - `jsonb` in database
@@ -2950,13 +2974,19 @@ declare module 'zapatos/schema' {
         */
         cursor?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
         /**
+        * **cache.entries.timestamp**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        timestamp?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+        /**
         * **cache.entries.data**
         * - `jsonb` in database
         * - `NOT NULL`, no default
         */
         data?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
       }
-      export type UniqueIndex = 'entries_pkey' | 'idx_actions_unique' | 'unique_cached_entries';
+      export type UniqueIndex = 'entries_pkey' | 'unique_cached_entries';
       export type Column = keyof Selectable;
       export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
       export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
@@ -3219,7 +3249,7 @@ declare module 'zapatos/schema' {
         */
         cursor?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       }
-      export type UniqueIndex = 'idx_roles_unique' | 'roles_pkey' | 'unique_cached_roles';
+      export type UniqueIndex = 'roles_pkey' | 'unique_cached_roles';
       export type Column = keyof Selectable;
       export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
       export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;

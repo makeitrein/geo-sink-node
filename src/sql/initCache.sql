@@ -1,3 +1,4 @@
+-- Uncomment, run init-db.sql, and recommend line below if you need to update the schema
 -- DROP SCHEMA IF EXISTS cache CASCADE;
 CREATE SCHEMA IF NOT EXISTS cache;
 
@@ -8,6 +9,7 @@ CREATE TABLE IF NOT EXISTS cache.entries (
     id serial PRIMARY KEY,
     block_number integer NOT NULL,
     cursor text NOT NULL,
+    timestamp integer NOT NULL,
     data jsonb NOT NULL
 );
 

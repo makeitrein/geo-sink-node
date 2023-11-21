@@ -1,7 +1,7 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 import { TYPES } from "./constants/systemIds";
-import { populateCachedEntries } from "./populateCache";
+import { upsertCachedEntries } from "./populateCache";
 import { StreamData, TripleAction, TripleDatabaseTuple } from "./types";
 import {
   actionTypeCheck,
@@ -17,7 +17,7 @@ import {
 import { pool } from "./utils/pool";
 import { Entry, ZodUriData, type FullEntry } from "./zod";
 
-export const populateEntries = async ({
+export const populateWithEntries = async ({
   entries,
   blockNumber,
   timestamp,
@@ -30,13 +30,7 @@ export const populateEntries = async ({
     );
 
     for (let i = 0; i < entries.length; i++) {
-      console.log(
-        "\n\nProcessing entry",
-        i + 1,
-        "of",
-        entries.length,
-        "entries"
-      );
+      console.log("\nProcessing entry", i + 1, "of", entries.length, "entries");
       // First check if the general response conforms to what we expect
       const uriResponse = ZodUriData.safeParse(uriResponses[i]);
       if (uriResponse.success) {
@@ -54,9 +48,31 @@ export const populateEntries = async ({
         console.error(uriResponse.error);
       }
     }
+    await populateWithFullEntries({
+      fullEntries,
+      blockNumber,
+      timestamp,
+      cursor,
+    });
+  } catch (error) {
+    console.error(`Error populating entries: ${error} at block ${blockNumber}`);
+  }
+};
 
+export const populateWithFullEntries = async ({
+  fullEntries,
+  blockNumber,
+  timestamp,
+  cursor,
+}: {
+  fullEntries: FullEntry[];
+  blockNumber: number;
+  timestamp: number;
+  cursor: string;
+}) => {
+  try {
     // Upsert the full entries into the cache
-    await populateCachedEntries({ fullEntries, blockNumber, cursor });
+    await upsertCachedEntries({ fullEntries, blockNumber, cursor, timestamp });
 
     const accounts: s.accounts.Insertable[] = toAccounts({ fullEntries });
     console.log("Accounts Count: ", accounts.length);

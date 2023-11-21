@@ -1,5 +1,5 @@
 import * as db from "zapatos/db";
-import { populateCachedRoles } from "./populateCache";
+import { upsertCachedRoles } from "./populateCache";
 import { pool } from "./utils/pool";
 import { RoleChange } from "./zod";
 
@@ -20,7 +20,7 @@ export const handleRoleGranted = async ({
 
     console.log("Handling role granted:", roleGranted);
 
-    populateCachedRoles({
+    upsertCachedRoles({
       roleChange: roleGranted,
       blockNumber,
       cursor,
@@ -71,7 +71,7 @@ export const handleRoleRevoked = async ({
 
     console.log("Handling role revoked:", roleRevoked);
 
-    populateCachedRoles({
+    upsertCachedRoles({
       roleChange: roleRevoked,
       blockNumber,
       cursor,

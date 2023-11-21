@@ -8,7 +8,7 @@ import { readPackageFromFile } from "@substreams/manifest";
 import { createSink, createStream } from "@substreams/sink";
 import { Data, Effect, Stream } from "effect";
 import { readCursor, writeCursor } from "./cursor";
-import { populateEntries } from "./populateEntries";
+import { populateWithEntries } from "./populateEntries";
 import { handleRoleGranted, handleRoleRevoked } from "./populateRoles";
 import { invariant } from "./utils/invariant";
 import { logger } from "./utils/logger";
@@ -118,7 +118,7 @@ export function runStream() {
             );
             const entries = entryResponse.data.entries;
             entriesQueue = entriesQueue.then(() =>
-              populateEntries({
+              populateWithEntries({
                 entries,
                 blockNumber,
                 cursor,
