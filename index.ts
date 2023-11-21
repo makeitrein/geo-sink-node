@@ -1,5 +1,6 @@
 import { Command } from "commander";
-import { startGeoStream } from "./src/stream.js";
+import { Effect } from "effect";
+import { runStream } from "./src/runStream.js";
 import { resetDatabaseToGenesis } from "./src/utils/resetDatabaseToGenesis.js";
 
 async function main() {
@@ -25,7 +26,7 @@ async function main() {
     if (options.fromCache) console.log("from cache");
     if (options.streamOnly) console.log("stream only");
 
-    startGeoStream();
+    await Effect.runPromise(runStream);
   } catch (error) {
     console.error("An error occurred:", error);
   }
