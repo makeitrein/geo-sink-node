@@ -1,105 +1,121 @@
-import { createGrpcTransport } from "@connectrpc/connect-node";
-import { authIssue, createAuthInterceptor } from "@substreams/core";
-import { readPackageFromFile } from "@substreams/manifest";
-import { createSink, createStream } from "@substreams/sink";
-import { Data, Effect, Stream } from "effect";
-import { readCursor } from "./cursor";
-import { invariant } from "./utils/invariant";
-import { logger } from "./utils/logger";
+import { createGrpcTransport } from '@connectrpc/connect-node';
+import { authIssue, createAuthInterceptor, createRegistry } from '@substreams/core';
+import { readPackageFromFile } from '@substreams/manifest';
+import { createSink, createStream } from '@substreams/sink';
+import { Data, Effect, Stream } from 'effect';
+import { readCursor } from './cursor';
+import { invariant } from './utils/invariant';
+import { logger } from './utils/logger';
+import { ZodEntryStreamResponse, ZodRoleChangeStreamResponse } from './zod';
+import { handleRoleGranted, handleRoleRevoked } from './populateRoles';
+import { populateEntries } from './populateEntries';
 // import * as MessageStorage from "./messages.js";
 
-export class InvalidPackageError extends Data.TaggedClass(
-  "InvalidPackageError"
-)<{
-  readonly cause: unknown;
-  readonly message: string;
+export class InvalidPackageError extends Data.TaggedClass('InvalidPackageError')<{
+    readonly cause: unknown;
+    readonly message: string;
 }> {}
 
 export function runStream() {
-  const program = Effect.gen(function* (_) {
-    const substreamsEndpoint = process.env.SUBSTREAMS_ENDPOINT;
-    invariant(substreamsEndpoint, "SUBSTREAMS_ENDPOINT is required");
-    const substreamsApiKey = process.env.SUBSTREAMS_API_KEY;
-    invariant(substreamsApiKey, "SUBSTREAMS_API_KEY is required");
-    const authIssueUrl = process.env.AUTH_ISSUE_URL;
-    invariant(authIssueUrl, "AUTH_ISSUE_URL is required");
+    const program = Effect.gen(function* (_) {
+        const substreamsEndpoint = process.env.SUBSTREAMS_ENDPOINT;
+        invariant(substreamsEndpoint, 'SUBSTREAMS_ENDPOINT is required');
+        const substreamsApiKey = process.env.SUBSTREAMS_API_KEY;
+        invariant(substreamsApiKey, 'SUBSTREAMS_API_KEY is required');
+        const authIssueUrl = process.env.AUTH_ISSUE_URL;
+        invariant(authIssueUrl, 'AUTH_ISSUE_URL is required');
 
-    logger.enable("pretty");
-    logger.info("Logging enabled");
+        logger.enable('pretty');
+        logger.info('Logging enabled');
 
-    const manifest = "./geo-substream.spkg";
-    const substreamPackage = readPackageFromFile(manifest);
+        const manifest = './geo-substream.spkg';
+        const substreamPackage = readPackageFromFile(manifest);
 
-    logger.info("Substream package downloaded");
+        logger.info('Substream package downloaded');
 
-    const { token } = yield* _(
-      Effect.tryPromise({
-        try: () => authIssue(substreamsApiKey, authIssueUrl),
-        catch: () => new Error(`Could not read package at path ${manifest}`),
-      })
-    );
+        const { token } = yield* _(
+            Effect.tryPromise({
+                try: () => authIssue(substreamsApiKey, authIssueUrl),
+                catch: () => new Error(`Could not read package at path ${manifest}`),
+            })
+        );
 
-    const outputModule = "geo_out";
-    const startBlockNum = 36472424;
-    const productionMode = true;
-    // const finalBlocksOnly = true; TODO - why doesn't createStream accept this option?
+        const outputModule = 'geo_out';
+        const startBlockNum = 36472424;
+        const productionMode = true;
+        // const finalBlocksOnly = true; TODO - why doesn't createStream accept this option?
 
-    const startCursor = yield* _(
-      Effect.tryPromise({
-        try: () => readCursor(),
-        catch: () => new Error(`Could not read cursor`),
-      })
-    );
+        const startCursor = yield* _(
+            Effect.tryPromise({
+                try: () => readCursor(),
+                catch: () => new Error(`Could not read cursor`),
+            })
+        );
 
-    // const registry = createRegistry(substreamPackage);
+        const registry = createRegistry(substreamPackage);
 
-    const transport = createGrpcTransport({
-      baseUrl: substreamsEndpoint,
-      httpVersion: "2",
-      interceptors: [createAuthInterceptor(token)],
+        const transport = createGrpcTransport({
+            baseUrl: substreamsEndpoint,
+            httpVersion: '2',
+            interceptors: [createAuthInterceptor(token)],
+        });
+
+        const stream = createStream({
+            connectTransport: transport,
+            substreamPackage,
+            outputModule,
+            startCursor,
+            startBlockNum,
+            productionMode,
+        });
+
+        const sink = createSink({
+            handleBlockScopedData: message =>
+                Effect.gen(function* (_) {
+                    // yield* _(cursor.write(Option.some(message.cursor)));
+
+                    if (message.output?.mapOutput?.value?.byteLength === 0) {
+                        console.log('Received empty message');
+                    } else {
+                        const unpackedOutput = message.output?.mapOutput?.unpack(registry);
+                        const clock = message.clock;
+
+                        const entryResponse = ZodEntryStreamResponse.safeParse(unpackedOutput);
+                        const roleChangeResponse = ZodRoleChangeStreamResponse.safeParse(unpackedOutput);
+
+                        const blockNumber = Number(clock?.number.toString());
+                        const timestamp = Number(clock?.timestamp?.seconds);
+
+                        if (entryResponse.success) {
+                            console.log('Processing ', entryResponse.data.entries.length, ' entries');
+                            const entries = entryResponse.data.entries;
+                            populateEntries({ entries, blockNumber, cursor: message.cursor, timestamp });
+                        } else if (roleChangeResponse.success) {
+                            roleChangeResponse.data.roleChanges.forEach(roleChange => {
+                                const { granted, revoked } = roleChange;
+                                if (granted) {
+                                    handleRoleGranted(granted);
+                                } else if (revoked) {
+                                    handleRoleRevoked(revoked);
+                                }
+                            });
+                        } else {
+                            console.error('Failed to parse substream message', unpackedOutput);
+                        }
+
+                        console.log('received message of type ${message.output?.mapOutput?.typeUrl}');
+                    }
+                }),
+            handleBlockUndoSignal: message =>
+                Effect.gen(function* (_) {
+                    //   yield* _(cursor.write(Option.some(message.lastValidCursor)));
+                }),
+        });
+
+        return yield* _(Stream.run(stream, sink));
     });
 
-    const stream = createStream({
-      connectTransport: transport,
-      substreamPackage,
-      outputModule,
-      startCursor,
-      startBlockNum,
-      productionMode,
-    });
-
-    const sink = createSink({
-      handleBlockScopedData: (message) =>
-        Effect.annotateLogs({
-          block: message.clock?.number.toString() ?? "???",
-          time: message.clock?.timestamp?.toDate().toLocaleString() ?? "???",
-          size: `${message.output?.mapOutput?.value?.byteLength ?? 0} bytes`,
-        })(
-          Effect.gen(function* (_) {
-            // yield* _(cursor.write(Option.some(message.cursor)));
-
-            if (message.output?.mapOutput?.value?.byteLength === 0) {
-              yield* _(Effect.logDebug("received empty message"));
-            } else {
-              yield* _(
-                Effect.logInfo(
-                  `received message of type ${message.output?.mapOutput?.typeUrl}`
-                )
-              );
-              //   yield* _(db.append(message.toJsonString({ typeRegistry: registry })));
-            }
-          })
-        ),
-      handleBlockUndoSignal: (message) =>
-        Effect.gen(function* (_) {
-          //   yield* _(cursor.write(Option.some(message.lastValidCursor)));
-        }),
-    });
-
-    return yield* _(Stream.run(stream, sink));
-  });
-
-  return program;
+    return program;
 }
 
 // export const layer = Layer.merge(CursorStorage.layer, MessageStorage.layer);
