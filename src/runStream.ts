@@ -75,12 +75,18 @@ export function runStream() {
       productionMode,
     });
 
+    let entriesQueue = Promise.resolve();
+
     const sink = createSink({
       handleBlockScopedData: (message) =>
         Effect.gen(function* (_) {
           const cursor = message.cursor;
           const blockNumber = Number(message.clock?.number.toString());
           const timestamp = Number(message.clock?.timestamp?.seconds);
+
+          if (blockNumber % 1000 === 0) {
+            console.log(`@ Block ${blockNumber}`);
+          }
 
           yield* _(
             Effect.tryPromise({
@@ -111,19 +117,21 @@ export function runStream() {
               " entries"
             );
             const entries = entryResponse.data.entries;
-            populateEntries({
-              entries,
-              blockNumber,
-              cursor,
-              timestamp,
-            });
+            entriesQueue = entriesQueue.then(() =>
+              populateEntries({
+                entries,
+                blockNumber,
+                cursor,
+                timestamp,
+              })
+            );
           } else if (roleChangeResponse.success) {
             console.log(
               "Processing ",
               roleChangeResponse.data.roleChanges.length,
               " role changes"
             );
-            roleChangeResponse.data.roleChanges.forEach((roleChange) => {
+            roleChangeResponse.data.roleChanges.map((roleChange) => {
               const { granted, revoked } = roleChange;
               if (granted) {
                 handleRoleGranted({

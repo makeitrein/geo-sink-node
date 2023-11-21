@@ -23,119 +23,143 @@ export const populateEntries = async ({
   timestamp,
   cursor,
 }: StreamData) => {
-  const fullEntries: FullEntry[] = [];
-  const uriResponses = await Promise.all(
-    entries.map((entry) => actionsFromURI(entry.uri))
-  );
+  try {
+    const fullEntries: FullEntry[] = [];
+    const uriResponses = await Promise.all(
+      entries.map((entry) => actionsFromURI(entry.uri))
+    );
 
-  for (let i = 0; i < entries.length; i++) {
-    console.log("\n\nProcessing entry", i + 1, "of", entries.length, "entries");
-    // First check if the general response conforms to what we expect
-    const uriResponse = ZodUriData.safeParse(uriResponses[i]);
-    if (uriResponse.success) {
-      // Then check if the actions conform to what we expect
-      console.log("Original Action Count: ", uriResponse.data.actions.length);
-      const actions = uriResponse.data.actions.filter(isValidAction);
-      console.log("Valid Actions:", actions.length);
-      fullEntries.push({
-        ...entries[i],
-        uriData: { ...uriResponse.data, actions },
-      });
-    } else {
-      console.error("Failed to parse URI data");
-      console.error(uriResponse);
-      console.error(uriResponse.error);
+    for (let i = 0; i < entries.length; i++) {
+      console.log(
+        "\n\nProcessing entry",
+        i + 1,
+        "of",
+        entries.length,
+        "entries"
+      );
+      // First check if the general response conforms to what we expect
+      const uriResponse = ZodUriData.safeParse(uriResponses[i]);
+      if (uriResponse.success) {
+        // Then check if the actions conform to what we expect
+        console.log("Original Action Count: ", uriResponse.data.actions.length);
+        const actions = uriResponse.data.actions.filter(isValidAction);
+        console.log("Valid Actions:", actions.length);
+        fullEntries.push({
+          ...entries[i],
+          uriData: { ...uriResponse.data, actions },
+        });
+      } else {
+        console.error("Failed to parse URI data");
+        console.error(uriResponse);
+        console.error(uriResponse.error);
+      }
     }
-  }
 
-  // Upsert the full entries into the cache
-  await populateCachedEntries({ fullEntries, blockNumber, cursor });
+    // Upsert the full entries into the cache
+    await populateCachedEntries({ fullEntries, blockNumber, cursor });
 
-  const accounts: s.accounts.Insertable[] = toAccounts({ fullEntries });
-  console.log("Accounts Count: ", accounts.length);
-  await upsertChunked("accounts", accounts, "id", {
-    updateColumns: db.doNothing,
-  });
+    const accounts: s.accounts.Insertable[] = toAccounts({ fullEntries });
+    console.log("Accounts Count: ", accounts.length);
+    await upsertChunked("accounts", accounts, "id", {
+      updateColumns: db.doNothing,
+    });
 
-  const actions: s.actions.Insertable[] = toActions({ fullEntries, cursor });
-  console.log("Actions Count", actions.length);
-  await insertChunked("actions", actions);
+    const actions: s.actions.Insertable[] = toActions({ fullEntries, cursor });
+    console.log("Actions Count", actions.length);
+    await insertChunked("actions", actions);
 
-  const geoEntities: s.geo_entities.Insertable[] = toGeoEntities({
-    fullEntries,
-  });
-  console.log("Geo Entities Count", geoEntities.length);
-  await upsertChunked("geo_entities", geoEntities, "id");
+    const geoEntities: s.geo_entities.Insertable[] = toGeoEntities({
+      fullEntries,
+    });
+    console.log("Geo Entities Count", geoEntities.length);
+    await upsertChunked("geo_entities", geoEntities, "id");
 
-  const proposals: s.proposals.Insertable[] = toProposals({
-    fullEntries,
-    blockNumber,
-    timestamp,
-    cursor,
-  });
-  console.log("Proposals Count", proposals.length);
-  await insertChunked("proposals", proposals);
-
-  const proposed_versions: s.proposed_versions.Insertable[] =
-    toProposedVersions({
+    const proposals: s.proposals.Insertable[] = toProposals({
       fullEntries,
       blockNumber,
       timestamp,
       cursor,
     });
-  console.log("Proposed Versions Count", proposed_versions.length);
-  await insertChunked("proposed_versions", proposed_versions);
+    console.log("Proposals Count", proposals.length);
+    await insertChunked("proposals", proposals);
 
-  const spaces: s.spaces.Insertable[] = toSpaces(fullEntries, blockNumber);
-  console.log("Spaces Count", spaces.length);
-  await upsertChunked("spaces", spaces, "id", { updateColumns: db.doNothing });
+    const proposed_versions: s.proposed_versions.Insertable[] =
+      toProposedVersions({
+        fullEntries,
+        blockNumber,
+        timestamp,
+        cursor,
+      });
+    console.log("Proposed Versions Count", proposed_versions.length);
+    await insertChunked("proposed_versions", proposed_versions);
 
-  // /* Todo: How are duplicate triples being handled in Geo? I know it's possible, but if the triple ID is defined, what does that entail */
-  const triplesDatabaseTuples: TripleDatabaseTuple[] =
-    toTripleDatabaseTuples(fullEntries);
-  console.log("TriplesDatabaseTuples Count", triplesDatabaseTuples.length);
+    const spaces: s.spaces.Insertable[] = toSpaces(fullEntries, blockNumber);
+    console.log("Spaces Count", spaces.length);
+    await upsertChunked("spaces", spaces, "id", {
+      updateColumns: db.doNothing,
+    });
 
-  for (const [tupleType, triple] of triplesDatabaseTuples) {
-    const isCreateTriple = tupleType === TripleAction.Create;
-    const isDeleteTriple = tupleType === TripleAction.Delete;
-    const isAddType = triple.attribute_id === TYPES && isCreateTriple;
-    const isDeleteType = triple.attribute_id === TYPES && isDeleteTriple;
+    // /* Todo: How are duplicate triples being handled in Geo? I know it's possible, but if the triple ID is defined, what does that entail */
+    const triplesDatabaseTuples: TripleDatabaseTuple[] =
+      toTripleDatabaseTuples(fullEntries);
+    console.log("TriplesDatabaseTuples Count", triplesDatabaseTuples.length);
 
-    if (isCreateTriple) {
-      await db
-        .upsert("triples", triple, "id", { updateColumns: db.doNothing })
-        .run(pool);
-    } else {
-      await db.deletes("triples", { id: triple.id }).run(pool);
+    for (const [tupleType, triple] of triplesDatabaseTuples) {
+      const isCreateTriple = tupleType === TripleAction.Create;
+      const isDeleteTriple = tupleType === TripleAction.Delete;
+      const isAddType = triple.attribute_id === TYPES && isCreateTriple;
+      const isDeleteType = triple.attribute_id === TYPES && isDeleteTriple;
+
+      if (isCreateTriple) {
+        await db
+          .upsert("triples", triple, "id", { updateColumns: db.doNothing })
+          .run(pool);
+      } else {
+        await db.deletes("triples", { id: triple.id }).run(pool);
+      }
+
+      if (isAddType) {
+        console.log(
+          "Adding type",
+          triple.value_id,
+          "to entity",
+          triple.entity_id
+        );
+        await db
+          .upsert(
+            "geo_entity_types",
+            { entity_id: triple.entity_id, type_id: triple.value_id },
+            ["entity_id", "type_id"],
+            { updateColumns: db.doNothing }
+          )
+          .run(pool);
+      } else if (isDeleteType) {
+        console.log(
+          "Deleting type",
+          triple.value_id,
+          "to entity",
+          triple.entity_id
+        );
+        await db
+          .deletes("geo_entity_types", {
+            entity_id: triple.entity_id,
+            type_id: triple.value_id,
+          })
+          .run(pool);
+      }
     }
 
-    if (isAddType) {
-      await db
-        .upsert(
-          "geo_entity_types",
-          { entity_id: triple.entity_id, type_id: triple.value_id },
-          ["entity_id", "type_id"],
-          { updateColumns: db.doNothing }
-        )
-        .run(pool);
-    } else if (isDeleteType) {
-      await db
-        .deletes("geo_entity_types", {
-          entity_id: triple.entity_id,
-          type_id: triple.value_id,
-        })
-        .run(pool);
-    }
+    const versions: s.versions.Insertable[] = toVersions({
+      fullEntries,
+      blockNumber,
+      timestamp,
+      cursor,
+    });
+    console.log("Versions Count", versions.length);
+    await insertChunked("versions", versions);
+  } catch (error) {
+    console.error(`Error populating entries: ${error} at block ${blockNumber}`);
   }
-
-  const versions: s.versions.Insertable[] = toVersions({
-    fullEntries,
-    blockNumber,
-    timestamp,
-    cursor,
-  });
-  console.log("Versions Count", versions.length);
-  await insertChunked("versions", versions);
 };
 
 interface ToAccountArgs {
