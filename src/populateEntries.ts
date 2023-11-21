@@ -118,7 +118,7 @@ export const populateEntries = async ({
           { updateColumns: db.doNothing }
         )
         .run(pool);
-    } else {
+    } else if (isDeleteType) {
       await db
         .deletes("geo_entity_types", {
           entity_id: triple.entity_id,
