@@ -1,7 +1,5 @@
 import { Command } from "commander";
 import { Effect } from "effect";
-import { readCacheCursor } from "./src/cursor.js";
-import { readCacheEntries, readCacheRoles } from "./src/populateCache.js";
 import { runStream } from "./src/runStream.js";
 import { resetDatabaseToGenesis } from "./src/utils/resetDatabaseToGenesis.js";
 
@@ -24,9 +22,10 @@ async function main() {
     }
 
     if (options.fromCache) {
-      const cachedEntries = await readCacheEntries();
-      const cachedRoles = await readCacheRoles();
-      const cachedCursor = await readCacheCursor();
+      // 1. reset database to genesis
+      // 2. populate with cached entries + roles
+      // 3. update the public.cursor to the cached.cursor
+      // 4. carry on streaming
     }
 
     await Effect.runPromise(runStream());
