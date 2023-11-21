@@ -15,7 +15,7 @@ export const populateCachedEntries = async ({
   const cachedEntry: s.cache.entries.Insertable = {
     block_number: blockNumber,
     cursor,
-    data: fullEntries,
+    data: JSON.stringify(fullEntries),
   };
 
   await db

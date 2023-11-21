@@ -52,7 +52,9 @@ export const populateEntries = async ({
 
   const accounts: s.accounts.Insertable[] = toAccounts({ fullEntries });
   console.log("Accounts Count: ", accounts.length);
-  await upsertChunked("accounts", accounts, "id");
+  await upsertChunked("accounts", accounts, "id", {
+    updateColumns: db.doNothing,
+  });
 
   const actions: s.actions.Insertable[] = toActions({ fullEntries, cursor });
   console.log("Actions Count", actions.length);
@@ -85,7 +87,7 @@ export const populateEntries = async ({
 
   const spaces: s.spaces.Insertable[] = toSpaces(fullEntries, blockNumber);
   console.log("Spaces Count", spaces.length);
-  await upsertChunked("spaces", spaces, "id");
+  await upsertChunked("spaces", spaces, "id", { updateColumns: db.doNothing });
 
   // /* Todo: How are duplicate triples being handled in Geo? I know it's possible, but if the triple ID is defined, what does that entail */
   const triplesDatabaseTuples: TripleDatabaseTuple[] =
