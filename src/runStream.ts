@@ -7,7 +7,7 @@ import {
 import { readPackageFromFile } from "@substreams/manifest";
 import { createSink, createStream } from "@substreams/sink";
 import { Data, Effect, Stream } from "effect";
-import { readCursor } from "./cursor";
+import { readCursor, writeCursor } from "./cursor";
 import { populateEntries } from "./populateEntries";
 import { handleRoleGranted, handleRoleRevoked } from "./populateRoles";
 import { invariant } from "./utils/invariant";
@@ -78,7 +78,15 @@ export function runStream() {
     const sink = createSink({
       handleBlockScopedData: (message) =>
         Effect.gen(function* (_) {
-          // yield* _(cursor.write(Option.some(message.cursor)));
+          const blockNumber = Number(message.clock?.number.toString());
+          const timestamp = Number(message.clock?.timestamp?.seconds);
+
+          yield* _(
+            Effect.tryPromise({
+              try: () => writeCursor(message.cursor, blockNumber),
+              catch: () => new Error(`Could not write cursor`),
+            })
+          );
 
           const mapOutput = message.output?.mapOutput;
           if (!mapOutput || mapOutput?.value?.byteLength === 0) {
@@ -90,14 +98,10 @@ export function runStream() {
             return;
           }
           const jsonOutput = unpackedOutput.toJson({ typeRegistry: registry });
-          const clock = message.clock;
 
           const entryResponse = ZodEntryStreamResponse.safeParse(jsonOutput);
           const roleChangeResponse =
             ZodRoleChangeStreamResponse.safeParse(jsonOutput);
-
-          const blockNumber = Number(clock?.number.toString());
-          const timestamp = Number(clock?.timestamp?.seconds);
 
           if (entryResponse.success) {
             console.log(
@@ -132,7 +136,13 @@ export function runStream() {
         }),
       handleBlockUndoSignal: (message) =>
         Effect.gen(function* (_) {
-          //   yield* _(cursor.write(Option.some(message.lastValidCursor)));
+          const blockNumber = Number(message.lastValidBlock?.number.toString());
+          yield* _(
+            Effect.tryPromise({
+              try: () => writeCursor(message.lastValidCursor, blockNumber),
+              catch: () => new Error(`Could not write cursor`),
+            })
+          );
         }),
     });
 
