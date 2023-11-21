@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS cache.entries (
     data jsonb NOT NULL
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS idx_actions_unique ON cache.entries (cursor);
+CREATE UNIQUE INDEX IF NOT EXISTS unique_cached_entries ON cache.entries (cursor);
 
 CREATE TABLE IF NOT EXISTS cache.roles (
     id serial PRIMARY KEY,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS cache.roles (
     cursor text NOT NULL
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS idx_roles_unique ON cache.roles (
+CREATE UNIQUE INDEX IF NOT EXISTS unique_cached_roles ON cache.roles (
     role,
     account,
     sender,
@@ -32,4 +32,10 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_roles_unique ON cache.roles (
     type,
     block_number,
     cursor
+);
+
+CREATE TABLE IF NOT EXISTS cache.cursors (
+    id integer PRIMARY KEY,
+    cursor text NOT NULL,
+    block_number integer NOT NULL
 );

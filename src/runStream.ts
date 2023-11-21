@@ -8,6 +8,7 @@ import { readPackageFromFile } from "@substreams/manifest";
 import { createSink, createStream } from "@substreams/sink";
 import { Data, Effect, Stream } from "effect";
 import { readCursor, writeCursor } from "./cursor";
+import { populateCachedRoles } from "./populateCache";
 import { populateEntries } from "./populateEntries";
 import { handleRoleGranted, handleRoleRevoked } from "./populateRoles";
 import { invariant } from "./utils/invariant";
@@ -78,12 +79,13 @@ export function runStream() {
     const sink = createSink({
       handleBlockScopedData: (message) =>
         Effect.gen(function* (_) {
+          const cursor = message.cursor;
           const blockNumber = Number(message.clock?.number.toString());
           const timestamp = Number(message.clock?.timestamp?.seconds);
 
           yield* _(
             Effect.tryPromise({
-              try: () => writeCursor(message.cursor, blockNumber),
+              try: () => writeCursor(cursor, blockNumber),
               catch: () => new Error(`Could not write cursor`),
             })
           );
@@ -113,7 +115,7 @@ export function runStream() {
             populateEntries({
               entries,
               blockNumber,
-              cursor: message.cursor,
+              cursor,
               timestamp,
             });
           } else if (roleChangeResponse.success) {
@@ -125,9 +127,21 @@ export function runStream() {
             roleChangeResponse.data.roleChanges.forEach((roleChange) => {
               const { granted, revoked } = roleChange;
               if (granted) {
+                populateCachedRoles({
+                  roleChange: granted,
+                  blockNumber,
+                  cursor,
+                  type: "GRANTED",
+                });
                 handleRoleGranted(granted);
               } else if (revoked) {
                 handleRoleRevoked(revoked);
+                populateCachedRoles({
+                  roleChange: revoked,
+                  blockNumber,
+                  cursor,
+                  type: "REVOKED",
+                });
               }
             });
           } else {
@@ -151,5 +165,3 @@ export function runStream() {
 
   return program;
 }
-
-// export const layer = Layer.merge(CursorStorage.layer, MessageStorage.layer);

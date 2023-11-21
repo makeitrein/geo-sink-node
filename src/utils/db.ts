@@ -19,7 +19,7 @@ export const upsertChunked = async (
   tableName: Table,
   values: Insertable[],
   conflictTarget: any,
-  options: any
+  options?: any
 ) => {
   const chunkSize = 4000;
   for (let i = 0; i < values.length; i += chunkSize) {

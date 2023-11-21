@@ -1,5 +1,6 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
+import { populateCachedEntries } from "./populateCache";
 import { StreamData, TripleAction, TripleDatabaseTuple } from "./types";
 import {
   actionTypeCheck,
@@ -46,11 +47,12 @@ export const populateEntries = async ({
     }
   }
 
+  // Upsert the full entries into the cache
+  await populateCachedEntries({ fullEntries, blockNumber, cursor });
+
   const accounts: s.accounts.Insertable[] = toAccounts({ fullEntries });
   console.log("Accounts Count: ", accounts.length);
-  await upsertChunked("accounts", accounts, ["id"], {
-    updateColumns: db.doNothing,
-  });
+  await upsertChunked("accounts", accounts, "id");
 
   const actions: s.actions.Insertable[] = toActions({ fullEntries, cursor });
   console.log("Actions Count", actions.length);
@@ -60,9 +62,7 @@ export const populateEntries = async ({
     fullEntries,
   });
   console.log("Geo Entities Count", geoEntities.length);
-  await upsertChunked("geo_entities", geoEntities, ["id"], {
-    updateColumns: db.doNothing,
-  });
+  await upsertChunked("geo_entities", geoEntities, "id");
 
   const proposals: s.proposals.Insertable[] = toProposals({
     fullEntries,
@@ -85,9 +85,7 @@ export const populateEntries = async ({
 
   const spaces: s.spaces.Insertable[] = toSpaces(fullEntries, blockNumber);
   console.log("Spaces Count", spaces.length);
-  await upsertChunked("spaces", spaces, ["id"], {
-    updateColumns: db.doNothing,
-  });
+  await upsertChunked("spaces", spaces, "id");
 
   // /* Todo: How are duplicate triples being handled in Geo? I know it's possible, but if the triple ID is defined, what does that entail */
   const triplesDatabaseTuples: TripleDatabaseTuple[] =
@@ -98,8 +96,8 @@ export const populateEntries = async ({
     const isCreateTriple = tupleType === TripleAction.Create;
     isCreateTriple
       ? await db
-          .upsert("triples", triple, ["id"], { updateColumns: db.doNothing })
-          .run(pool) // Protecting against duplicate triples that should have been deleted before creating again, but weren't
+          .upsert("triples", triple, "id", { updateColumns: db.doNothing })
+          .run(pool)
       : await db.deletes("triples", { id: triple.id }).run(pool);
   }
 

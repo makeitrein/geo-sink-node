@@ -2595,6 +2595,119 @@ declare module 'zapatos/schema' {
     /* --- tables --- */
   
     /**
+     * **cache.cursors**
+     * - Table in database
+     */
+    export namespace cursors {
+      export type Table = 'cache.cursors';
+      export interface Selectable {
+        /**
+        * **cache.cursors.id**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        id: number;
+        /**
+        * **cache.cursors.cursor**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        cursor: string;
+        /**
+        * **cache.cursors.block_number**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        block_number: number;
+      }
+      export interface JSONSelectable {
+        /**
+        * **cache.cursors.id**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        id: number;
+        /**
+        * **cache.cursors.cursor**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        cursor: string;
+        /**
+        * **cache.cursors.block_number**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        block_number: number;
+      }
+      export interface Whereable {
+        /**
+        * **cache.cursors.id**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+        /**
+        * **cache.cursors.cursor**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        cursor?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+        /**
+        * **cache.cursors.block_number**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        block_number?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      }
+      export interface Insertable {
+        /**
+        * **cache.cursors.id**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        id: number | db.Parameter<number> | db.SQLFragment;
+        /**
+        * **cache.cursors.cursor**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        cursor: string | db.Parameter<string> | db.SQLFragment;
+        /**
+        * **cache.cursors.block_number**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        block_number: number | db.Parameter<number> | db.SQLFragment;
+      }
+      export interface Updatable {
+        /**
+        * **cache.cursors.id**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+        /**
+        * **cache.cursors.cursor**
+        * - `text` in database
+        * - `NOT NULL`, no default
+        */
+        cursor?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+        /**
+        * **cache.cursors.block_number**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        block_number?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      }
+      export type UniqueIndex = 'cursors_pkey';
+      export type Column = keyof Selectable;
+      export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+      export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+      export type SQL = SQLExpression | SQLExpression[];
+    }
+  
+    /**
      * **cache.entries**
      * - Table in database
      */
@@ -2730,7 +2843,7 @@ declare module 'zapatos/schema' {
         */
         data?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
       }
-      export type UniqueIndex = 'entries_pkey' | 'idx_actions_unique';
+      export type UniqueIndex = 'entries_pkey' | 'idx_actions_unique' | 'unique_cached_entries';
       export type Column = keyof Selectable;
       export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
       export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
@@ -2993,7 +3106,7 @@ declare module 'zapatos/schema' {
         */
         cursor?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       }
-      export type UniqueIndex = 'idx_roles_unique' | 'roles_pkey';
+      export type UniqueIndex = 'idx_roles_unique' | 'roles_pkey' | 'unique_cached_roles';
       export type Column = keyof Selectable;
       export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
       export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
@@ -3002,20 +3115,20 @@ declare module 'zapatos/schema' {
   
     /* --- aggregate types --- */
   
-    export type Table = entries.Table | roles.Table;
-    export type Selectable = entries.Selectable | roles.Selectable;
-    export type JSONSelectable = entries.JSONSelectable | roles.JSONSelectable;
-    export type Whereable = entries.Whereable | roles.Whereable;
-    export type Insertable = entries.Insertable | roles.Insertable;
-    export type Updatable = entries.Updatable | roles.Updatable;
-    export type UniqueIndex = entries.UniqueIndex | roles.UniqueIndex;
-    export type Column = entries.Column | roles.Column;
+    export type Table = cursors.Table | entries.Table | roles.Table;
+    export type Selectable = cursors.Selectable | entries.Selectable | roles.Selectable;
+    export type JSONSelectable = cursors.JSONSelectable | entries.JSONSelectable | roles.JSONSelectable;
+    export type Whereable = cursors.Whereable | entries.Whereable | roles.Whereable;
+    export type Insertable = cursors.Insertable | entries.Insertable | roles.Insertable;
+    export type Updatable = cursors.Updatable | entries.Updatable | roles.Updatable;
+    export type UniqueIndex = cursors.UniqueIndex | entries.UniqueIndex | roles.UniqueIndex;
+    export type Column = cursors.Column | entries.Column | roles.Column;
   
-    export type AllBaseTables = [entries.Table, roles.Table];
+    export type AllBaseTables = [cursors.Table, entries.Table, roles.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [entries.Table, roles.Table];
+    export type AllTablesAndViews = [cursors.Table, entries.Table, roles.Table];
   }
 
 
@@ -3056,6 +3169,7 @@ declare module 'zapatos/schema' {
     "subspaces": subspaces.Selectable;
     "triples": triples.Selectable;
     "versions": versions.Selectable;
+    "cache.cursors": cache.cursors.Selectable;
     "cache.entries": cache.entries.Selectable;
     "cache.roles": cache.roles.Selectable;
   }[T];
@@ -3075,6 +3189,7 @@ declare module 'zapatos/schema' {
     "subspaces": subspaces.JSONSelectable;
     "triples": triples.JSONSelectable;
     "versions": versions.JSONSelectable;
+    "cache.cursors": cache.cursors.JSONSelectable;
     "cache.entries": cache.entries.JSONSelectable;
     "cache.roles": cache.roles.JSONSelectable;
   }[T];
@@ -3094,6 +3209,7 @@ declare module 'zapatos/schema' {
     "subspaces": subspaces.Whereable;
     "triples": triples.Whereable;
     "versions": versions.Whereable;
+    "cache.cursors": cache.cursors.Whereable;
     "cache.entries": cache.entries.Whereable;
     "cache.roles": cache.roles.Whereable;
   }[T];
@@ -3113,6 +3229,7 @@ declare module 'zapatos/schema' {
     "subspaces": subspaces.Insertable;
     "triples": triples.Insertable;
     "versions": versions.Insertable;
+    "cache.cursors": cache.cursors.Insertable;
     "cache.entries": cache.entries.Insertable;
     "cache.roles": cache.roles.Insertable;
   }[T];
@@ -3132,6 +3249,7 @@ declare module 'zapatos/schema' {
     "subspaces": subspaces.Updatable;
     "triples": triples.Updatable;
     "versions": versions.Updatable;
+    "cache.cursors": cache.cursors.Updatable;
     "cache.entries": cache.entries.Updatable;
     "cache.roles": cache.roles.Updatable;
   }[T];
@@ -3151,6 +3269,7 @@ declare module 'zapatos/schema' {
     "subspaces": subspaces.UniqueIndex;
     "triples": triples.UniqueIndex;
     "versions": versions.UniqueIndex;
+    "cache.cursors": cache.cursors.UniqueIndex;
     "cache.entries": cache.entries.UniqueIndex;
     "cache.roles": cache.roles.UniqueIndex;
   }[T];
@@ -3170,6 +3289,7 @@ declare module 'zapatos/schema' {
     "subspaces": subspaces.Column;
     "triples": triples.Column;
     "versions": versions.Column;
+    "cache.cursors": cache.cursors.Column;
     "cache.entries": cache.entries.Column;
     "cache.roles": cache.roles.Column;
   }[T];
@@ -3189,6 +3309,7 @@ declare module 'zapatos/schema' {
     "subspaces": subspaces.SQL;
     "triples": triples.SQL;
     "versions": versions.SQL;
+    "cache.cursors": cache.cursors.SQL;
     "cache.entries": cache.entries.SQL;
     "cache.roles": cache.roles.SQL;
   }[T];

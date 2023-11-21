@@ -18,27 +18,42 @@ export const populateCachedEntries = async ({
     data: fullEntries,
   };
 
-  await db.upsert("cache.entries", cachedEntry, ["cursor"]).run(pool);
+  await db
+    .upsert("cache.entries", cachedEntry, ["cursor"], {
+      updateColumns: db.doNothing,
+    })
+    .run(pool);
 };
 
-export const populateCachedRolesGranted = async ({
-  roleGranted,
+export const populateCachedRoles = async ({
+  roleChange,
   blockNumber,
   cursor,
+  type,
 }: {
-  roleGranted: RoleChange;
+  roleChange: RoleChange;
   blockNumber: number;
   cursor: string;
+  type: "GRANTED" | "REVOKED";
 }) => {
   const cachedRole: s.cache.roles.Insertable = {
     block_number: blockNumber,
-    role: roleGranted.role,
-    space: roleGranted.space,
-    account: roleGranted.account,
+    role: roleChange.role,
+    space: roleChange.space,
+    account: roleChange.account,
     cursor,
-    sender: roleGranted.sender,
-    type: "GRANTED",
+    sender: roleChange.sender,
+    type,
   };
 
-  await db.upsert("cache.entries", cachedRole, ["cursor"]).run(pool);
+  await db
+    .upsert(
+      "cache.roles",
+      cachedRole,
+      ["role", "account", "sender", "space", "type", "block_number", "cursor"],
+      {
+        updateColumns: db.doNothing,
+      }
+    )
+    .run(pool);
 };
