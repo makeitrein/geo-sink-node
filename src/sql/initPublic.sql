@@ -26,6 +26,13 @@ CREATE TABLE public.geo_entities (
     -- attribute_value_type_id text
 );
 
+CREATE TABLE public.geo_entity_types (
+    id serial PRIMARY KEY,
+    entity_id text NOT NULL REFERENCES public.geo_entities(id),
+    type_id text NOT NULL REFERENCES public.geo_entities(id),
+    CONSTRAINT geo_entity_types_unique_entity_type_pair UNIQUE (entity_id, type_id)
+);
+
 -- ALTER TABLE
 --     public.geo_entities
 -- ADD
@@ -147,6 +154,9 @@ ALTER TABLE
 
 ALTER TABLE
     public.geo_entities DISABLE TRIGGER ALL;
+
+ALTER TABLE
+    public.geo_entity_types DISABLE TRIGGER ALL;
 
 ALTER TABLE
     public.log_entries DISABLE TRIGGER ALL;

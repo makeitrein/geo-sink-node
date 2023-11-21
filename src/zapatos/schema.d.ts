@@ -685,6 +685,119 @@ declare module 'zapatos/schema' {
   }
 
   /**
+   * **geo_entity_types**
+   * - Table in database
+   */
+  export namespace geo_entity_types {
+    export type Table = 'geo_entity_types';
+    export interface Selectable {
+      /**
+      * **geo_entity_types.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('geo_entity_types_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **geo_entity_types.entity_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      entity_id: string;
+      /**
+      * **geo_entity_types.type_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      type_id: string;
+    }
+    export interface JSONSelectable {
+      /**
+      * **geo_entity_types.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('geo_entity_types_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **geo_entity_types.entity_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      entity_id: string;
+      /**
+      * **geo_entity_types.type_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      type_id: string;
+    }
+    export interface Whereable {
+      /**
+      * **geo_entity_types.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('geo_entity_types_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **geo_entity_types.entity_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      entity_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **geo_entity_types.type_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      type_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **geo_entity_types.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('geo_entity_types_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **geo_entity_types.entity_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      entity_id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **geo_entity_types.type_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      type_id: string | db.Parameter<string> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **geo_entity_types.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('geo_entity_types_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **geo_entity_types.entity_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      entity_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **geo_entity_types.type_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      type_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'geo_entity_types_pkey' | 'geo_entity_types_unique_entity_type_pair';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
    * **log_entries**
    * - Table in database
    */
@@ -2567,20 +2680,20 @@ declare module 'zapatos/schema' {
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = accounts.Table | actions.Table | cursors.Table | geo_entities.Table | log_entries.Table | proposals.Table | proposed_versions.Table | space_admins.Table | space_editor_controllers.Table | space_editors.Table | spaces.Table | subspaces.Table | triples.Table | versions.Table;
-    export type Selectable = accounts.Selectable | actions.Selectable | cursors.Selectable | geo_entities.Selectable | log_entries.Selectable | proposals.Selectable | proposed_versions.Selectable | space_admins.Selectable | space_editor_controllers.Selectable | space_editors.Selectable | spaces.Selectable | subspaces.Selectable | triples.Selectable | versions.Selectable;
-    export type JSONSelectable = accounts.JSONSelectable | actions.JSONSelectable | cursors.JSONSelectable | geo_entities.JSONSelectable | log_entries.JSONSelectable | proposals.JSONSelectable | proposed_versions.JSONSelectable | space_admins.JSONSelectable | space_editor_controllers.JSONSelectable | space_editors.JSONSelectable | spaces.JSONSelectable | subspaces.JSONSelectable | triples.JSONSelectable | versions.JSONSelectable;
-    export type Whereable = accounts.Whereable | actions.Whereable | cursors.Whereable | geo_entities.Whereable | log_entries.Whereable | proposals.Whereable | proposed_versions.Whereable | space_admins.Whereable | space_editor_controllers.Whereable | space_editors.Whereable | spaces.Whereable | subspaces.Whereable | triples.Whereable | versions.Whereable;
-    export type Insertable = accounts.Insertable | actions.Insertable | cursors.Insertable | geo_entities.Insertable | log_entries.Insertable | proposals.Insertable | proposed_versions.Insertable | space_admins.Insertable | space_editor_controllers.Insertable | space_editors.Insertable | spaces.Insertable | subspaces.Insertable | triples.Insertable | versions.Insertable;
-    export type Updatable = accounts.Updatable | actions.Updatable | cursors.Updatable | geo_entities.Updatable | log_entries.Updatable | proposals.Updatable | proposed_versions.Updatable | space_admins.Updatable | space_editor_controllers.Updatable | space_editors.Updatable | spaces.Updatable | subspaces.Updatable | triples.Updatable | versions.Updatable;
-    export type UniqueIndex = accounts.UniqueIndex | actions.UniqueIndex | cursors.UniqueIndex | geo_entities.UniqueIndex | log_entries.UniqueIndex | proposals.UniqueIndex | proposed_versions.UniqueIndex | space_admins.UniqueIndex | space_editor_controllers.UniqueIndex | space_editors.UniqueIndex | spaces.UniqueIndex | subspaces.UniqueIndex | triples.UniqueIndex | versions.UniqueIndex;
-    export type Column = accounts.Column | actions.Column | cursors.Column | geo_entities.Column | log_entries.Column | proposals.Column | proposed_versions.Column | space_admins.Column | space_editor_controllers.Column | space_editors.Column | spaces.Column | subspaces.Column | triples.Column | versions.Column;
+    export type Table = accounts.Table | actions.Table | cursors.Table | geo_entities.Table | geo_entity_types.Table | log_entries.Table | proposals.Table | proposed_versions.Table | space_admins.Table | space_editor_controllers.Table | space_editors.Table | spaces.Table | subspaces.Table | triples.Table | versions.Table;
+    export type Selectable = accounts.Selectable | actions.Selectable | cursors.Selectable | geo_entities.Selectable | geo_entity_types.Selectable | log_entries.Selectable | proposals.Selectable | proposed_versions.Selectable | space_admins.Selectable | space_editor_controllers.Selectable | space_editors.Selectable | spaces.Selectable | subspaces.Selectable | triples.Selectable | versions.Selectable;
+    export type JSONSelectable = accounts.JSONSelectable | actions.JSONSelectable | cursors.JSONSelectable | geo_entities.JSONSelectable | geo_entity_types.JSONSelectable | log_entries.JSONSelectable | proposals.JSONSelectable | proposed_versions.JSONSelectable | space_admins.JSONSelectable | space_editor_controllers.JSONSelectable | space_editors.JSONSelectable | spaces.JSONSelectable | subspaces.JSONSelectable | triples.JSONSelectable | versions.JSONSelectable;
+    export type Whereable = accounts.Whereable | actions.Whereable | cursors.Whereable | geo_entities.Whereable | geo_entity_types.Whereable | log_entries.Whereable | proposals.Whereable | proposed_versions.Whereable | space_admins.Whereable | space_editor_controllers.Whereable | space_editors.Whereable | spaces.Whereable | subspaces.Whereable | triples.Whereable | versions.Whereable;
+    export type Insertable = accounts.Insertable | actions.Insertable | cursors.Insertable | geo_entities.Insertable | geo_entity_types.Insertable | log_entries.Insertable | proposals.Insertable | proposed_versions.Insertable | space_admins.Insertable | space_editor_controllers.Insertable | space_editors.Insertable | spaces.Insertable | subspaces.Insertable | triples.Insertable | versions.Insertable;
+    export type Updatable = accounts.Updatable | actions.Updatable | cursors.Updatable | geo_entities.Updatable | geo_entity_types.Updatable | log_entries.Updatable | proposals.Updatable | proposed_versions.Updatable | space_admins.Updatable | space_editor_controllers.Updatable | space_editors.Updatable | spaces.Updatable | subspaces.Updatable | triples.Updatable | versions.Updatable;
+    export type UniqueIndex = accounts.UniqueIndex | actions.UniqueIndex | cursors.UniqueIndex | geo_entities.UniqueIndex | geo_entity_types.UniqueIndex | log_entries.UniqueIndex | proposals.UniqueIndex | proposed_versions.UniqueIndex | space_admins.UniqueIndex | space_editor_controllers.UniqueIndex | space_editors.UniqueIndex | spaces.UniqueIndex | subspaces.UniqueIndex | triples.UniqueIndex | versions.UniqueIndex;
+    export type Column = accounts.Column | actions.Column | cursors.Column | geo_entities.Column | geo_entity_types.Column | log_entries.Column | proposals.Column | proposed_versions.Column | space_admins.Column | space_editor_controllers.Column | space_editors.Column | spaces.Column | subspaces.Column | triples.Column | versions.Column;
   
-    export type AllBaseTables = [accounts.Table, actions.Table, cursors.Table, geo_entities.Table, log_entries.Table, proposals.Table, proposed_versions.Table, space_admins.Table, space_editor_controllers.Table, space_editors.Table, spaces.Table, subspaces.Table, triples.Table, versions.Table];
+    export type AllBaseTables = [accounts.Table, actions.Table, cursors.Table, geo_entities.Table, geo_entity_types.Table, log_entries.Table, proposals.Table, proposed_versions.Table, space_admins.Table, space_editor_controllers.Table, space_editors.Table, spaces.Table, subspaces.Table, triples.Table, versions.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [accounts.Table, actions.Table, cursors.Table, geo_entities.Table, log_entries.Table, proposals.Table, proposed_versions.Table, space_admins.Table, space_editor_controllers.Table, space_editors.Table, spaces.Table, subspaces.Table, triples.Table, versions.Table];
+    export type AllTablesAndViews = [accounts.Table, actions.Table, cursors.Table, geo_entities.Table, geo_entity_types.Table, log_entries.Table, proposals.Table, proposed_versions.Table, space_admins.Table, space_editor_controllers.Table, space_editors.Table, spaces.Table, subspaces.Table, triples.Table, versions.Table];
   }
 
 
@@ -3159,6 +3272,7 @@ declare module 'zapatos/schema' {
     "actions": actions.Selectable;
     "cursors": cursors.Selectable;
     "geo_entities": geo_entities.Selectable;
+    "geo_entity_types": geo_entity_types.Selectable;
     "log_entries": log_entries.Selectable;
     "proposals": proposals.Selectable;
     "proposed_versions": proposed_versions.Selectable;
@@ -3179,6 +3293,7 @@ declare module 'zapatos/schema' {
     "actions": actions.JSONSelectable;
     "cursors": cursors.JSONSelectable;
     "geo_entities": geo_entities.JSONSelectable;
+    "geo_entity_types": geo_entity_types.JSONSelectable;
     "log_entries": log_entries.JSONSelectable;
     "proposals": proposals.JSONSelectable;
     "proposed_versions": proposed_versions.JSONSelectable;
@@ -3199,6 +3314,7 @@ declare module 'zapatos/schema' {
     "actions": actions.Whereable;
     "cursors": cursors.Whereable;
     "geo_entities": geo_entities.Whereable;
+    "geo_entity_types": geo_entity_types.Whereable;
     "log_entries": log_entries.Whereable;
     "proposals": proposals.Whereable;
     "proposed_versions": proposed_versions.Whereable;
@@ -3219,6 +3335,7 @@ declare module 'zapatos/schema' {
     "actions": actions.Insertable;
     "cursors": cursors.Insertable;
     "geo_entities": geo_entities.Insertable;
+    "geo_entity_types": geo_entity_types.Insertable;
     "log_entries": log_entries.Insertable;
     "proposals": proposals.Insertable;
     "proposed_versions": proposed_versions.Insertable;
@@ -3239,6 +3356,7 @@ declare module 'zapatos/schema' {
     "actions": actions.Updatable;
     "cursors": cursors.Updatable;
     "geo_entities": geo_entities.Updatable;
+    "geo_entity_types": geo_entity_types.Updatable;
     "log_entries": log_entries.Updatable;
     "proposals": proposals.Updatable;
     "proposed_versions": proposed_versions.Updatable;
@@ -3259,6 +3377,7 @@ declare module 'zapatos/schema' {
     "actions": actions.UniqueIndex;
     "cursors": cursors.UniqueIndex;
     "geo_entities": geo_entities.UniqueIndex;
+    "geo_entity_types": geo_entity_types.UniqueIndex;
     "log_entries": log_entries.UniqueIndex;
     "proposals": proposals.UniqueIndex;
     "proposed_versions": proposed_versions.UniqueIndex;
@@ -3279,6 +3398,7 @@ declare module 'zapatos/schema' {
     "actions": actions.Column;
     "cursors": cursors.Column;
     "geo_entities": geo_entities.Column;
+    "geo_entity_types": geo_entity_types.Column;
     "log_entries": log_entries.Column;
     "proposals": proposals.Column;
     "proposed_versions": proposed_versions.Column;
@@ -3299,6 +3419,7 @@ declare module 'zapatos/schema' {
     "actions": actions.SQL;
     "cursors": cursors.SQL;
     "geo_entities": geo_entities.SQL;
+    "geo_entity_types": geo_entity_types.SQL;
     "log_entries": log_entries.SQL;
     "proposals": proposals.SQL;
     "proposed_versions": proposed_versions.SQL;

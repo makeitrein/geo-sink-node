@@ -1,5 +1,6 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
+import { TYPES } from "./constants/systemIds";
 import { populateCachedEntries } from "./populateCache";
 import { StreamData, TripleAction, TripleDatabaseTuple } from "./types";
 import {
@@ -96,11 +97,35 @@ export const populateEntries = async ({
 
   for (const [tupleType, triple] of triplesDatabaseTuples) {
     const isCreateTriple = tupleType === TripleAction.Create;
-    isCreateTriple
-      ? await db
-          .upsert("triples", triple, "id", { updateColumns: db.doNothing })
-          .run(pool)
-      : await db.deletes("triples", { id: triple.id }).run(pool);
+    const isDeleteTriple = tupleType === TripleAction.Delete;
+    const isAddType = triple.attribute_id === TYPES && isCreateTriple;
+    const isDeleteType = triple.attribute_id === TYPES && isDeleteTriple;
+
+    if (isCreateTriple) {
+      await db
+        .upsert("triples", triple, "id", { updateColumns: db.doNothing })
+        .run(pool);
+    } else {
+      await db.deletes("triples", { id: triple.id }).run(pool);
+    }
+
+    if (isAddType) {
+      await db
+        .upsert(
+          "geo_entity_types",
+          { entity_id: triple.entity_id, type_id: triple.value_id },
+          ["entity_id", "type_id"],
+          { updateColumns: db.doNothing }
+        )
+        .run(pool);
+    } else {
+      await db
+        .deletes("geo_entity_types", {
+          entity_id: triple.entity_id,
+          type_id: triple.value_id,
+        })
+        .run(pool);
+    }
   }
 
   const versions: s.versions.Insertable[] = toVersions({
