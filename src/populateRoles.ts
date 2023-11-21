@@ -1,8 +1,17 @@
 import * as db from "zapatos/db";
+import { populateCachedRoles } from "./populateCache";
 import { pool } from "./utils/pool";
 import { RoleChange } from "./zod";
 
-export const handleRoleGranted = async (roleGranted: RoleChange) => {
+export const handleRoleGranted = async ({
+  roleGranted,
+  blockNumber,
+  cursor,
+}: {
+  roleGranted: RoleChange;
+  blockNumber: number;
+  cursor: string;
+}) => {
   try {
     const role = roleGranted.role;
     const isAdminRole = role === "ADMIN";
@@ -10,6 +19,13 @@ export const handleRoleGranted = async (roleGranted: RoleChange) => {
     const isModeratorRole = role === "MODERATOR";
 
     console.log("Handling role granted:", roleGranted);
+
+    populateCachedRoles({
+      roleChange: roleGranted,
+      blockNumber,
+      cursor,
+      type: "GRANTED",
+    });
 
     if (isAdminRole) {
       await db
@@ -32,15 +48,21 @@ export const handleRoleGranted = async (roleGranted: RoleChange) => {
           account_id: roleGranted.account,
         })
         .run(pool);
-    } else {
-      console.error("Unknown granted role:", role);
     }
   } catch (error) {
     console.error("Error handling role granted:", error);
   }
 };
 
-export const handleRoleRevoked = async (roleRevoked: RoleChange) => {
+export const handleRoleRevoked = async ({
+  roleRevoked,
+  blockNumber,
+  cursor,
+}: {
+  roleRevoked: RoleChange;
+  blockNumber: number;
+  cursor: string;
+}) => {
   try {
     const role = roleRevoked.role;
     const isAdminRole = role === "ADMIN";
@@ -48,6 +70,13 @@ export const handleRoleRevoked = async (roleRevoked: RoleChange) => {
     const isModeratorRole = role === "MODERATOR";
 
     console.log("Handling role revoked:", roleRevoked);
+
+    populateCachedRoles({
+      roleChange: roleRevoked,
+      blockNumber,
+      cursor,
+      type: "REVOKED",
+    });
 
     if (isAdminRole) {
       await db
