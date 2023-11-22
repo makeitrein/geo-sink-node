@@ -29,24 +29,39 @@ export const handleRoleGranted = async ({
 
     if (isAdminRole) {
       await db
-        .insert("space_admins", {
-          space_id: roleGranted.space,
-          account_id: roleGranted.account,
-        })
+        .upsert(
+          "space_admins",
+          {
+            space_id: roleGranted.space,
+            account_id: roleGranted.account,
+          },
+          ["space_id", "account_id"],
+          { updateColumns: db.doNothing }
+        )
         .run(pool);
     } else if (isMemberRole) {
       await db
-        .insert("space_editors", {
-          space_id: roleGranted.space,
-          account_id: roleGranted.account,
-        })
+        .upsert(
+          "space_editors",
+          {
+            space_id: roleGranted.space,
+            account_id: roleGranted.account,
+          },
+          ["space_id", "account_id"],
+          { updateColumns: db.doNothing }
+        )
         .run(pool);
     } else if (isModeratorRole) {
       await db
-        .insert("space_editor_controllers", {
-          space_id: roleGranted.space,
-          account_id: roleGranted.account,
-        })
+        .upsert(
+          "space_editor_controllers",
+          {
+            space_id: roleGranted.space,
+            account_id: roleGranted.account,
+          },
+          ["space_id", "account_id"],
+          { updateColumns: db.doNothing }
+        )
         .run(pool);
     }
   } catch (error) {

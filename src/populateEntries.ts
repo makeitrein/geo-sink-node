@@ -91,7 +91,7 @@ export const populateWithFullEntries = async ({
     });
     console.log("Geo Entities Count", geoEntities.length);
     await upsertChunked("geo_entities", geoEntities, "id", {
-      updateColumns: ["name", "description"],
+      updateColumns: ["name", "description", "updated_at", "updated_at_block"],
     });
 
     const proposals: s.proposals.Insertable[] = toProposals({
@@ -154,7 +154,12 @@ export const populateWithFullEntries = async ({
         await db
           .upsert(
             "geo_entity_types",
-            { entity_id: triple.entity_id, type_id: triple.value_id },
+            {
+              entity_id: triple.entity_id,
+              type_id: triple.value_id,
+              created_at: timestamp,
+              created_at_block: blockNumber,
+            },
             ["entity_id", "type_id"],
             { updateColumns: db.doNothing }
           )
@@ -287,6 +292,8 @@ export const toGeoEntities = ({
         description: updatedDescription,
         created_at: timestamp,
         created_at_block: blockNumber,
+        updated_at: timestamp,
+        updated_at_block: blockNumber,
       };
     });
   });
@@ -307,14 +314,18 @@ export const toProposals = ({
   cursor,
 }: toProposalsArgs) => {
   const proposals: s.proposals.Insertable[] = fullEntries.flatMap(
-    (fullEntry, entryIdx) => ({
-      id: generateProposalId({ entryIdx, cursor }),
-      created_at_block: blockNumber,
-      created_by_id: fullEntry.author,
-      space_id: fullEntry.space,
-      created_at: timestamp,
-      status: "APPROVED",
-    })
+    (fullEntry, entryIdx) => {
+      const proposalId = generateProposalId({ entryIdx, cursor });
+      console.log("Proposal ID", proposalId);
+      return {
+        id: proposalId,
+        created_at_block: blockNumber,
+        created_by_id: fullEntry.author,
+        space_id: fullEntry.space,
+        created_at: timestamp,
+        status: "APPROVED",
+      };
+    }
   );
 
   return proposals;

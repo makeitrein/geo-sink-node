@@ -23,7 +23,9 @@ CREATE TABLE public.geo_entities (
     name character varying,
     description character varying,
     created_at integer NOT NULL,
-    created_at_block integer NOT NULL -- is_attribute boolean DEFAULT false,
+    created_at_block integer NOT NULL,
+    updated_at integer,
+    updated_at_block integer -- is_attribute boolean DEFAULT false,
     -- attribute_value_type_id text
 );
 
@@ -31,6 +33,8 @@ CREATE TABLE public.geo_entity_types (
     id serial PRIMARY KEY,
     entity_id text NOT NULL REFERENCES public.geo_entities(id),
     type_id text NOT NULL REFERENCES public.geo_entities(id),
+    created_at integer NOT NULL,
+    created_at_block integer NOT NULL,
     CONSTRAINT geo_entity_types_unique_entity_type_pair UNIQUE (entity_id, type_id)
 );
 
