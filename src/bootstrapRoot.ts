@@ -142,6 +142,8 @@ const geoEntities: s.geo_entities.Insertable[] = entities.map((entity) => ({
   // is_attribute: attributes[entity] ? true : false,
   // is_type: types[entity] ? true : false,
   // attribute_value_type_id: attributes[entity],
+  created_at_block: ROOT_SPACE_CREATED_AT_BLOCK,
+  created_at: ROOT_SPACE_CREATED_AT,
 }));
 
 const namesTriples: s.triples.Insertable[] = Object.entries(names).map(
@@ -159,6 +161,8 @@ const namesTriples: s.triples.Insertable[] = Object.entries(names).map(
     string_value: name,
     is_protected: true,
     space_id: PERMISSIONED_SPACE_REGISTRY_ADDRESS,
+    created_at_block: ROOT_SPACE_CREATED_AT_BLOCK,
+    created_at: ROOT_SPACE_CREATED_AT,
   })
 );
 
@@ -179,6 +183,8 @@ const attributeTriples: s.triples.Insertable[] = Object.entries(attributes)
       entity_value_id: ATTRIBUTE,
       is_protected: true,
       space_id: PERMISSIONED_SPACE_REGISTRY_ADDRESS,
+      created_at_block: ROOT_SPACE_CREATED_AT_BLOCK,
+      created_at: ROOT_SPACE_CREATED_AT,
     },
     /* Giving these attributes a value type of the type they are */
     {
@@ -195,6 +201,8 @@ const attributeTriples: s.triples.Insertable[] = Object.entries(attributes)
       entity_value_id,
       is_protected: true,
       space_id: PERMISSIONED_SPACE_REGISTRY_ADDRESS,
+      created_at_block: ROOT_SPACE_CREATED_AT_BLOCK,
+      created_at: ROOT_SPACE_CREATED_AT,
     },
   ])
   .flat();
@@ -216,6 +224,8 @@ const typeTriples: s.triples.Insertable[] = Object.entries(types)
       entity_value_id: SCHEMA_TYPE,
       is_protected: true,
       space_id: PERMISSIONED_SPACE_REGISTRY_ADDRESS,
+      created_at_block: ROOT_SPACE_CREATED_AT_BLOCK,
+      created_at: ROOT_SPACE_CREATED_AT,
     },
     /* Giving these entities an attribute of attribute */
     ...attributes.map((attribute) => ({
@@ -232,6 +242,8 @@ const typeTriples: s.triples.Insertable[] = Object.entries(types)
       entity_value_id: attribute,
       is_protected: true,
       space_id: PERMISSIONED_SPACE_REGISTRY_ADDRESS,
+      created_at_block: ROOT_SPACE_CREATED_AT_BLOCK,
+      created_at: ROOT_SPACE_CREATED_AT,
     })),
   ])
   .flat();

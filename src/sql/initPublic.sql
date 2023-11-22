@@ -23,10 +23,7 @@ CREATE TABLE public.geo_entities (
     name character varying,
     description character varying,
     created_at integer NOT NULL,
-    created_at_block integer NOT NULL,
-    updated_at integer NOT NULL,
-    updated_at_block integer NOT NULL -- is_type boolean DEFAULT false,
-    -- is_attribute boolean DEFAULT false,
+    created_at_block integer NOT NULL -- is_attribute boolean DEFAULT false,
     -- attribute_value_type_id text
 );
 

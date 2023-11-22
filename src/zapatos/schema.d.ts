@@ -608,18 +608,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       created_at_block: number;
-      /**
-      * **geo_entities.updated_at**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      updated_at: number;
-      /**
-      * **geo_entities.updated_at_block**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      updated_at_block: number;
     }
     export interface JSONSelectable {
       /**
@@ -652,18 +640,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       created_at_block: number;
-      /**
-      * **geo_entities.updated_at**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      updated_at: number;
-      /**
-      * **geo_entities.updated_at_block**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      updated_at_block: number;
     }
     export interface Whereable {
       /**
@@ -696,18 +672,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       created_at_block?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **geo_entities.updated_at**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      updated_at?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **geo_entities.updated_at_block**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      updated_at_block?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -740,18 +704,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       created_at_block: number | db.Parameter<number> | db.SQLFragment;
-      /**
-      * **geo_entities.updated_at**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      updated_at: number | db.Parameter<number> | db.SQLFragment;
-      /**
-      * **geo_entities.updated_at_block**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      updated_at_block: number | db.Parameter<number> | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -784,18 +736,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       created_at_block?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
-      /**
-      * **geo_entities.updated_at**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      updated_at?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
-      /**
-      * **geo_entities.updated_at_block**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      updated_at_block?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
     }
     export type UniqueIndex = 'geo_entities_pkey';
     export type Column = keyof Selectable;

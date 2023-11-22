@@ -86,9 +86,13 @@ export const populateWithFullEntries = async ({
 
     const geoEntities: s.geo_entities.Insertable[] = toGeoEntities({
       fullEntries,
+      blockNumber,
+      timestamp,
     });
     console.log("Geo Entities Count", geoEntities.length);
-    await upsertChunked("geo_entities", geoEntities, "id");
+    await upsertChunked("geo_entities", geoEntities, "id", {
+      updateColumns: ["name", "description"],
+    });
 
     const proposals: s.proposals.Insertable[] = toProposals({
       fullEntries,
@@ -116,8 +120,11 @@ export const populateWithFullEntries = async ({
     });
 
     // /* Todo: How are duplicate triples being handled in Geo? I know it's possible, but if the triple ID is defined, what does that entail */
-    const triplesDatabaseTuples: TripleDatabaseTuple[] =
-      toTripleDatabaseTuples(fullEntries);
+    const triplesDatabaseTuples: TripleDatabaseTuple[] = toTripleDatabaseTuples(
+      fullEntries,
+      timestamp,
+      blockNumber
+    );
     console.log("TriplesDatabaseTuples Count", triplesDatabaseTuples.length);
 
     for (const [tupleType, triple] of triplesDatabaseTuples) {
@@ -240,8 +247,14 @@ export const toActions = ({ fullEntries, cursor }: ToActionArgs) => {
 
 interface toGeoEntitiesArgs {
   fullEntries: FullEntry[];
+  timestamp: number;
+  blockNumber: number;
 }
-export const toGeoEntities = ({ fullEntries }: toGeoEntitiesArgs) => {
+export const toGeoEntities = ({
+  fullEntries,
+  timestamp,
+  blockNumber,
+}: toGeoEntitiesArgs) => {
   const entitiesMap: Record<string, s.geo_entities.Insertable> = {};
 
   fullEntries.forEach((fullEntry) => {
@@ -272,6 +285,8 @@ export const toGeoEntities = ({ fullEntries }: toGeoEntitiesArgs) => {
         id: action.entityId,
         name: updatedName,
         description: updatedDescription,
+        created_at: timestamp,
+        created_at_block: blockNumber,
       };
     });
   });
@@ -333,6 +348,7 @@ export const toProposedVersions = ({
           name: proposedVersionName ? proposedVersionName : null,
           created_by_id: fullEntry.author,
           proposal_id: generateProposalId({ entryIdx, cursor }),
+          space_id: fullEntry.space,
         };
       });
     });
@@ -372,6 +388,7 @@ export const toVersions = ({
             cursor,
           }),
           created_by_id: fullEntry.author,
+          space_id: fullEntry.space,
         };
       });
     }
@@ -390,7 +407,11 @@ export const toSpaces = (fullEntries: FullEntry[], blockNumber: number) => {
   return spaces;
 };
 
-export const toTripleDatabaseTuples = (fullEntries: FullEntry[]) => {
+export const toTripleDatabaseTuples = (
+  fullEntries: FullEntry[],
+  timestamp: number,
+  blockNumber: number
+) => {
   const triples: TripleDatabaseTuple[] = fullEntries.flatMap((fullEntry) => {
     return fullEntry.uriData.actions.map((action) => {
       const action_type = action.type;
@@ -427,6 +448,8 @@ export const toTripleDatabaseTuples = (fullEntries: FullEntry[]) => {
           string_value,
           space_id,
           is_protected,
+          created_at: timestamp,
+          created_at_block: blockNumber,
         },
       ] as TripleDatabaseTuple;
     });
