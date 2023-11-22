@@ -16,21 +16,17 @@ async function main() {
 
     const options = program.opts();
 
-    console.log("Options: ", options);
-
     if (options.fromGenesis) {
       await resetPublicTablesToGenesis();
     }
 
     if (options.fromCache) {
       await resetPublicTablesToGenesis();
-      await populateFromCache();
-      // 2. populate with cached entries + roles
-      // 3. update the public.cursor to the cached.cursor
-      // 4. carry on streaming
+      const startBlockNum = await populateFromCache();
+      await Effect.runPromise(runStream(startBlockNum));
+    } else {
+      await Effect.runPromise(runStream());
     }
-
-    await Effect.runPromise(runStream());
   } catch (error) {
     console.error("An error occurred:", error);
   }

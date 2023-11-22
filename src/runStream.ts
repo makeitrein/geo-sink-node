@@ -23,7 +23,7 @@ export class InvalidPackageError extends Data.TaggedClass(
   readonly message: string;
 }> {}
 
-export function runStream() {
+export function runStream(startBlockNum?: number) {
   const program = Effect.gen(function* (_) {
     const substreamsEndpoint = process.env.SUBSTREAMS_ENDPOINT;
     invariant(substreamsEndpoint, "SUBSTREAMS_ENDPOINT is required");
@@ -70,8 +70,8 @@ export function runStream() {
       connectTransport: transport,
       substreamPackage,
       outputModule,
-      startCursor,
-      startBlockNum: genesisStartBlockNum,
+      startCursor: startBlockNum ? undefined : startCursor,
+      startBlockNum: startBlockNum || genesisStartBlockNum,
       productionMode,
     });
 
@@ -145,6 +145,7 @@ export function runStream() {
                   roleRevoked: revoked,
                   blockNumber,
                   cursor,
+                  timestamp,
                 });
               }
             });
