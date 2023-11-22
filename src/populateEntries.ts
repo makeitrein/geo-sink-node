@@ -101,7 +101,6 @@ export const populateWithFullEntries = async ({
       cursor,
     });
     console.log("Proposals Count", proposals.length);
-    await insertChunked("proposals", proposals);
 
     const proposed_versions: s.proposed_versions.Insertable[] =
       toProposedVersions({
@@ -131,9 +130,6 @@ export const populateWithFullEntries = async ({
       const isCreateTriple = tupleType === TripleAction.Create;
       const isDeleteTriple = tupleType === TripleAction.Delete;
       const isAddType = triple.attribute_id === TYPES && isCreateTriple;
-
-      console.log(triple.attribute_id);
-      console.log("isAddType", isAddType);
       const isDeleteType = triple.attribute_id === TYPES && isDeleteTriple;
 
       if (isCreateTriple) {

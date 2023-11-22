@@ -1,8 +1,9 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 import { populateWithFullEntries } from "./populateEntries";
+import { handleRoleGranted } from "./populateRoles";
 import { pool } from "./utils/pool";
-import { FullEntry, RoleChange } from "./zod";
+import { FullEntry, RoleChange, ZodRoleChange } from "./zod";
 
 export const populateFromCache = async () => {
   const cachedEntries = await readCacheEntries();
@@ -15,6 +16,27 @@ export const populateFromCache = async () => {
       blockNumber: cachedEntry.block_number,
       timestamp: cachedEntry.timestamp,
       cursor: cachedEntry.cursor,
+    });
+  }
+
+  for (const cachedRole of cachedRoles) {
+    const roleChange = ZodRoleChange.safeParse({
+      role: cachedRole.role,
+      space: cachedRole.space,
+      account: cachedRole.account,
+      sender: cachedRole.sender,
+    });
+    if (!roleChange.success) {
+      console.error("Failed to parse cached role change");
+      console.error(roleChange);
+      console.error(roleChange.error);
+      continue;
+    }
+    await handleRoleGranted({
+      roleGranted: roleChange.data,
+      blockNumber: cachedRole.block_number,
+      timestamp: cachedRole.timestamp,
+      cursor: cachedRole.cursor,
     });
   }
 };

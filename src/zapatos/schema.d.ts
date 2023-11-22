@@ -3404,11 +3404,17 @@ declare module 'zapatos/schema' {
         */
         type: string;
         /**
-        * **cache.roles.block_number**
+        * **cache.roles.created_at**
         * - `int4` in database
         * - `NOT NULL`, no default
         */
-        block_number: number;
+        created_at: number;
+        /**
+        * **cache.roles.created_at_block**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        created_at_block: number;
         /**
         * **cache.roles.cursor**
         * - `text` in database
@@ -3454,11 +3460,17 @@ declare module 'zapatos/schema' {
         */
         type: string;
         /**
-        * **cache.roles.block_number**
+        * **cache.roles.created_at**
         * - `int4` in database
         * - `NOT NULL`, no default
         */
-        block_number: number;
+        created_at: number;
+        /**
+        * **cache.roles.created_at_block**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        created_at_block: number;
         /**
         * **cache.roles.cursor**
         * - `text` in database
@@ -3504,11 +3516,17 @@ declare module 'zapatos/schema' {
         */
         type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
         /**
-        * **cache.roles.block_number**
+        * **cache.roles.created_at**
         * - `int4` in database
         * - `NOT NULL`, no default
         */
-        block_number?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+        created_at?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+        /**
+        * **cache.roles.created_at_block**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        created_at_block?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
         /**
         * **cache.roles.cursor**
         * - `text` in database
@@ -3554,11 +3572,17 @@ declare module 'zapatos/schema' {
         */
         type: string | db.Parameter<string> | db.SQLFragment;
         /**
-        * **cache.roles.block_number**
+        * **cache.roles.created_at**
         * - `int4` in database
         * - `NOT NULL`, no default
         */
-        block_number: number | db.Parameter<number> | db.SQLFragment;
+        created_at: number | db.Parameter<number> | db.SQLFragment;
+        /**
+        * **cache.roles.created_at_block**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        created_at_block: number | db.Parameter<number> | db.SQLFragment;
         /**
         * **cache.roles.cursor**
         * - `text` in database
@@ -3604,11 +3628,17 @@ declare module 'zapatos/schema' {
         */
         type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
         /**
-        * **cache.roles.block_number**
+        * **cache.roles.created_at**
         * - `int4` in database
         * - `NOT NULL`, no default
         */
-        block_number?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+        created_at?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+        /**
+        * **cache.roles.created_at_block**
+        * - `int4` in database
+        * - `NOT NULL`, no default
+        */
+        created_at_block?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
         /**
         * **cache.roles.cursor**
         * - `text` in database
