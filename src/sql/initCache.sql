@@ -35,9 +35,3 @@ CREATE UNIQUE INDEX IF NOT EXISTS unique_cached_roles ON cache.roles (
     block_number,
     cursor
 );
-
-CREATE TABLE IF NOT EXISTS cache.cursors (
-    id integer PRIMARY KEY,
-    cursor text NOT NULL,
-    block_number integer NOT NULL
-);

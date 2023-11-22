@@ -1,6 +1,5 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
-import { readCacheCursor } from "./cursor";
 import { populateWithFullEntries } from "./populateEntries";
 import { pool } from "./utils/pool";
 import { FullEntry, RoleChange } from "./zod";
@@ -8,7 +7,7 @@ import { FullEntry, RoleChange } from "./zod";
 export const populateFromCache = async () => {
   const cachedEntries = await readCacheEntries();
   const cachedRoles = await readCacheRoles();
-  const cachedCursor = await readCacheCursor();
+  // const cachedCursor = await readCacheCursor();
 
   for (const cachedEntry of cachedEntries) {
     await populateWithFullEntries({
