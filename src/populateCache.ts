@@ -52,18 +52,22 @@ export const upsertCachedEntries = async ({
   cursor: string;
   timestamp: number;
 }) => {
-  const cachedEntry: s.cache.entries.Insertable = {
-    block_number: blockNumber,
-    cursor,
-    data: JSON.stringify(fullEntries),
-    timestamp,
-  };
+  try {
+    const cachedEntry: s.cache.entries.Insertable = {
+      block_number: blockNumber,
+      cursor,
+      data: JSON.stringify(fullEntries),
+      timestamp,
+    };
 
-  await db
-    .upsert("cache.entries", cachedEntry, ["cursor"], {
-      updateColumns: db.doNothing,
-    })
-    .run(pool);
+    await db
+      .upsert("cache.entries", cachedEntry, ["cursor"], {
+        updateColumns: db.doNothing,
+      })
+      .run(pool);
+  } catch (error) {
+    console.error("Error upserting cached entry:", error);
+  }
 };
 
 export const upsertCachedRoles = async ({
@@ -79,35 +83,39 @@ export const upsertCachedRoles = async ({
   cursor: string;
   type: "GRANTED" | "REVOKED";
 }) => {
-  const cachedRole: s.cache.roles.Insertable = {
-    created_at: timestamp,
-    created_at_block: blockNumber,
-    role: roleChange.role,
-    space: roleChange.space,
-    account: roleChange.account,
-    cursor,
-    sender: roleChange.sender,
-    type,
-  };
+  try {
+    const cachedRole: s.cache.roles.Insertable = {
+      created_at: timestamp,
+      created_at_block: blockNumber,
+      role: roleChange.role,
+      space: roleChange.space,
+      account: roleChange.account,
+      cursor,
+      sender: roleChange.sender,
+      type,
+    };
 
-  await db
-    .upsert(
-      "cache.roles",
-      cachedRole,
-      [
-        "role",
-        "account",
-        "sender",
-        "space",
-        "type",
-        "created_at_block",
-        "cursor",
-      ],
-      {
-        updateColumns: db.doNothing,
-      }
-    )
-    .run(pool);
+    await db
+      .upsert(
+        "cache.roles",
+        cachedRole,
+        [
+          "role",
+          "account",
+          "sender",
+          "space",
+          "type",
+          "created_at_block",
+          "cursor",
+        ],
+        {
+          updateColumns: db.doNothing,
+        }
+      )
+      .run(pool);
+  } catch (error) {
+    console.error("Error upserting cached role:", error);
+  }
 };
 
 export const readCacheEntries = async () => {

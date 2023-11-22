@@ -141,12 +141,6 @@ export const populateWithFullEntries = async ({
       }
 
       if (isAddType) {
-        console.log(
-          "Adding type",
-          triple.value_id,
-          "to entity",
-          triple.entity_id
-        );
         await db
           .upsert(
             "geo_entity_types",
@@ -312,7 +306,6 @@ export const toProposals = ({
   const proposals: s.proposals.Insertable[] = fullEntries.flatMap(
     (fullEntry, entryIdx) => {
       const proposalId = generateProposalId({ entryIdx, cursor });
-      console.log("Proposal ID", proposalId);
       return {
         id: proposalId,
         created_at_block: blockNumber,
