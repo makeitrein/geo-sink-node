@@ -5,11 +5,11 @@ import {
   createRegistry,
 } from "@substreams/core";
 import { readPackageFromFile } from "@substreams/manifest";
-import { createSink, createStream } from "@substreams/sink";
 import { Data, Effect, Stream } from "effect";
 import { readCursor, writeCursor } from "./cursor";
 import { populateWithEntries } from "./populateEntries";
 import { handleRoleGranted, handleRoleRevoked } from "./populateRoles";
+import { createSink, createStream } from "./substreams.js/sink/src";
 import { invariant } from "./utils/invariant";
 import { logger } from "./utils/logger";
 import { ZodEntryStreamResponse, ZodRoleChangeStreamResponse } from "./zod";
