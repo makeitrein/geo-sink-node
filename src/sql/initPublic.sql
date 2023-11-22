@@ -21,7 +21,11 @@ CREATE TABLE public.spaces (
 CREATE TABLE public.geo_entities (
     id text PRIMARY KEY,
     name character varying,
-    description character varying -- is_type boolean DEFAULT false,
+    description character varying,
+    created_at integer NOT NULL,
+    created_at_block integer NOT NULL,
+    updated_at integer NOT NULL,
+    updated_at_block integer NOT NULL -- is_type boolean DEFAULT false,
     -- is_attribute boolean DEFAULT false,
     -- attribute_value_type_id text
 );
@@ -67,7 +71,8 @@ CREATE TABLE public.proposed_versions (
     created_at_block integer NOT NULL,
     created_by_id text NOT NULL REFERENCES public.accounts(id),
     entity_id text NOT NULL REFERENCES public.geo_entities(id),
-    proposal_id text NOT NULL REFERENCES public.proposals(id)
+    proposal_id text NOT NULL REFERENCES public.proposals(id),
+    space_id text NOT NULL REFERENCES public.spaces(id)
 );
 
 CREATE TABLE public.space_admins (
@@ -114,7 +119,9 @@ CREATE TABLE public.triples (
     array_value text,
     entity_value_id text REFERENCES public.geo_entities(id),
     is_protected boolean NOT NULL,
-    space_id text NOT NULL REFERENCES public.spaces(id)
+    space_id text NOT NULL REFERENCES public.spaces(id),
+    created_at integer NOT NULL,
+    created_at_block integer NOT NULL
 );
 
 CREATE TABLE public.versions (
@@ -124,8 +131,9 @@ CREATE TABLE public.versions (
     created_at integer NOT NULL,
     created_at_block integer NOT NULL,
     created_by_id text NOT NULL REFERENCES public.accounts(id),
-    proposed_version_id text NOT NULL REFERENCES public.proposed_versions(id) NOT NULL,
-    entity_id text NOT NULL REFERENCES public.geo_entities(id)
+    proposed_version_id text NOT NULL REFERENCES public.proposed_versions(id),
+    entity_id text NOT NULL REFERENCES public.geo_entities(id),
+    space_id text NOT NULL REFERENCES public.spaces(id)
 );
 
 CREATE TABLE public.actions (
