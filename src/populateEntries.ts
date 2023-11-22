@@ -8,7 +8,7 @@ import {
   actionsFromURI,
   isValidAction,
 } from "./utils/actions";
-import { insertChunked, upsertChunked } from "./utils/db";
+import { upsertChunked } from "./utils/db";
 import {
   generateActionId,
   generateProposalId,
@@ -118,7 +118,9 @@ export const populateWithFullEntries = async ({
         cursor,
       });
     console.log("Proposed Versions Count", proposed_versions.length);
-    await insertChunked("proposed_versions", proposed_versions);
+    await upsertChunked("proposed_versions", proposed_versions, "id", {
+      updateColumns: db.doNothing,
+    });
 
     const spaces: s.spaces.Insertable[] = toSpaces(fullEntries, blockNumber);
     console.log("Spaces Count", spaces.length);
@@ -185,7 +187,9 @@ export const populateWithFullEntries = async ({
       cursor,
     });
     console.log("Versions Count", versions.length);
-    await insertChunked("versions", versions);
+    await upsertChunked("versions", versions, "id", {
+      updateColumns: db.doNothing,
+    });
   } catch (error) {
     console.error(`Error populating entries: ${error} at block ${blockNumber}`);
   }

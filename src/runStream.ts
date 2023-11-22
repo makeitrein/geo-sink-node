@@ -6,6 +6,7 @@ import {
 } from "@substreams/core";
 import { readPackageFromFile } from "@substreams/manifest";
 import { Data, Effect, Stream } from "effect";
+import { genesisStartBlockNum } from "./constants/constants";
 import { readCursor, writeCursor } from "./cursor";
 import { populateWithEntries } from "./populateEntries";
 import { handleRoleGranted, handleRoleRevoked } from "./populateRoles";
@@ -47,7 +48,6 @@ export function runStream() {
     );
 
     const outputModule = "geo_out";
-    const startBlockNum = 36472424;
     const productionMode = true;
     // const finalBlocksOnly = true; TODO - why doesn't createStream accept this option?
 
@@ -71,7 +71,7 @@ export function runStream() {
       substreamPackage,
       outputModule,
       startCursor,
-      startBlockNum,
+      startBlockNum: genesisStartBlockNum,
       productionMode,
     });
 

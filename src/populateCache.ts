@@ -1,13 +1,16 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
+import { genesisStartBlockNum } from "./constants/constants";
 import { populateWithFullEntries } from "./populateEntries";
-import { handleRoleGranted } from "./populateRoles";
+import { handleRoleGranted, handleRoleRevoked } from "./populateRoles";
 import { pool } from "./utils/pool";
 import { FullEntry, RoleChange, ZodRoleChange } from "./zod";
 
 export const populateFromCache = async () => {
   const cachedEntries = await readCacheEntries();
   const cachedRoles = await readCacheRoles();
+
+  let blockNumber = genesisStartBlockNum;
 
   for (const cachedEntry of cachedEntries) {
     await populateWithFullEntries({
@@ -16,6 +19,8 @@ export const populateFromCache = async () => {
       timestamp: cachedEntry.timestamp,
       cursor: cachedEntry.cursor,
     });
+
+    blockNumber = cachedEntry.block_number;
   }
 
   for (const cachedRole of cachedRoles) {
@@ -25,18 +30,33 @@ export const populateFromCache = async () => {
       account: cachedRole.account,
       sender: cachedRole.sender,
     });
+
     if (!roleChange.success) {
       console.error("Failed to parse cached role change");
       console.error(roleChange);
       console.error(roleChange.error);
       continue;
     }
-    await handleRoleGranted({
-      roleGranted: roleChange.data,
-      blockNumber: cachedRole.created_at_block,
-      timestamp: cachedRole.created_at,
-      cursor: cachedRole.cursor,
-    });
+
+    if (cachedRole.type === "GRANTED") {
+      await handleRoleGranted({
+        roleGranted: roleChange.data,
+        blockNumber: cachedRole.created_at_block,
+        timestamp: cachedRole.created_at,
+        cursor: cachedRole.cursor,
+      });
+    } else if (cachedRole.type === "REVOKED") {
+      await handleRoleRevoked({
+        roleRevoked: roleChange.data,
+        blockNumber: cachedRole.created_at_block,
+        cursor: cachedRole.cursor,
+        timestamp: cachedRole.created_at,
+      });
+    }
+
+    if (cachedRole.created_at_block > blockNumber) {
+      blockNumber = cachedRole.created_at_block;
+    }
   }
 };
 

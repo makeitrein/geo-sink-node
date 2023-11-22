@@ -1,10 +1,7 @@
 import { bootstrapRoot } from "../bootstrapRoot.js";
 import { runSqlFile } from "./runSqlFile.js";
 
-export const sleep = (ms: number) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
-
-export const resetDatabaseToGenesis = async () => {
+export const resetPublicTablesToGenesis = async () => {
   try {
     await runSqlFile("./src/sql/clearPublicTables.sql");
     await bootstrapRoot();

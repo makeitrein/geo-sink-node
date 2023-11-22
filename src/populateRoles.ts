@@ -81,10 +81,12 @@ export const handleRoleGranted = async ({
 export const handleRoleRevoked = async ({
   roleRevoked,
   blockNumber,
+  timestamp,
   cursor,
 }: {
   roleRevoked: RoleChange;
   blockNumber: number;
+  timestamp: number;
   cursor: string;
 }) => {
   try {
@@ -98,6 +100,7 @@ export const handleRoleRevoked = async ({
     upsertCachedRoles({
       roleChange: roleRevoked,
       blockNumber,
+      timestamp,
       cursor,
       type: "REVOKED",
     });
