@@ -10,6 +10,7 @@ import {
 } from "./utils/actions";
 import { insertChunked, upsertChunked } from "./utils/db";
 import {
+  generateActionId,
   generateProposalId,
   generateTripleId,
   generateVersionId,
@@ -80,9 +81,16 @@ export const populateWithFullEntries = async ({
       updateColumns: db.doNothing,
     });
 
-    const actions: s.actions.Insertable[] = toActions({ fullEntries, cursor });
+    const actions: s.actions.Insertable[] = toActions({
+      fullEntries,
+      cursor,
+      timestamp,
+      blockNumber,
+    });
     console.log("Actions Count", actions.length);
-    await insertChunked("actions", actions);
+    await upsertChunked("actions", actions, "id", {
+      updateColumns: db.doNothing,
+    });
 
     const geoEntities: s.geo_entities.Insertable[] = toGeoEntities({
       fullEntries,
@@ -200,8 +208,15 @@ export const toAccounts = ({ fullEntries }: ToAccountArgs) => {
 interface ToActionArgs {
   fullEntries: FullEntry[];
   cursor: string;
+  timestamp: number;
+  blockNumber: number;
 }
-export const toActions = ({ fullEntries, cursor }: ToActionArgs) => {
+export const toActions = ({
+  fullEntries,
+  cursor,
+  timestamp,
+  blockNumber,
+}: ToActionArgs) => {
   const actions: s.actions.Insertable[] = fullEntries.flatMap(
     (fullEntry, entryIdx) => {
       return fullEntry.uriData.actions.map((action) => {
@@ -222,7 +237,16 @@ export const toActions = ({ fullEntries, cursor }: ToActionArgs) => {
           cursor,
         });
 
+        const action_id = generateActionId({
+          space_id: fullEntry.space,
+          entity_id: action.entityId,
+          attribute_id: action.attributeId,
+          value_id: action.value.id,
+          cursor,
+        });
+
         return {
+          id: action_id,
           action_type: action.type,
           entity_id: action.entityId,
           attribute_id: action.attributeId,
@@ -232,6 +256,9 @@ export const toActions = ({ fullEntries, cursor }: ToActionArgs) => {
           entity_value,
           proposed_version_id,
           version_id,
+          created_at: timestamp,
+          created_at_block: blockNumber,
+          cursor,
         };
       });
     }

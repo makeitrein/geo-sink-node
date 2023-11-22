@@ -8,7 +8,6 @@ import { FullEntry, RoleChange, ZodRoleChange } from "./zod";
 export const populateFromCache = async () => {
   const cachedEntries = await readCacheEntries();
   const cachedRoles = await readCacheRoles();
-  // const cachedCursor = await readCacheCursor();
 
   for (const cachedEntry of cachedEntries) {
     await populateWithFullEntries({

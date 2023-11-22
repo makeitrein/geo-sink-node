@@ -144,7 +144,7 @@ CREATE TABLE public.versions (
 );
 
 CREATE TABLE public.actions (
-    id serial PRIMARY KEY,
+    id text PRIMARY KEY NOT NULL,
     action_type text NOT NULL,
     entity_id text REFERENCES public.geo_entities(id) NOT NULL,
     attribute_id text REFERENCES public.geo_entities(id) NOT NULL,
@@ -155,7 +155,10 @@ CREATE TABLE public.actions (
     entity_value text REFERENCES public.geo_entities(id),
     array_value text [],
     proposed_version_id text REFERENCES public.proposed_versions(id) NOT NULL,
-    version_id text REFERENCES public.versions(id) NOT NULL
+    version_id text REFERENCES public.versions(id) NOT NULL,
+    created_at integer NOT NULL,
+    created_at_block integer NOT NULL,
+    cursor text NOT NULL
 );
 
 -- 
