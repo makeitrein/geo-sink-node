@@ -138,6 +138,7 @@ export function runStream() {
                   roleGranted: granted,
                   blockNumber,
                   cursor,
+                  timestamp,
                 });
               } else if (revoked) {
                 handleRoleRevoked({

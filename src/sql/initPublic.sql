@@ -79,18 +79,24 @@ CREATE TABLE public.proposed_versions (
 CREATE TABLE public.space_admins (
     space_id text NOT NULL REFERENCES public.spaces(id),
     account_id text NOT NULL REFERENCES public.accounts(id),
+    created_at integer NOT NULL,
+    created_at_block integer NOT NULL,
     CONSTRAINT space_admins_unique_account_space_pair UNIQUE (account_id, space_id)
 );
 
 CREATE TABLE public.space_editors (
     space_id text NOT NULL REFERENCES public.spaces(id),
     account_id text NOT NULL REFERENCES public.accounts(id),
+    created_at integer NOT NULL,
+    created_at_block integer NOT NULL,
     CONSTRAINT space_editors_unique_account_space_pair UNIQUE (account_id, space_id)
 );
 
 CREATE TABLE public.space_editor_controllers (
     space_id text NOT NULL REFERENCES public.spaces(id),
     account_id text NOT NULL REFERENCES public.accounts(id),
+    created_at integer NOT NULL,
+    created_at_block integer NOT NULL,
     CONSTRAINT space_editor_controllers_unique_account_space_pair UNIQUE (account_id, space_id)
 );
 

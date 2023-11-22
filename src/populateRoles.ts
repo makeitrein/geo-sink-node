@@ -6,10 +6,12 @@ import { RoleChange } from "./zod";
 export const handleRoleGranted = async ({
   roleGranted,
   blockNumber,
+  timestamp,
   cursor,
 }: {
   roleGranted: RoleChange;
   blockNumber: number;
+  timestamp: number;
   cursor: string;
 }) => {
   try {
@@ -34,6 +36,8 @@ export const handleRoleGranted = async ({
           {
             space_id: roleGranted.space,
             account_id: roleGranted.account,
+            created_at: timestamp,
+            created_at_block: blockNumber,
           },
           ["space_id", "account_id"],
           { updateColumns: db.doNothing }
@@ -46,6 +50,8 @@ export const handleRoleGranted = async ({
           {
             space_id: roleGranted.space,
             account_id: roleGranted.account,
+            created_at: timestamp,
+            created_at_block: blockNumber,
           },
           ["space_id", "account_id"],
           { updateColumns: db.doNothing }
@@ -58,6 +64,8 @@ export const handleRoleGranted = async ({
           {
             space_id: roleGranted.space,
             account_id: roleGranted.account,
+            created_at: timestamp,
+            created_at_block: blockNumber,
           },
           ["space_id", "account_id"],
           { updateColumns: db.doNothing }
