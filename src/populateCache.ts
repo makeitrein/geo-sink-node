@@ -34,8 +34,8 @@ export const populateFromCache = async () => {
     }
     await handleRoleGranted({
       roleGranted: roleChange.data,
-      blockNumber: cachedRole.block_number,
-      timestamp: cachedRole.timestamp,
+      blockNumber: cachedRole.created_at_block,
+      timestamp: cachedRole.created_at,
       cursor: cachedRole.cursor,
     });
   }
@@ -71,14 +71,17 @@ export const upsertCachedRoles = async ({
   blockNumber,
   cursor,
   type,
+  timestamp,
 }: {
   roleChange: RoleChange;
+  timestamp: number;
   blockNumber: number;
   cursor: string;
   type: "GRANTED" | "REVOKED";
 }) => {
   const cachedRole: s.cache.roles.Insertable = {
-    block_number: blockNumber,
+    created_at: timestamp,
+    created_at_block: blockNumber,
     role: roleChange.role,
     space: roleChange.space,
     account: roleChange.account,
@@ -91,7 +94,15 @@ export const upsertCachedRoles = async ({
     .upsert(
       "cache.roles",
       cachedRole,
-      ["role", "account", "sender", "space", "type", "block_number", "cursor"],
+      [
+        "role",
+        "account",
+        "sender",
+        "space",
+        "type",
+        "created_at_block",
+        "cursor",
+      ],
       {
         updateColumns: db.doNothing,
       }

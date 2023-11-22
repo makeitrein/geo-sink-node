@@ -27,6 +27,7 @@ export const handleRoleGranted = async ({
       blockNumber,
       cursor,
       type: "GRANTED",
+      timestamp,
     });
 
     if (isAdminRole) {

@@ -47,7 +47,7 @@ export function runStream() {
     );
 
     const outputModule = "geo_out";
-    const startBlockNum = 42942233;
+    const startBlockNum = 36472424;
     const productionMode = true;
     // const finalBlocksOnly = true; TODO - why doesn't createStream accept this option?
 
