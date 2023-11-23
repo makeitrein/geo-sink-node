@@ -22,6 +22,7 @@ CREATE TABLE public.geo_entities (
     id text PRIMARY KEY,
     name character varying,
     description character varying,
+    created_by_id text NOT NULL REFERENCES public.accounts(id),
     created_at integer NOT NULL,
     created_at_block integer NOT NULL,
     updated_at integer,

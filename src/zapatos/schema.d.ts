@@ -687,6 +687,12 @@ declare module 'zapatos/schema' {
       */
       description: string | null;
       /**
+      * **geo_entities.created_by_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      created_by_id: string;
+      /**
       * **geo_entities.created_at**
       * - `int4` in database
       * - `NOT NULL`, no default
@@ -730,6 +736,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       description: string | null;
+      /**
+      * **geo_entities.created_by_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      created_by_id: string;
       /**
       * **geo_entities.created_at**
       * - `int4` in database
@@ -775,6 +787,12 @@ declare module 'zapatos/schema' {
       */
       description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **geo_entities.created_by_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      created_by_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **geo_entities.created_at**
       * - `int4` in database
       * - `NOT NULL`, no default
@@ -819,6 +837,12 @@ declare module 'zapatos/schema' {
       */
       description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
+      * **geo_entities.created_by_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      created_by_id: string | db.Parameter<string> | db.SQLFragment;
+      /**
       * **geo_entities.created_at**
       * - `int4` in database
       * - `NOT NULL`, no default
@@ -862,6 +886,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **geo_entities.created_by_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      created_by_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **geo_entities.created_at**
       * - `int4` in database

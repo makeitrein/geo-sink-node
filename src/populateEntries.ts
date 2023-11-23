@@ -315,6 +315,7 @@ export const toGeoEntities = ({
         created_at_block: blockNumber,
         updated_at: timestamp,
         updated_at_block: blockNumber,
+        created_by_id: fullEntry.author,
       };
     });
   });
